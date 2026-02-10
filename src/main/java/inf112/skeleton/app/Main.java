@@ -15,14 +15,14 @@ import com.badlogic.gdx.utils.Os;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
-public class HelloWorldMain implements ApplicationListener {
+public class Main implements ApplicationListener {
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private Texture spriteImage;
 
 	public static void main(String[] args) {
 		// Enable assertions by default (only works for classes that haven't been loaded yet)
-		HelloWorldMain.class.getClassLoader().setDefaultAssertionStatus(true);
+		Main.class.getClassLoader().setDefaultAssertionStatus(true);
 
 		// Workaround for Mac OS problem
 		if (SharedLibraryLoader.os == Os.MacOsX) {
@@ -32,7 +32,7 @@ public class HelloWorldMain implements ApplicationListener {
 		cfg.setTitle("Hello World Example");
 		cfg.setWindowedMode(1280, 768);
 
-		new Lwjgl3Application(new HelloWorldMain(), cfg);
+		new Lwjgl3Application(new Main(), cfg);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class HelloWorldMain implements ApplicationListener {
 
 		// Draw calls should be wrapped in batch.begin() ... batch.end()
 		batch.begin();
-		font.draw(batch, "Hello, World!", 200, 200);
+		font.draw(batch, "Hello, Leila!", 200, 200);
 		batch.draw(spriteImage, 300, 300, 100, 100);
 		batch.end();
 
