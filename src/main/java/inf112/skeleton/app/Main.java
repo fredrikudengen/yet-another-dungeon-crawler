@@ -48,7 +48,7 @@ public class Main implements ApplicationListener {
 
 	@Override
 	public void dispose() {
-		// Called at shutdown
+		// Called at shutdown.
 
 		// Graphics and sound resources aren't managed by Java's garbage collector, so
 		// they must generally be disposed of manually when no longer needed. But,
