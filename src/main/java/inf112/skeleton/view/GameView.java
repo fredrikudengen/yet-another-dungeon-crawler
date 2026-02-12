@@ -1,181 +1,119 @@
 package inf112.skeleton.view;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.*;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class GameView implements Painter{
-    private Viewport viewport; // defines screen / world size, aspect ratio and camera
-    private SpriteBatch batch; // used for drawing images / textures
-    private BitmapFont font; // used for writing
-    private ShapeRenderer shape; // used for drawing shapes
-    private Map<String, Texture> textures = new HashMap<>();
-    private Sound blippSound; // unused
+import inf112.skeleton.model.world.Room;
+import inf112.skeleton.view.render.WorldRenderer;
+import inf112.skeleton.view.render.EntityRenderer;
 
+/**
+ * Example GameView showing how to integrate WorldRenderer.
+ * This replaces/extends the AppView from the example.
+ */
+public class GameView {
+    private Viewport viewport;
+    private SpriteBatch batch;
+    private BitmapFont font;
+
+    // Renderers for different parts of the game
+    private WorldRenderer worldRenderer;
+    private EntityRenderer entityRenderer;
+
+    private final int TILE_SIZE = 32; // Each tile is 32x32 pixels
+
+    /**
+     * Initialize the view with world dimensions.
+     *
+     * @param worldWidth Width of the viewport in pixels
+     * @param worldHeight Height of the viewport in pixels
+     */
     public void create(double worldWidth, double worldHeight) {
-
-        // To preserve aspect ratio, use FitViewport, ExtendViewport or FillViewport.
-        // FitViewport keeps aspect by leaving empty space.
-        // ExtendViewport keeps aspect by extending the world size in one direction.
-        // FillViewport keeps aspect by hiding part of the world in the other direction.
+        // Setup viewport and camera
         this.viewport = new FillViewport((float) worldWidth, (float) worldHeight);
         this.batch = new SpriteBatch();
-        this.shape = new ShapeRenderer();
-        this.blippSound = Gdx.audio.newSound(Gdx.files.internal("blipp.ogg"));
-
         this.font = new BitmapFont();
-        font.setColor(Color.RED);
+        font.setColor(Color.WHITE);
 
-        preloadTextures();
+        // Create the renderers
+        this.worldRenderer = new WorldRenderer(batch, viewport.getCamera(), TILE_SIZE);
+        this.entityRenderer = new EntityRenderer(batch, viewport.getCamera());
 
         Gdx.graphics.setForegroundFPS(60);
     }
 
-    /*
-     * Loading everything at startup prevents glitches later on.
+    /**
+     * Main render method called every frame.
+     *
+     * @param currentRoom The room currently being displayed
      */
-    private void preloadTextures() {
-        for (String fileName : List.of("obligator.png")) {
-            getTexture(fileName);
+    public void render(Room currentRoom) {
+        // Clear the screen
+        ScreenUtils.clear(Color.BLACK);
+
+        // Begin drawing
+        batch.begin();
+        batch.setProjectionMatrix(viewport.getCamera().combined);
+
+        try {
+            // 1. Draw the room tiles (background layer)
+            worldRenderer.render(currentRoom);
+
+            // 2. Draw entities (player, enemies, items)
+            entityRenderer.render(currentRoom.getEntities());
+
+            // 3. Draw UI elements (health bar, etc.)
+            // This would typically use a separate UI camera/viewport
+            // drawUI();
+
+        } finally {
+            batch.end();
         }
-    }
-
-    /*
-     * Example: load textures only once, and save them in a hash map.
-     *
-     * You should do the same with sounds and other resources. LibGDX has a built-in
-     * AssetManager that can help with this.
-     *
-     * If you do new Texture() every time you draw, you'll slow the game down and
-     * fill up memory.
-     *
-     * @param name
-     *
-     * @return
-     */
-    private Texture getTexture(String name) {
-        if (!textures.containsKey(name)) {
-            FileHandle file = Gdx.files.internal(name);
-            if (file != null)
-                textures.put(name, new Texture(file));
-            else
-                textures.put(name, null);
-        }
-        return textures.get(name);
-    }
-
-    public void dispose() {
-        // Called at shutdown
-
-        // Graphics and sound resources aren't managed by Java's garbage collector, so
-        // they must generally be disposed of manually when no longer needed. But,
-        // any remaining resources are typically cleaned up automatically when the
-        // application exits, so these aren't strictly necessary here.
-        // (We might need to do something like this when loading a new game level in
-        // a large game, for instance, or if the user switches to another application
-        // temporarily (e.g., incoming phone call on a phone, or something).
-        batch.dispose();
-        shape.dispose();
-        blippSound.dispose();
-        font.dispose();
-        textures.values().forEach(tex -> {
-            if (tex != null)
-                tex.dispose();
-        });
-    }
-
-    @Override
-    public void draw(double x, double y, double w, double h, String textureName) {
-        Texture texture = getTexture(textureName);
-        if (texture != null) {
-            batch.draw(texture, //
-                    (float) x, //
-                    (float) y, //
-                    (float) w, //
-                    (float) h);
-        }
-    }
-
-    public void playSound() {
-        // TODO: play different sounds
-        blippSound.play();
     }
 
     /**
-     * Example:
+     * Updates the camera to follow the player.
+     * Call this before rendering.
      *
-     * {@snippet :
-     * appView.render(painter -> {
-     * 	painter.draw(x, y, w, h, tex1);
-     * 	painter.draw(x, y, w, h, tex2);
-     * });
-     * }
-     *
-     * TODO: probably easier to just accept a list of objects to draw.
-     *
-     * See lectures for better examples.
-     *
-     * Doing it this way has the advantage of making sure that SpriteBatch's begin()
-     * and end() methods are called properly.
-     *
-     * @param drawCommands
+     * @param playerX Player's X position in world coordinates
+     * @param playerY Player's Y position in world coordinates
      */
-    public void render(Consumer<Painter> drawCommands) {
-        // Called when the application should draw a new frame (many times per second).
-
-        // Start with a blank screen
-
-        ScreenUtils.clear(Color.WHITE);
-
-        // Draw calls should be wrapped in batch.begin() ... batch.end()
-        batch.begin();
-        // The projection matrix translates from world to view coordinates.
-        batch.setProjectionMatrix(viewport.getCamera().combined);
-        font.draw(batch, "Hello, World!", 200, 200);
-        try {
-            drawCommands.accept(this);
-        } finally {
-            batch.end(); // if you forget this, resources will leak!
-        }
-
-        // It's also possible to draw simple shapes
-        shape.begin(ShapeType.Filled);
-        shape.setProjectionMatrix(viewport.getCamera().combined);
-        shape.setColor(Color.BLUE);
-        shape.box(100, 100, 0, 100, 100, 0);
-        shape.end();
+    public void updateCamera(float playerX, float playerY) {
+        viewport.getCamera().position.set(playerX, playerY, 0);
+        viewport.getCamera().update();
     }
 
+    /**
+     * Called when window is resized.
+     */
     public void resize(int width, int height) {
-        // Called whenever the window is resized (including with its original size at
-        // startup)
-
         viewport.update(width, height, true);
-        // System.out.printf("%dx%d, %fx%f%n", viewport.getScreenWidth(),
-        // viewport.getScreenHeight(),
-        // viewport.getWorldWidth(), viewport.getWorldHeight());
     }
 
-    // If we use ExtendViewport, the world size might change when the window is
-    // resize, so the controller needs access to this information
-    public double worldWidth() {
-        return viewport.getWorldWidth();
+    /**
+     * Cleanup resources.
+     */
+    public void dispose() {
+        batch.dispose();
+        font.dispose();
+        worldRenderer.dispose();
+        // entityRenderer.dispose();
     }
 
-    public double worldHeight() {
-        return viewport.getWorldHeight();
+    /**
+     * Get the tile size used by the renderer.
+     * Useful for collision detection and positioning.
+     */
+    public int getTileSize() {
+        return TILE_SIZE;
+    }
+
+    public Viewport getViewport() {
+        return viewport;
     }
 }
