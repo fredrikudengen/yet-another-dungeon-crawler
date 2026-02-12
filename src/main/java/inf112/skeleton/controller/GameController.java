@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 import inf112.skeleton.model.world.GameWorld;
+import inf112.skeleton.model.world.Gator;
+import inf112.skeleton.model.world.ModelObject;
 import inf112.skeleton.view.GameView;
 
 public class GameController implements ApplicationListener {
@@ -16,7 +18,10 @@ public class GameController implements ApplicationListener {
     public void create() { // Called at startup
 
         // MODEL: our virtual world
-        world = new GameWorld(1280, 768);        // VIEW: graphics
+        world = new GameWorld(1280, 768);
+        world.add(new Gator(123, 456));
+
+        // VIEW: graphics
         gameView.create(world.width(), world.height());
         Gdx.graphics.setForegroundFPS(60);
     }
@@ -39,14 +44,12 @@ public class GameController implements ApplicationListener {
     public void render() {
         // Called when the application should draw a new frame (many times per second).
 
-        // MODEL: simulate one step
-        if (!paused)
-            world.step(Gdx.graphics.getDeltaTime());
-
         // VIEW: draw stuff
         gameView.render(painter -> {
+            for (ModelObject obj : world) {
                 // commands to draw stuff
-
+                painter.draw(obj.x(), obj.y(), obj.width(), obj.height(), obj.appearance());
+            }
         });
 
         // Don't handle input this way – use event handlers!
@@ -55,6 +58,18 @@ public class GameController implements ApplicationListener {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) { // check for key press
             Gdx.app.exit();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            world.step(Gdx.graphics.getDeltaTime(), "up");
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            world.step(Gdx.graphics.getDeltaTime(), "down");
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            world.step(Gdx.graphics.getDeltaTime(), "left");
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            world.step(Gdx.graphics.getDeltaTime(), "right");
         }
     }
 
