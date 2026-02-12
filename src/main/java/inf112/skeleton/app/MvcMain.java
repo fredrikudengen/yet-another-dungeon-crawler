@@ -8,7 +8,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.utils.Os;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
-import inf112.skeleton._example.controller.AppController;
+import inf112.skeleton.controller.GameController;
 
 public class MvcMain {
 	public static void main(String[] args) {
@@ -30,7 +30,7 @@ public class MvcMain {
 
 		// This object is our application. It'll "listen" to events from
 		// the LibGDX main loop.
-		ApplicationListener appListener = new AppController(); // Replace this with your own
+		ApplicationListener appListener = new GameController(); // Replace this with your own
 
 		// Start the application framework. The constructor call won't return until
 		// Gdx.app.exit() is called.

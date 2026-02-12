@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GameWorld implements Iterable<ModelObject> {
+public class GameWorld {
     double width;
     double height;
     double currentTime = 0;
-    List<ModelObject> objects = new ArrayList<>();
 
     public GameWorld (double width, double height) {
         super();
@@ -16,16 +15,9 @@ public class GameWorld implements Iterable<ModelObject> {
         this.height = height;
     }
 
-    @Override
-    public Iterator<ModelObject> iterator() {
-        return objects.iterator();
-    }
-
     public void step(double deltaTime) {
         currentTime += deltaTime;
-        for (var obj : objects) {
-            obj.step(this, deltaTime);
-        }
+
     }
 
     public double width() {
@@ -40,7 +32,4 @@ public class GameWorld implements Iterable<ModelObject> {
         return currentTime;
     }
 
-    public void add(ModelObject obj) {
-        objects.add(obj);
-    }
 }

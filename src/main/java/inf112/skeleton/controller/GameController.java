@@ -4,25 +4,20 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import inf112.skeleton._example.model.AppWorld;
-import inf112.skeleton._example.model.Gator;
-import inf112.skeleton._example.model.ModelObject;
-import inf112.skeleton._example.view.AppView;
+import inf112.skeleton.model.world.GameWorld;
+import inf112.skeleton.view.GameView;
 
 public class GameController implements ApplicationListener {
-    private AppView appView = new AppView();
-    private AppWorld world;
+    private GameView gameView = new GameView();
+    private GameWorld world;
     private boolean paused = false;
 
     @Override
     public void create() { // Called at startup
 
         // MODEL: our virtual world
-        world = new AppWorld(1280, 768);
-        world.add(new Gator(123, 456));
-
-        // VIEW: graphics
-        appView.create(world.width(), world.height());
+        world = new GameWorld(1280, 768);        // VIEW: graphics
+        gameView.create(world.width(), world.height());
         Gdx.graphics.setForegroundFPS(60);
     }
 
@@ -37,7 +32,7 @@ public class GameController implements ApplicationListener {
         // (We might need to do something like this when loading a new game level in
         // a large game, for instance, or if the user switches to another application
         // temporarily (e.g., incoming phone call on a phone, or something).
-        appView.dispose();
+        gameView.dispose();
     }
 
     @Override
@@ -49,16 +44,14 @@ public class GameController implements ApplicationListener {
             world.step(Gdx.graphics.getDeltaTime());
 
         // VIEW: draw stuff
-        appView.render(painter -> {
-            for (ModelObject obj : world) {
+        gameView.render(painter -> {
                 // commands to draw stuff
-                painter.draw(obj.x(), obj.y(), obj.width(), obj.height(), obj.appearance());
-            }
+
         });
 
         // Don't handle input this way – use event handlers!
         if (Gdx.input.justTouched()) { // check for mouse click
-            appView.playSound();
+            gameView.playSound();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) { // check for key press
             Gdx.app.exit();
@@ -69,7 +62,7 @@ public class GameController implements ApplicationListener {
     public void resize(int width, int height) {
         // Called whenever the window is resized (including with its original size at
         // startup)
-        appView.resize(width, height);
+        gameView.resize(width, height);
 
         // if appView can change the world size, we'd have to update *world* here
     }

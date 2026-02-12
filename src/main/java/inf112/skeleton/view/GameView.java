@@ -17,7 +17,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.*;
 
-public class GameView {
+public class GameView implements Painter{
     private Viewport viewport; // defines screen / world size, aspect ratio and camera
     private SpriteBatch batch; // used for drawing images / textures
     private BitmapFont font; // used for writing
