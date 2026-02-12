@@ -34,14 +34,6 @@ public class GameWorld implements Iterable<Entity> {
         return width;
     }
 
-    public double height() {
-        return height;
-    }
-
-    public double currentTime() {
-        return currentTime;
-    }
-
     public void add(Entity entity) {
         entities.add(entity);
     }
