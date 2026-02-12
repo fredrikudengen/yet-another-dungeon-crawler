@@ -1,14 +1,16 @@
 package inf112.skeleton.model.world;
 
+import inf112.skeleton.model.entities.Entity;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GameWorld implements Iterable<ModelObject> {
+public class GameWorld implements Iterable<Entity> {
     double width;
     double height;
     double currentTime = 0;
-    List<ModelObject> objects = new ArrayList<>();
+    List<Entity> entities = new ArrayList<>();
 
     public GameWorld(double width, double height) {
         super();
@@ -17,14 +19,14 @@ public class GameWorld implements Iterable<ModelObject> {
     }
 
     @Override
-    public Iterator<ModelObject> iterator() {
-        return objects.iterator();
+    public Iterator<Entity> iterator() {
+        return entities.iterator();
     }
 
     public void step(double deltaTime, String direction) {
         currentTime += deltaTime;
-        for (var obj : objects) {
-            obj.step(this, deltaTime, direction);
+        for (Entity entity : entities) {
+            entity.step(this, deltaTime);
         }
     }
 
@@ -40,7 +42,7 @@ public class GameWorld implements Iterable<ModelObject> {
         return currentTime;
     }
 
-    public void add(ModelObject obj) {
-        objects.add(obj);
+    public void add(Entity entity) {
+        entities.add(entity);
     }
 }
