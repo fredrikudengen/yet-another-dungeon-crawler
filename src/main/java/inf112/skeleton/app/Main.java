@@ -15,10 +15,13 @@ import com.badlogic.gdx.utils.Os;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
+import inf112.skeleton.controller.GameController;
+
 public class Main implements ApplicationListener {
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private Texture spriteImage;
+	private GameController appListener;
 
 	public static void main(String[] args) {
 		// Enable assertions by default (only works for classes that haven't been loaded yet)
@@ -32,7 +35,9 @@ public class Main implements ApplicationListener {
 		cfg.setTitle("Hello World Example");
 		cfg.setWindowedMode(1280, 768);
 
-		new Lwjgl3Application(new Main(), cfg);
+		ApplicationListener appListener = new GameController(); // Replace this with your own
+
+		new Lwjgl3Application(appListener, cfg);
 	}
 
 	@Override
@@ -84,6 +89,8 @@ public class Main implements ApplicationListener {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) { // check for key press
 			Gdx.app.exit();
 		}
+
+		appListener.render();
 	}
 
 	@Override
