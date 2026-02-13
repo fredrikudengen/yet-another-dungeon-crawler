@@ -24,8 +24,6 @@ public class Main implements ApplicationListener {
 	private GameController appListener;
 
 	public static void main(String[] args) {
-		// Enable assertions by default (only works for classes that haven't been loaded
-		// yet)
 		Main.class.getClassLoader().setDefaultAssertionStatus(true);
 
 		// Workaround for Mac OS problem
@@ -36,7 +34,7 @@ public class Main implements ApplicationListener {
 		cfg.setTitle("Hello World Example");
 		cfg.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 
-		ApplicationListener appListener = new GameController(); // Replace this with your own
+		ApplicationListener appListener = new GameController();
 
 		new Lwjgl3Application(appListener, cfg);
 	}

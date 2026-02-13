@@ -2,6 +2,8 @@ package inf112.skeleton.model.entities;
 
 import inf112.skeleton.model.world.GameWorld;
 
+import inf112.skeleton.model.world.GameWorld;
+
 public class Player implements Entity {
     private double x, y, dx = 100, dy = 100;
 
