@@ -4,91 +4,123 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import inf112.skeleton.model.world.GameWorld;
-import inf112.skeleton.model.world.Gator;
-import inf112.skeleton.model.world.ModelObject;
+import inf112.skeleton.model.factories.*;
+import inf112.skeleton.model.generation.RoomTemplate;
+import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.GameView;
 
+/**
+ * Example GameController showing complete integration of the grid system.
+ * This demonstrates how Room, RoomFactory, and WorldRenderer work together.
+ */
 public class GameController implements ApplicationListener {
-    private GameView gameView = new GameView();
-    private GameWorld world;
-    private boolean paused = false;
+    private GameView gameView;
+    private Room currentRoom;
+
+    private float playerX = 160;
+    private float playerY = 160;
+    private float playerSpeed = 200; // pixels per second
 
     @Override
-    public void create() { // Called at startup
+    public void create() {
+        gameView = new GameView();
+        gameView.create(1280, 768);
 
-        // MODEL: our virtual world
-        world = new GameWorld(1280, 768);
-        world.add(new Gator(123, 456));
+        currentRoom = createRoom();
 
-        // VIEW: graphics
-        gameView.create(world.width(), world.height());
-        Gdx.graphics.setForegroundFPS(60);
+        gameView.updateCamera(playerX, playerY);
     }
 
-    @Override
-    public void dispose() {
-        // Called at shutdown
+    private Room createRoom() {
 
-        // Graphics and sound resources aren't managed by Java's garbage collector, so
-        // they must generally be disposed of manually when no longer needed. But,
-        // any remaining resources are typically cleaned up automatically when the
-        // application exits, so these aren't strictly necessary here.
-        // (We might need to do something like this when loading a new game level in
-        // a large game, for instance, or if the user switches to another application
-        // temporarily (e.g., incoming phone call on a phone, or something).
-        gameView.dispose();
+        String[] pattern = {
+                "####################",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#..................#",
+                "#...####...####....#",
+                "#..................#",
+                "#..................#",
+                "#....##########....#",
+                "#..................#",
+                "#..................#",
+                "#....##########....#",
+                "#..................#",
+                "####################"
+        };
+
+        RoomTemplate template = new RoomTemplate(pattern);
+        RoomFactory factory = new TemplateRoomFactory(template);
+        return factory.createRoom();
     }
 
     @Override
     public void render() {
-        // Called when the application should draw a new frame (many times per second).
+        // should use InputHandler in real game
+        handleInput();
 
-        // VIEW: draw stuff
-        gameView.render(painter -> {
-            for (ModelObject obj : world) {
-                // commands to draw stuff
-                painter.draw(obj.x(), obj.y(), obj.width(), obj.height(), obj.appearance());
-            }
-        });
+        gameView.updateCamera(playerX, playerY);
 
-        // Don't handle input this way – use event handlers!
-        if (Gdx.input.justTouched()) { // check for mouse click
-            gameView.playSound();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) { // check for key press
+        gameView.render(currentRoom);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            world.step(Gdx.graphics.getDeltaTime(), "up");
+    }
+
+    /**
+     * This should be in the Player class. 
+     */
+    private void handleInput() {
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        int tileSize = gameView.getTileSize();
+
+        float newX = playerX;
+        float newY = playerY;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            newY += playerSpeed * deltaTime;
         }
-        else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            world.step(Gdx.graphics.getDeltaTime(), "down");
+        if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            newY -= playerSpeed * deltaTime;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            world.step(Gdx.graphics.getDeltaTime(), "left");
+        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            newX -= playerSpeed * deltaTime;
         }
-        else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            world.step(Gdx.graphics.getDeltaTime(), "right");
+        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            newX += playerSpeed * deltaTime;
+        }
+
+        if (!currentRoom.isBlocked(newX, newY, tileSize)) {
+            playerX = newX;
+            playerY = newY;
+        } else {
+            if (!currentRoom.isBlocked(newX, playerY, tileSize)) {
+                playerX = newX;
+            }
+            if (!currentRoom.isBlocked(playerX, newY, tileSize)) {
+                playerY = newY;
+            }
         }
     }
 
     @Override
     public void resize(int width, int height) {
-        // Called whenever the window is resized (including with its original size at
-        // startup)
         gameView.resize(width, height);
-
-        // if appView can change the world size, we'd have to update *world* here
     }
 
     @Override
     public void pause() {
-        paused = true;
     }
 
     @Override
     public void resume() {
-        paused = false;
+    }
+
+    @Override
+    public void dispose() {
+        gameView.dispose();
     }
 }
