@@ -4,34 +4,35 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import inf112.skeleton.model.entities.Player;
-import inf112.skeleton.model.factories.RoomFactory;
-import inf112.skeleton.model.factories.TemplateRoomFactory;
+import inf112.skeleton.model.factories.*;
 import inf112.skeleton.model.generation.RoomTemplate;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.GameView;
 
+/**
+ * Example GameController showing complete integration of the grid system.
+ * This demonstrates how Room, RoomFactory, and WorldRenderer work together.
+ */
 public class GameController implements ApplicationListener {
     private GameView gameView;
     private Room currentRoom;
-    private Player player;
+
+    private float playerX = 160;
+    private float playerY = 160;
+    private float playerSpeed = 200; // pixels per second
 
     @Override
     public void create() {
         gameView = new GameView();
-        player = new Player(200, 200);
         gameView.create(1280, 768);
 
-        // Input via InputProcessor
-        Gdx.input.setInputProcessor(new InputHandler(player));
+        currentRoom = createRoom();
 
-        currentRoom = createExampleRoom();
-        currentRoom.addEntity(player);
-
-        gameView.updateCamera(player.getX(), player.getY());
+        gameView.updateCamera(playerX, playerY);
     }
 
-    private Room createExampleRoom() {
+    private Room createRoom() {
+
         String[] pattern = {
                 "####################",
                 "#..................#",
@@ -39,13 +40,13 @@ public class GameController implements ApplicationListener {
                 "#..................#",
                 "#..................#",
                 "#..................#",
+                "#...####...####....#",
                 "#..................#",
                 "#..................#",
+                "#....##########....#",
                 "#..................#",
                 "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
+                "#....##########....#",
                 "#..................#",
                 "####################"
         };
@@ -57,9 +58,11 @@ public class GameController implements ApplicationListener {
 
     @Override
     public void render() {
-        handleInputAndMovePlayer();
+        // should use InputHandler in real game
+        handleInput();
 
-        gameView.updateCamera(player.getX(), player.getY());
+        gameView.updateCamera(playerX, playerY);
+
         gameView.render(currentRoom);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -67,35 +70,39 @@ public class GameController implements ApplicationListener {
         }
     }
 
-    private void handleInputAndMovePlayer() {
-        float dt = Gdx.graphics.getDeltaTime();
+    /**
+     * This should be in the Player class. 
+     */
+    private void handleInput() {
+        float deltaTime = Gdx.graphics.getDeltaTime();
         int tileSize = gameView.getTileSize();
 
-        float x = player.getX();
-        float y = player.getY();
+        float newX = playerX;
+        float newY = playerY;
 
-        float newX = x;
-        float newY = y;
+        if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            newY += playerSpeed * deltaTime;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            newY -= playerSpeed * deltaTime;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            newX -= playerSpeed * deltaTime;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            newX += playerSpeed * deltaTime;
+        }
 
-        float speed = player.getSpeed(); // pixels/second
-
-        if (player.isMovingUp())    newY += speed * dt;
-        if (player.isMovingDown())  newY -= speed * dt;
-        if (player.isMovingLeft())  newX -= speed * dt;
-        if (player.isMovingRight()) newX += speed * dt;
-
-        // Kollisjon mot rommet
         if (!currentRoom.isBlocked(newX, newY, tileSize)) {
-            player.setPosition(newX, newY);
-            return;
-        }
-
-        // “Slide” langs vegger
-        if (!currentRoom.isBlocked(newX, y, tileSize)) {
-            player.setPosition(newX, y);
-        }
-        if (!currentRoom.isBlocked(player.getX(), newY, tileSize)) {
-            player.setPosition(player.getX(), newY);
+            playerX = newX;
+            playerY = newY;
+        } else {
+            if (!currentRoom.isBlocked(newX, playerY, tileSize)) {
+                playerX = newX;
+            }
+            if (!currentRoom.isBlocked(playerX, newY, tileSize)) {
+                playerY = newY;
+            }
         }
     }
 
@@ -104,9 +111,13 @@ public class GameController implements ApplicationListener {
         gameView.resize(width, height);
     }
 
-    @Override public void pause() {}
+    @Override
+    public void pause() {
+    }
 
-    @Override public void resume() {}
+    @Override
+    public void resume() {
+    }
 
     @Override
     public void dispose() {

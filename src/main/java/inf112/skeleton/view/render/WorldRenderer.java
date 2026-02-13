@@ -16,7 +16,7 @@ public class WorldRenderer {
     private final SpriteBatch batch;
     private final Camera camera;
     private final Map<TileType, Texture> tileTextures;
-    private final int tileSize;
+    private final int tileSize; // Size of each tile in pixels
 
     public WorldRenderer(SpriteBatch batch, Camera camera, int tileSize) {
         this.batch = batch;
@@ -28,13 +28,13 @@ public class WorldRenderer {
     }
 
     private void loadTextures() {
-
         for (TileType type : TileType.values()) {
             String textureName = type.getTextureName();
             FileHandle file = Gdx.files.internal(textureName);
 
             Texture texture = new Texture(file);
             tileTextures.put(type, texture);
+
         }
     }
 
@@ -61,6 +61,18 @@ public class WorldRenderer {
         }
     }
 
+    public int[] worldToGrid(float worldX, float worldY) {
+        int gridX = (int)(worldX / tileSize);
+        int gridY = (int)(worldY / tileSize);
+        return new int[] { gridX, gridY };
+    }
+
+    public float[] gridToWorld(int gridX, int gridY) {
+        float worldX = gridX * tileSize + tileSize / 2f;
+        float worldY = gridY * tileSize + tileSize / 2f;
+        return new float[] { worldX, worldY };
+    }
+
     public void dispose() {
         for (Texture texture : tileTextures.values()) {
             if (texture != null) {
@@ -68,5 +80,9 @@ public class WorldRenderer {
             }
         }
         tileTextures.clear();
+    }
+
+    public int getTileSize() {
+        return tileSize;
     }
 }

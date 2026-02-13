@@ -1,5 +1,6 @@
 package inf112.skeleton.model.world;
 
+
 public enum TileType {
     FLOOR("floor.png", false),
     WALL("wall.png", true);
@@ -18,5 +19,9 @@ public enum TileType {
 
     public boolean blocksMovement() {
         return blocksMovement;
+    }
+
+    public boolean isWalkable() {
+        return !blocksMovement;
     }
 }

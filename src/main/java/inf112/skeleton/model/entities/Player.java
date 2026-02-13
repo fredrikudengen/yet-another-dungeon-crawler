@@ -2,42 +2,60 @@ package inf112.skeleton.model.entities;
 
 import inf112.skeleton.model.world.GameWorld;
 
-public class Player extends Entity {
-    private boolean movingLeft, movingRight, movingUp, movingDown;
+import inf112.skeleton.model.world.GameWorld;
 
-    public Player(float x, float y) {
-        super(x, y, 32, 32, 200);
+public class Player implements Entity {
+    private double x, y, dx = 100, dy = 100;
+
+    public Player (double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override
-    public void step(GameWorld world, double deltaTime) {
-        velocityX = 0;
-        velocityY = 0;
-        if (movingLeft)  velocityX -= speed;
-        if (movingRight) velocityX += speed;
-        if (movingUp)    velocityY += speed;
-        if (movingDown)  velocityY -= speed;
-
-        updatePosition(deltaTime);
+    public double x() {
+        return x;
     }
 
     @Override
-    public String getTextureName() {
+    public double y() {
+        return y;
+    }
+
+    @Override
+    public double width() {
+        return 100;
+    }
+
+    @Override
+    public double height() {
+        return 100;
+    }
+
+    @Override
+    public String appearance() {
         return "obligator.png";
     }
 
-    public boolean isMovingLeft() { return movingLeft; }
-    public boolean isMovingRight() { return movingRight; }
-    public boolean isMovingUp() { return movingUp; }
-    public boolean isMovingDown() { return movingDown; }
-
-    public void setMovingLeft(boolean moving) { movingLeft = moving; }
-    public void setMovingRight(boolean moving) { movingRight = moving; }
-    public void setMovingUp(boolean moving) { movingUp = moving; }
-    public void setMovingDown(boolean moving) { movingDown = moving; }
+    @Override
+    public String sound() {
+        return "blipp.ogg";
+    }
 
     @Override
-    public boolean collidesWith(Collidable other) {
-        return super.collidesWith(other);
+    public void step(GameWorld world, double deltaTime, String direction) {
+        if (direction.equals("up")) {
+            y += 3;
+        }
+        if (direction.equals("down")) {
+            y -= 3;
+        }
+        if (direction.equals("left")) {
+            x -= 3;
+        }
+        if (direction.equals("right")) {
+            x += 3;
+        }
     }
 }
+

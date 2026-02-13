@@ -16,6 +16,7 @@ public class Room {
         this.tiles = new TileType[width][height];
         this.entities = new ArrayList<>();
 
+        // Initialize all tiles to FLOOR
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 tiles[x][y] = TileType.FLOOR;
@@ -25,7 +26,7 @@ public class Room {
 
     public TileType getTileAt(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) {
-            return TileType.WALL;
+            return TileType.WALL; // Out of bounds treated as wall
         }
         return tiles[x][y];
     }
@@ -40,6 +41,25 @@ public class Room {
         int gridX = (int) (worldX / tileSize);
         int gridY = (int) (worldY / tileSize);
         return getTileAt(gridX, gridY).blocksMovement();
+    }
+
+    public void fillWith(TileType type) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                tiles[x][y] = type;
+            }
+        }
+    }
+
+    public void createPerimeterWalls() {
+        for (int x = 0; x < width; x++) {
+            tiles[x][0] = TileType.WALL;
+            tiles[x][height - 1] = TileType.WALL;
+        }
+        for (int y = 0; y < height; y++) {
+            tiles[0][y] = TileType.WALL;
+            tiles[width - 1][y] = TileType.WALL;
+        }
     }
 
     public void addEntity(Entity entity) {

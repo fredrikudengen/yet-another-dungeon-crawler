@@ -18,15 +18,10 @@ public class GameWorld implements Iterable<Entity> {
         this.height = height;
     }
 
-    @Override
-    public Iterator<Entity> iterator() {
-        return entities.iterator();
-    }
-
     public void step(double deltaTime, String direction) {
         currentTime += deltaTime;
         for (Entity entity : entities) {
-            entity.step(this, deltaTime);
+            entity.step(this, deltaTime, direction);
         }
     }
 
@@ -34,7 +29,20 @@ public class GameWorld implements Iterable<Entity> {
         return width;
     }
 
+    public double height() {
+        return height;
+    }
+
+    public double currentTime() {
+        return currentTime;
+    }
+
     public void add(Entity entity) {
         entities.add(entity);
+    }
+
+    @Override
+    public Iterator<Entity> iterator() {
+        return entities.iterator();
     }
 }

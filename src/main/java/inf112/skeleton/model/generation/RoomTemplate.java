@@ -1,11 +1,9 @@
 package inf112.skeleton.model.generation;
 
-import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.model.world.TileType;
 
-
-public class RoomTemplate implements RoomFactory {
+public class RoomTemplate {
     private final String[] pattern;
     private final int width;
     private final int height;
@@ -35,5 +33,13 @@ public class RoomTemplate implements RoomFactory {
             case '#' -> TileType.WALL;
             default -> TileType.FLOOR;
         };
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
