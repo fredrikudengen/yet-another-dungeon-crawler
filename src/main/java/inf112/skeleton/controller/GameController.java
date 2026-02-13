@@ -71,7 +71,7 @@ public class GameController implements ApplicationListener {
     }
 
     /**
-     * This should be in the Player class.
+     * This should be in the Player class. 
      */
     private void handleInput() {
         float deltaTime = Gdx.graphics.getDeltaTime();
