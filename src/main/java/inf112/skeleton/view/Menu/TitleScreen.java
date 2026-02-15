@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.ScreenUtils;
+import inf112.skeleton.controller.GameScreen;
 
 public class TitleScreen implements Screen {
 
@@ -99,11 +100,11 @@ public class TitleScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             switch (options[currentIndex]) {
                 case START:
-                    // game.setScreen(new GameScreen(game));
-                    System.out.println("Start Game");
+                    game.setScreen(new GameScreen(game));
                     break;
                 case OPTIONS:
-                    System.out.println("Options");
+                    // You can create an OptionsScreen later
+                    System.out.println("Options - Not implemented yet");
                     break;
                 case EXIT:
                     Gdx.app.exit();
