@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 
-import inf112.skeleton.controller.InputHandler;
 import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.factories.TemplateRoomFactory;
@@ -19,7 +18,7 @@ public class GameScreen implements Screen {
     private GameView gameView;
     private Room currentRoom;
     private Player player;
-    private InputHandler inputHandler;
+    private PlayerInputHandler playerInputHandler;
 
     public GameScreen(Game game) {
         this.game = game;
@@ -32,8 +31,8 @@ public class GameScreen implements Screen {
         gameView.create(1280, 768);
 
         // Input via InputProcessor
-        inputHandler = new InputHandler(player);
-        Gdx.input.setInputProcessor(inputHandler);
+        playerInputHandler = new PlayerInputHandler(player);
+        Gdx.input.setInputProcessor(playerInputHandler);
 
         currentRoom = createExampleRoom();
         currentRoom.addEntity(player);
