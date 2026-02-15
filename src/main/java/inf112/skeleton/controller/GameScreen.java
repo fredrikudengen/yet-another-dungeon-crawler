@@ -1,29 +1,39 @@
 package inf112.skeleton.controller;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 
+import inf112.skeleton.controller.InputHandler;
 import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.factories.TemplateRoomFactory;
 import inf112.skeleton.model.generation.RoomTemplate;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.GameView;
+import inf112.skeleton.view.Menu.PauseScreen;
 
-public class GameController implements ApplicationListener {
+public class GameScreen implements Screen {
+    private Game game;
     private GameView gameView;
     private Room currentRoom;
     private Player player;
+    private InputHandler inputHandler;
+
+    public GameScreen(Game game) {
+        this.game = game;
+    }
 
     @Override
-    public void create() {
+    public void show() {
         gameView = new GameView();
         player = new Player(200, 200);
         gameView.create(1280, 768);
 
         // Input via InputProcessor
-        Gdx.input.setInputProcessor(new InputHandler(player));
+        inputHandler = new InputHandler(player);
+        Gdx.input.setInputProcessor(inputHandler);
 
         currentRoom = createExampleRoom();
         currentRoom.addEntity(player);
@@ -56,14 +66,15 @@ public class GameController implements ApplicationListener {
     }
 
     @Override
-    public void render() {
+    public void render(float delta) {
         handleInputAndMovePlayer();
 
         gameView.updateCamera(player.getX(), player.getY());
         gameView.render(currentRoom);
 
+        // ESC to pause game
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit();
+            game.setScreen(new PauseScreen(game, this));
         }
     }
 
@@ -90,7 +101,7 @@ public class GameController implements ApplicationListener {
             return;
         }
 
-        // “Slide” langs vegger
+        // "Slide" langs vegger
         if (!currentRoom.isBlocked(newX, y, tileSize)) {
             player.setPosition(newX, y);
         }
@@ -104,9 +115,19 @@ public class GameController implements ApplicationListener {
         gameView.resize(width, height);
     }
 
-    @Override public void pause() {}
+    @Override
+    public void pause() {
+    }
 
-    @Override public void resume() {}
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+        // Called when switching away from this screen
+        Gdx.input.setInputProcessor(null);
+    }
 
     @Override
     public void dispose() {
