@@ -8,7 +8,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.utils.Os;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
-import inf112.skeleton.controller.GameController;
+import inf112.skeleton.controller.GameScreen;
 
 public class MvcMain {
 	public static void main(String[] args) {
@@ -23,17 +23,12 @@ public class MvcMain {
 			Configuration.GLFW_LIBRARY_NAME.set("glfw_async");
 		}
 
+		// Setup window
 		Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
-		cfg.setTitle("MVC Example");
-		cfg.setWindowedMode(1280, 768); // change default window size if this is too large or small
-		// (there are lots of other interesting configuration options
+		cfg.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+		cfg.setForegroundFPS(60);
 
-		// This object is our application. It'll "listen" to events from
-		// the LibGDX main loop.
-		ApplicationListener appListener = new GameController(); // Replace this with your own
-
-		// Start the application framework. The constructor call won't return until
-		// Gdx.app.exit() is called.
-		new Lwjgl3Application(appListener, cfg);
+		Main game = new Main();
+		new Lwjgl3Application(game, cfg);
 	}
 }

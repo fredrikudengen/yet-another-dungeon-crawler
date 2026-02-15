@@ -5,15 +5,10 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.utils.Os;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
-import org.lwjgl.system.Configuration;
 import inf112.skeleton.view.Menu.TitleScreen;
+import org.lwjgl.system.Configuration;
 
 public class Main extends Game {
-
-	@Override
-	public void create() {
-		setScreen(new TitleScreen(this));
-	}
 
 	public static void main(String[] args) {
 		Main.class.getClassLoader().setDefaultAssertionStatus(true);
@@ -26,76 +21,21 @@ public class Main extends Game {
 		// Setup window
 		Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
 		cfg.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+		cfg.setForegroundFPS(60);
 
-		ApplicationListener appListener = new GameController(); // Replace this with your own
-
-		new Lwjgl3Application(appListener, cfg);
+		Main game = new Main();
+		new Lwjgl3Application(game, cfg);
 	}
 
 	@Override
 	public void create() {
-		// Called at startup
-
-		batch = new SpriteBatch();
-		font = new BitmapFont();
-		font.setColor(Color.RED);
-		spriteImage = new Texture(Gdx.files.internal("obligator.png"));
-		Gdx.graphics.setForegroundFPS(60);
+		// Start with title screen
+		setScreen(new TitleScreen(this));
 	}
 
 	@Override
 	public void dispose() {
-		// Called at shutdown.
-
-		// Graphics and sound resources aren't managed by Java's garbage collector, so
-		// they must generally be disposed of manually when no longer needed. But,
-		// any remaining resources are typically cleaned up automatically when the
-		// application exits, so these aren't strictly necessary here.
-		// (We might need to do something like this when loading a new game level in
-		// a large game, for instance, or if the user switches to another application
-		// temporarily (e.g., incoming phone call on a phone, or something).
-		batch.dispose();
-		font.dispose();
-		spriteImage.dispose();
-	}
-
-	@Override
-	public void render() {
-		// Called when the application should draw a new frame (many times per second).
-
-		// This is a minimal example – don't write your application this way!
-
-		// Start with a blank screen
-		ScreenUtils.clear(Color.WHITE);
-
-		// Draw calls should be wrapped in batch.begin() ... batch.end()
-		batch.begin();
-		font.draw(batch, "Hello, Leila!", 200, 200);
-		batch.draw(spriteImage, 300, 300, 100, 100);
-		batch.end();
-
-		// Don't handle input this way – use event handlers!
-		if (Gdx.input.justTouched()) { // check for mouse click
-			System.out.println("Click!");
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) { // check for key press
-			Gdx.app.exit();
-		}
-
-		appListener.render();
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		// Called whenever the window is resized (including with its original site at
-		// startup)
-	}
-
-	@Override
-	public void pause() {
-	}
-
-	@Override
-	public void resume() {
+		super.dispose();
+		// Screen disposal is handled by Game class
 	}
 }
