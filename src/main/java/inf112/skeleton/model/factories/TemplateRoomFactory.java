@@ -15,7 +15,6 @@ public class TemplateRoomFactory implements RoomFactory {
 
     @Override
     public Room createRoom() {
-        // Pick a random template if multiple
         RoomTemplate template = templates[random.nextInt(templates.length)];
         return template.createRoom();
     }

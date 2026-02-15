@@ -1,40 +1,33 @@
 package inf112.skeleton.app;
 
-import org.lwjgl.system.Configuration;
-
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Os;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
+import org.lwjgl.system.Configuration;
+import inf112.skeleton.view.Menu.TitleScreen;
 
-import inf112.skeleton.controller.GameController;
+public class Main extends Game {
 
-public class Main implements ApplicationListener {
-	private SpriteBatch batch;
-	private BitmapFont font;
-	private Texture spriteImage;
-	private GameController appListener;
+	@Override
+	public void create() {
+		setScreen(new TitleScreen(this));
+	}
 
 	public static void main(String[] args) {
 		Main.class.getClassLoader().setDefaultAssertionStatus(true);
 
-		// Workaround for Mac OS problem
+		// MacOS GLFW workaround
 		if (SharedLibraryLoader.os == Os.MacOsX) {
 			Configuration.GLFW_LIBRARY_NAME.set("glfw_async");
 		}
+
+		// Setup window
 		Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
-		cfg.setTitle("Hello World Example");
 		cfg.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 
-		ApplicationListener appListener = new GameController();
+		ApplicationListener appListener = new GameController(); // Replace this with your own
 
 		new Lwjgl3Application(appListener, cfg);
 	}
