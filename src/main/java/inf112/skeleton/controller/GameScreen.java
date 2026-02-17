@@ -71,7 +71,6 @@ public class GameScreen implements Screen {
         gameView.updateCamera(player.getX(), player.getY());
         gameView.render(currentRoom);
 
-        // ESC to pause game
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new PauseScreen(game, this));
         }
@@ -87,25 +86,23 @@ public class GameScreen implements Screen {
         float newX = x;
         float newY = y;
 
-        float speed = player.getSpeed(); // pixels/second
+        float speed = player.getSpeed();
 
         if (player.isMovingUp())    newY += speed * dt;
         if (player.isMovingDown())  newY -= speed * dt;
         if (player.isMovingLeft())  newX -= speed * dt;
         if (player.isMovingRight()) newX += speed * dt;
 
-        // Kollisjon mot rommet
-        if (!currentRoom.isBlocked(newX, newY, tileSize)) {
+        if (!currentRoom.isBlocked(newX, newY, player.getWidth(), player.getHeight(), tileSize)) {
             player.setPosition(newX, newY);
             return;
         }
 
-        // "Slide" langs vegger
-        if (!currentRoom.isBlocked(newX, y, tileSize)) {
+        if (!currentRoom.isBlocked(newX, y, player.getWidth(), player.getHeight(), tileSize)) {
             player.setPosition(newX, y);
         }
-        if (!currentRoom.isBlocked(player.getX(), newY, tileSize)) {
-            player.setPosition(player.getX(), newY);
+        if (!currentRoom.isBlocked(x, newY, player.getWidth(), player.getHeight(), tileSize)) {
+            player.setPosition(x, newY);
         }
     }
 
@@ -124,7 +121,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
-        // Called when switching away from this screen
         Gdx.input.setInputProcessor(null);
     }
 

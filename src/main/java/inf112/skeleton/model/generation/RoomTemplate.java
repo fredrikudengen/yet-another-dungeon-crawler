@@ -13,7 +13,7 @@ public class RoomTemplate implements RoomFactory {
     public RoomTemplate(String[] pattern) {
         this.pattern = pattern;
         this.height = pattern.length;
-        this.width = pattern.length > 0 ? pattern[0].length() : 0;
+        this.width = pattern[0].length();
     }
 
     public Room createRoom() {

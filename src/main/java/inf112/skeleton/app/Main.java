@@ -29,13 +29,11 @@ public class Main extends Game {
 
 	@Override
 	public void create() {
-		// Start with title screen
 		setScreen(new TitleScreen(this));
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		// Screen disposal is handled by Game class
 	}
 }

@@ -36,9 +36,20 @@ public class Room {
         }
     }
 
-    public boolean isBlocked(double worldX, double worldY, int tileSize) {
+    public boolean isBlocked(double worldX, double worldY, float width, float height, int tileSize) {
+        return isTileBlocked(worldX, worldY, tileSize) || // nedre venstre
+                isTileBlocked(worldX + width, worldY, tileSize) || // nedre høyre
+                isTileBlocked(worldX,worldY + height, tileSize) || // øvre venstre
+                isTileBlocked(worldX + width,worldY + height, tileSize);   // øvre høyre
+    }
+
+    private boolean isTileBlocked(double worldX, double worldY, int tileSize) {
         int gridX = (int) (worldX / tileSize);
         int gridY = (int) (worldY / tileSize);
+
+        if (gridX < 0 || gridY < 0 || gridX >= width || gridY >= height) {
+            return true;
+        }
         return getTileAt(gridX, gridY).blocksMovement();
     }
 
