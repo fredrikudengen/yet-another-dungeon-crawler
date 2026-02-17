@@ -1,12 +1,25 @@
 package inf112.skeleton.model.entities;
 
+import inf112.skeleton.model.combat.AttackType;
+import inf112.skeleton.model.combat.Attack;
+import java.util.HashMap;
+import java.util.Map;
 import inf112.skeleton.model.world.GameWorld;
 
 public class Player extends Entity {
     private boolean movingLeft, movingRight, movingUp, movingDown;
+    private Map<AttackType, Attack> attacks;
+    private AttackType currentAttackType = AttackType.BASIC;
+    private float attackTimer = 0;
+    private boolean isAttacking = false;
+
 
     public Player(float x, float y) {
         super(x, y, 32, 32, 200);
+
+        attacks = new HashMap<>();
+        attacks.put(AttackType.BASIC, Attack.basicAttack());
+        attacks.put(AttackType.HEAVY, Attack.heavyAttack());
     }
 
     @Override
