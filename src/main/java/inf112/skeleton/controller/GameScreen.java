@@ -5,6 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 
+import inf112.skeleton.model.combat.Attack;
+import inf112.skeleton.model.entities.Enemy;
+import inf112.skeleton.model.entities.Entity;
 import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.factories.TemplateRoomFactory;
@@ -74,6 +77,61 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new PauseScreen(game, this));
         }
+    }
+
+    // Needs testing
+    private void handleAttack() {
+        if (player.isAttacking() && player.getCurrentAttack().canUse()) {
+            Attack attack = player.getCurrentAttack();
+
+            float attackX = player.getX();
+            float attackY = player.getY();
+            float attackWidth = attack.getRange();
+            float attackHeight = player.getHeight();
+
+            // Hitbox logic
+            switch (player.getFacingDirection()) {
+                case RIGHT:
+                    attackX = player.getX() + player.getWidth();
+                    attackWidth = attack.getRange();
+                    break;
+                case LEFT:
+                    attackX = player.getX() - player.getWidth();
+                    attackWidth = attack.getRange();
+                    break;
+                case UP:
+                    attackY = player.getY() + player.getHeight();
+                    attackHeight = attack.getRange();
+                    attackWidth = player.getWidth();
+                    break;
+                case DOWN:
+                    attackY = player.getY() - player.getHeight();
+                    attackHeight = attack.getRange();
+                    attackWidth = player.getWidth();
+                    break;
+            }
+
+            // Check collision
+            for (Entity entity : currentRoom.getEntities()) {
+                if (entity instanceof Enemy) {
+                    if (attackX < entity.getX() + entity.getWidth() &&
+                        attackX + attackWidth > entity.getX() &&
+                        attackY < entity.getY() + entity.getHeight() &&
+                        attackY + attackHeight > entity.getY()) {
+
+                        applyDamageToEnemy((Enemy) entity, attack);
+                    }
+                }
+            }
+        }
+    }
+
+    // Needs testing
+    private void applyDamageToEnemy(Enemy enemy, Attack attack) {
+        System.out.println("Hit enemy for " + attack.getDamage() + " damage!");
+
+        // TODO: Implement actual damage and enemy death
+
     }
 
     private void handleInputAndMovePlayer() {
