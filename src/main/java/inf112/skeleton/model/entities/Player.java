@@ -24,15 +24,48 @@ public class Player extends Entity {
 
     @Override
     public void step(GameWorld world, double deltaTime) {
-        velocityX = 0;
-        velocityY = 0;
-        if (movingLeft)  velocityX -= speed;
-        if (movingRight) velocityX += speed;
-        if (movingUp)    velocityY += speed;
-        if (movingDown)  velocityY -= speed;
 
-        updatePosition(deltaTime);
+        for (Attack attack : attacks.values()) {
+            attack.update((float) deltaTime);
+        }
+
+        if (isAttacking) {
+            attackTimer += (float) deltaTime;
+            if (attackTimer > 0.2f) {
+                isAttacking = false;
+                attackTimer = 0;
+            }
+        }
+
+        if (!isAttacking) {
+            velocityX = 0;
+            velocityY = 0;
+            if (movingLeft)  velocityX -= speed;
+            if (movingRight) velocityX += speed;
+            if (movingUp)    velocityY += speed;
+            if (movingDown)  velocityY -= speed;
+
+            updatePosition(deltaTime);
+        }
+
     }
+
+    public void performAttack(AttackType attackType) {
+        Attack attack = attacks.get(attackType);
+
+        if (attack != null && attack.canUse() && !isAttacking) {
+            attack.use();
+            isAttacking = true;
+            attackTimer = 0;
+            currentAttackType = attackType;
+        }
+    }
+
+    // Mulig at å håndtere hvilken vei spilleren er vendt mot er bedre håndtert med enum enn booleans?
+    public boolean facingLeft() { return movingLeft; }
+    public boolean facingRight() { return movingRight; }
+    public boolean facingUp() { return movingUp; }
+    public boolean facingDown() { return movingDown; }
 
     @Override
     public String getTextureName() {
