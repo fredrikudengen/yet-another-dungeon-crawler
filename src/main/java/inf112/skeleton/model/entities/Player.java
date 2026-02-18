@@ -1,5 +1,6 @@
 package inf112.skeleton.model.entities;
 
+import inf112.skeleton.model.Direction;
 import inf112.skeleton.model.combat.AttackType;
 import inf112.skeleton.model.combat.Attack;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import inf112.skeleton.model.world.GameWorld;
 public class Player extends Entity {
     private boolean movingLeft, movingRight, movingUp, movingDown;
     private Map<AttackType, Attack> attacks;
+    private Direction facingDirection = Direction.RIGHT; // Default direction
     private AttackType currentAttackType = AttackType.BASIC;
     private float attackTimer = 0;
     private boolean isAttacking = false;
@@ -37,6 +39,8 @@ public class Player extends Entity {
             }
         }
 
+        updateFacingDirection();
+
         if (!isAttacking) {
             velocityX = 0;
             velocityY = 0;
@@ -50,6 +54,19 @@ public class Player extends Entity {
 
     }
 
+    private void updateFacingDirection() {
+        if (movingLeft) facingDirection = Direction.LEFT;
+        else if (movingRight) facingDirection = Direction.RIGHT;
+        else if (movingUp) facingDirection = Direction.UP;
+        else if (movingDown) facingDirection = Direction.DOWN;
+    }
+
+    public Direction getFacingDirection() { return facingDirection; }
+
+    public boolean isAttacking() { return isAttacking; }
+
+    public Attack getCurrentAttack() { return attacks.get(currentAttackType); }
+
     public void performAttack(AttackType attackType) {
         Attack attack = attacks.get(attackType);
 
@@ -60,12 +77,6 @@ public class Player extends Entity {
             currentAttackType = attackType;
         }
     }
-
-    // Mulig at å håndtere hvilken vei spilleren er vendt mot er bedre håndtert med enum enn booleans?
-    public boolean facingLeft() { return movingLeft; }
-    public boolean facingRight() { return movingRight; }
-    public boolean facingUp() { return movingUp; }
-    public boolean facingDown() { return movingDown; }
 
     @Override
     public String getTextureName() {

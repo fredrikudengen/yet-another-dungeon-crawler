@@ -49,4 +49,5 @@ public class Attack {
     public float getRange() { return range; }
     public float getKnockback() { return knockback; }
     public float getCooldownProgress() { return currentCooldown / cooldown; }
+
 }
