@@ -10,7 +10,6 @@ import inf112.skeleton.model.entities.Enemy;
 import inf112.skeleton.model.entities.Entity;
 import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.factories.RoomFactory;
-import inf112.skeleton.model.factories.TemplateRoomFactory;
 import inf112.skeleton.model.generation.RoomTemplate;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.GameView;
@@ -61,9 +60,7 @@ public class GameScreen implements Screen {
                 "#..................#",
                 "####################"
         };
-
-        RoomTemplate template = new RoomTemplate(pattern);
-        RoomFactory factory = new TemplateRoomFactory(template);
+        RoomFactory factory = new RoomTemplate(pattern);
         return factory.createRoom();
     }
 
