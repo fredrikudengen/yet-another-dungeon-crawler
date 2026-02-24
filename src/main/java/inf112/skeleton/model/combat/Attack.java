@@ -30,7 +30,7 @@ public class Attack {
 
     public void update(float deltaTime) {
         if (currentCooldown > 0) {
-            currentCooldown -= deltaTime;
+            currentCooldown = Math.max(0, currentCooldown - deltaTime);
         }
     }
 
