@@ -5,12 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 
-import inf112.skeleton.model.combat.Attack;
-import inf112.skeleton.model.entities.Enemy;
-import inf112.skeleton.model.entities.Entity;
+import inf112.skeleton.model.entities.FastEnemy;
 import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.generation.RoomTemplate;
+import inf112.skeleton.model.world.GameWorld;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.GameView;
 import inf112.skeleton.view.Menu.PauseScreen;
@@ -18,8 +17,9 @@ import inf112.skeleton.view.Menu.PauseScreen;
 public class GameScreen implements Screen {
     private Game game;
     private GameView gameView;
-    private Room currentRoom;
+    private GameWorld gameWorld;
     private Player player;
+    private FastEnemy fastEnemy;
     private PlayerInputHandler playerInputHandler;
 
     public GameScreen(Game game) {
@@ -29,15 +29,19 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         gameView = new GameView();
-        player = new Player(200, 200);
         gameView.create(1280, 768);
 
-        // Input via InputProcessor
+        Room room = createExampleRoom();
+        gameWorld = new GameWorld(room);
+
+        player = new Player(200, 200);
+        gameWorld.addEntity(player);
+
+        fastEnemy = new FastEnemy(300, 300, 32, 32, 48, player);
+        gameWorld.addEntity(fastEnemy);
+
         playerInputHandler = new PlayerInputHandler(player);
         Gdx.input.setInputProcessor(playerInputHandler);
-
-        currentRoom = createExampleRoom();
-        currentRoom.addEntity(player);
 
         gameView.updateCamera(player.getX(), player.getY());
     }
@@ -66,98 +70,14 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        handleInputAndMovePlayer();
+        gameWorld.step(delta);
 
         gameView.updateCamera(player.getX(), player.getY());
-        gameView.render(currentRoom);
+
+        gameView.render(gameWorld.getRoom(), gameWorld.getEntities());
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new PauseScreen(game, this));
-        }
-    }
-
-    // Needs testing
-    private void handleAttack() {
-        if (player.isAttacking() && player.getCurrentAttack().canUse()) {
-            Attack attack = player.getCurrentAttack();
-
-            float attackX = player.getX();
-            float attackY = player.getY();
-            float attackWidth = attack.getRange();
-            float attackHeight = player.getHeight();
-
-            // Hitbox logic
-            switch (player.getFacingDirection()) {
-                case RIGHT:
-                    attackX = player.getX() + player.getWidth();
-                    attackWidth = attack.getRange();
-                    break;
-                case LEFT:
-                    attackX = player.getX() - player.getWidth();
-                    attackWidth = attack.getRange();
-                    break;
-                case UP:
-                    attackY = player.getY() + player.getHeight();
-                    attackHeight = attack.getRange();
-                    attackWidth = player.getWidth();
-                    break;
-                case DOWN:
-                    attackY = player.getY() - player.getHeight();
-                    attackHeight = attack.getRange();
-                    attackWidth = player.getWidth();
-                    break;
-            }
-
-            // Check collision
-            for (Entity entity : currentRoom.getEntities()) {
-                if (entity instanceof Enemy) {
-                    if (attackX < entity.getX() + entity.getWidth() &&
-                        attackX + attackWidth > entity.getX() &&
-                        attackY < entity.getY() + entity.getHeight() &&
-                        attackY + attackHeight > entity.getY()) {
-
-                        applyDamageToEnemy((Enemy) entity, attack);
-                    }
-                }
-            }
-        }
-    }
-
-    // Needs testing
-    private void applyDamageToEnemy(Enemy enemy, Attack attack) {
-        System.out.println("Hit enemy for " + attack.getDamage() + " damage!");
-
-        // TODO: Implement actual damage and enemy death
-
-    }
-
-    private void handleInputAndMovePlayer() {
-        float dt = Gdx.graphics.getDeltaTime();
-        int tileSize = gameView.getTileSize();
-
-        float x = player.getX();
-        float y = player.getY();
-
-        float newX = x;
-        float newY = y;
-
-        float speed = player.getSpeed();
-
-        if (player.isMovingUp())    newY += speed * dt;
-        if (player.isMovingDown())  newY -= speed * dt;
-        if (player.isMovingLeft())  newX -= speed * dt;
-        if (player.isMovingRight()) newX += speed * dt;
-
-        if (!currentRoom.isBlocked(newX, newY, player.getWidth(), player.getHeight(), tileSize)) {
-            player.setPosition(newX, newY);
-            return;
-        }
-
-        if (!currentRoom.isBlocked(newX, y, player.getWidth(), player.getHeight(), tileSize)) {
-            player.setPosition(newX, y);
-        }
-        if (!currentRoom.isBlocked(x, newY, player.getWidth(), player.getHeight(), tileSize)) {
-            player.setPosition(x, newY);
         }
     }
 
@@ -167,12 +87,10 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-    }
+    public void resume() {}
 
     @Override
     public void hide() {

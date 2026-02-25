@@ -35,10 +35,5 @@ public abstract class Entity implements Collidable {
 
     public abstract void step(GameWorld world, double deltaTime);
 
-    public void updatePosition(double deltaTime) {
-        x += velocityX * deltaTime;
-        y += velocityY * deltaTime;
-    }
-
     public abstract String getTextureName();
 }

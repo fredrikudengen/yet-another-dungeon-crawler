@@ -8,9 +8,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import inf112.skeleton.model.entities.Entity;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.render.WorldRenderer;
 import inf112.skeleton.view.render.EntityRenderer;
+
+import java.util.List;
 
 /**
  * Example GameView showing how to integrate WorldRenderer.
@@ -47,29 +50,16 @@ public class GameView {
         Gdx.graphics.setForegroundFPS(60);
     }
 
-    /**
-     * Main render method called every frame.
-     *
-     * @param currentRoom The room currently being displayed
-     */
-    public void render(Room currentRoom) {
-        // Clear the screen
+    public void render(Room room, List<Entity> entities) {
         ScreenUtils.clear(Color.BLACK);
 
-        // Begin drawing
         batch.begin();
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
         try {
-            // 1. Draw the room tiles (background layer)
-            worldRenderer.render(currentRoom);
+            worldRenderer.render(room);
 
-            // 2. Draw entities (player, enemies, items)
-            entityRenderer.render(currentRoom.getEntities());
-
-            // 3. Draw UI elements (health bar, etc.)
-            // This would typically use a separate UI camera/viewport
-            // drawUI();
+            entityRenderer.render(entities);
 
         } finally {
             batch.end();

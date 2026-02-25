@@ -6,6 +6,7 @@ import inf112.skeleton.model.combat.Attack;
 import java.util.HashMap;
 import java.util.Map;
 import inf112.skeleton.model.world.GameWorld;
+import inf112.skeleton.model.world.Room;
 
 public class Player extends Entity {
     private boolean movingLeft, movingRight, movingUp, movingDown;
@@ -26,32 +27,30 @@ public class Player extends Entity {
 
     @Override
     public void step(GameWorld world, double deltaTime) {
+        velocityX = 0;
+        velocityY = 0;
+        if (movingLeft)  velocityX -= speed;
+        if (movingRight) velocityX += speed;
+        if (movingUp)    velocityY += speed;
+        if (movingDown)  velocityY -= speed;
 
-        for (Attack attack : attacks.values()) {
-            attack.update((float) deltaTime);
+        float newX = x + velocityX * (float)deltaTime;
+        float newY = y + velocityY * (float)deltaTime;
+
+        Room room = world.getRoom();
+        int tileSize = 32;
+
+        if (!room.isBlocked(newX, newY, width, height, tileSize)) {
+            setPosition(newX, newY);
+            return;
         }
 
-        if (isAttacking) {
-            attackTimer += (float) deltaTime;
-            if (attackTimer > 0.2f) {
-                isAttacking = false;
-                attackTimer = 0;
-            }
+        if (!room.isBlocked(newX, y, width, height, tileSize)) {
+            setPosition(newX, y);
         }
-
-        updateFacingDirection();
-
-        if (!isAttacking) {
-            velocityX = 0;
-            velocityY = 0;
-            if (movingLeft)  velocityX -= speed;
-            if (movingRight) velocityX += speed;
-            if (movingUp)    velocityY += speed;
-            if (movingDown)  velocityY -= speed;
-
-            updatePosition(deltaTime);
+        if (!room.isBlocked(x, newY, width, height, tileSize)) {
+            setPosition(x, newY);
         }
-
     }
 
     private void updateFacingDirection() {

@@ -1,40 +1,54 @@
 package inf112.skeleton.model.world;
 
 import inf112.skeleton.model.entities.Entity;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class GameWorld implements Iterable<Entity> {
-    double width;
-    double height;
-    double currentTime = 0;
-    List<Entity> entities = new ArrayList<>();
+    private Room room;
+    private List<Entity> entities;
+    private double currentTime;
 
-    public GameWorld(double width, double height) {
-        super();
-        this.width = width;
-        this.height = height;
+    public GameWorld(Room room) {
+        this.room = room;
+        this.entities = new ArrayList<>();
+        this.currentTime = 0;
+    }
+
+    public void step(double deltaTime) {
+        currentTime += deltaTime;
+
+        for (Entity entity : entities) {
+            entity.step(this, deltaTime);
+        }
+
+        // TODO: Sjekk entity-til-entity kollisjon
+        // TODO: Fjern døde entities
+    }
+
+    public void addEntity(Entity entity) {
+        entities.add(entity);
+    }
+
+    public void removeEntity(Entity entity) {
+        entities.remove(entity);
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public double getCurrentTime() {
+        return currentTime;
     }
 
     @Override
     public Iterator<Entity> iterator() {
         return entities.iterator();
-    }
-
-    public void step(double deltaTime, String direction) {
-        currentTime += deltaTime;
-        for (Entity entity : entities) {
-            entity.step(this, deltaTime);
-        }
-    }
-
-    public double width() {
-        return width;
-    }
-
-    public void add(Entity entity) {
-        entities.add(entity);
     }
 }
