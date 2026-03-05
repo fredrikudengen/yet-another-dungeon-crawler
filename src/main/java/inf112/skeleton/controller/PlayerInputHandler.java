@@ -4,10 +4,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import inf112.skeleton.model.entities.Player;
 
-public class InputHandler extends InputAdapter {
+public class PlayerInputHandler extends InputAdapter {
     private final Player player;
 
-    public InputHandler(Player player) {
+    public PlayerInputHandler(Player player) {
         this.player = player;
     }
 

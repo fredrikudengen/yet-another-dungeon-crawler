@@ -16,7 +16,6 @@ public class Room {
         this.tiles = new TileType[width][height];
         this.entities = new ArrayList<>();
 
-        // Initialize all tiles to FLOOR
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 tiles[x][y] = TileType.FLOOR;
@@ -26,7 +25,7 @@ public class Room {
 
     public TileType getTileAt(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) {
-            return TileType.WALL; // Out of bounds treated as wall
+            return TileType.WALL;
         }
         return tiles[x][y];
     }
@@ -37,29 +36,21 @@ public class Room {
         }
     }
 
-    public boolean isBlocked(double worldX, double worldY, int tileSize) {
+    public boolean isBlocked(double worldX, double worldY, float width, float height, int tileSize) {
+        return isTileBlocked(worldX, worldY, tileSize) || // nedre venstre
+                isTileBlocked(worldX + width, worldY, tileSize) || // nedre høyre
+                isTileBlocked(worldX,worldY + height, tileSize) || // øvre venstre
+                isTileBlocked(worldX + width,worldY + height, tileSize);   // øvre høyre
+    }
+
+    private boolean isTileBlocked(double worldX, double worldY, int tileSize) {
         int gridX = (int) (worldX / tileSize);
         int gridY = (int) (worldY / tileSize);
+
+        if (gridX < 0 || gridY < 0 || gridX >= width || gridY >= height) {
+            return true;
+        }
         return getTileAt(gridX, gridY).blocksMovement();
-    }
-
-    public void fillWith(TileType type) {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                tiles[x][y] = type;
-            }
-        }
-    }
-
-    public void createPerimeterWalls() {
-        for (int x = 0; x < width; x++) {
-            tiles[x][0] = TileType.WALL;
-            tiles[x][height - 1] = TileType.WALL;
-        }
-        for (int y = 0; y < height; y++) {
-            tiles[0][y] = TileType.WALL;
-            tiles[width - 1][y] = TileType.WALL;
-        }
     }
 
     public void addEntity(Entity entity) {

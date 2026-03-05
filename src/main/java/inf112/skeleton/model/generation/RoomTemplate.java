@@ -1,9 +1,11 @@
 package inf112.skeleton.model.generation;
 
+import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.model.world.TileType;
 
-public class RoomTemplate {
+
+public class RoomTemplate implements RoomFactory {
     private final String[] pattern;
     private final int width;
     private final int height;
@@ -11,7 +13,7 @@ public class RoomTemplate {
     public RoomTemplate(String[] pattern) {
         this.pattern = pattern;
         this.height = pattern.length;
-        this.width = pattern.length > 0 ? pattern[0].length() : 0;
+        this.width = pattern[0].length();
     }
 
     public Room createRoom() {
@@ -33,13 +35,5 @@ public class RoomTemplate {
             case '#' -> TileType.WALL;
             default -> TileType.FLOOR;
         };
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 }

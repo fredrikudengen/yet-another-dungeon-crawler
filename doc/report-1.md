@@ -1,11 +1,10 @@
 # Rapport – innlevering 1
-**Team:** *Sprite Zero* – *Kim Harry Huynh, Guangwei Zhang, Fredrik Udengen, Njål Nordal, Leila Lu*...
+**Team:** *Sprite Zero* – *Kim Harry Huynh, Guangwei Zhang, Fredrik Udengen, Njål Nordal, Leila Lu*
 
 
 Team/prosjekt: 
 
 - Rollene i teamet fungerer veldig bra. Vi har kartlagt våre kompetanser, styrker og svakheter så vi vet hvordan å forholde seg til hverandre. 
-# TODO: finn ut hva som menes med teamlead eller kundekontakt
 
 - Fredrik er prosjektleder, han står for spillogikk og koden. Han og njål kom med ideer til spillet, så de vil naturligvis ha mer ansvar for utviklingen av spillet. Guang sitt hovedansvar er å designe karakterer, powerups, etc. ved å bruke sprite. Kim skal bistå og jobber med romutvikling for spillet. Leila er Git-master og har ansvar for å skrive rapportene, referatene og at kravene blir møtt. Njål skal jobbe med spillfunksjonaliteten og jobber tett med Guang og Kim for å få tegnet riktige trekk på karakterene (farge, størrelse, tema). Per nå er det lite delegering av arbeidsoppgaver og mer forståelse for prosjektet og kommunikasjon innad teamet for å passe på at vi alle er på samme side. 
 
