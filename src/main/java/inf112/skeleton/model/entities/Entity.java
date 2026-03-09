@@ -27,11 +27,13 @@ public abstract class Entity implements Collidable {
     @Override
     public float getHeight() { return height; }
 
-    public int getSpeed() { return speed; }
-
     public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
     }
 
     public abstract void step(GameWorld world, double deltaTime);

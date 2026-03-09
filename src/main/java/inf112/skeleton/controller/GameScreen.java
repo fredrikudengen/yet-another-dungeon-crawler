@@ -38,7 +38,7 @@ public class GameScreen implements Screen {
         player = new Player(200, 200);
         gameWorld.addEntity(player);
 
-        fastEnemy = new FastEnemy(300, 300, 32, 32, 48, 2, player);
+        fastEnemy = new FastEnemy(300, 300, 32, 32, 48, 3, player);
         gameWorld.addEntity(fastEnemy);
 
         playerInputHandler = new PlayerInputHandler(player);

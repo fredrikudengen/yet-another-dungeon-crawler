@@ -23,19 +23,13 @@ public class GameWorld implements Iterable<Entity> {
 
         for (Entity entity : entities) {
             entity.step(this, deltaTime);
-
-            if (entity.getHealth() <= 0) {
-                removeEntity(entity);
-            }
         }
+
+        entities.removeIf(entity -> entity.getHealth() <= 0);
     }
 
     public void addEntity(Entity entity) {
         entities.add(entity);
-    }
-
-    public void removeEntity(Entity entity) {
-        entities.remove(entity);
     }
 
     public List<Entity> getEntities() {

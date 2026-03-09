@@ -3,6 +3,7 @@ package inf112.skeleton.controller;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import inf112.skeleton.model.entities.Player;
+import inf112.skeleton.model.Direction;
 
 public class PlayerInputHandler extends InputAdapter {
     private final Player player;
@@ -14,10 +15,15 @@ public class PlayerInputHandler extends InputAdapter {
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
-            case Input.Keys.A, Input.Keys.LEFT -> player.setMovingLeft(true);
-            case Input.Keys.D, Input.Keys.RIGHT -> player.setMovingRight(true);
-            case Input.Keys.W, Input.Keys.UP -> player.setMovingUp(true);
-            case Input.Keys.S, Input.Keys.DOWN -> player.setMovingDown(true);
+            case Input.Keys.A -> player.setMovingLeft(true);
+            case Input.Keys.D -> player.setMovingRight(true);
+            case Input.Keys.W -> player.setMovingUp(true);
+            case Input.Keys.S -> player.setMovingDown(true);
+
+            case Input.Keys.UP -> player.performAttack(Direction.UP);
+            case Input.Keys.DOWN -> player.performAttack(Direction.DOWN);
+            case Input.Keys.LEFT -> player.performAttack(Direction.LEFT);
+            case Input.Keys.RIGHT -> player.performAttack(Direction.RIGHT);
         }
         return true;
     }
@@ -25,10 +31,10 @@ public class PlayerInputHandler extends InputAdapter {
     @Override
     public boolean keyUp(int keycode) {
         switch (keycode) {
-            case Input.Keys.A, Input.Keys.LEFT -> player.setMovingLeft(false);
-            case Input.Keys.D, Input.Keys.RIGHT -> player.setMovingRight(false);
-            case Input.Keys.W, Input.Keys.UP -> player.setMovingUp(false);
-            case Input.Keys.S, Input.Keys.DOWN -> player.setMovingDown(false);
+            case Input.Keys.A -> player.setMovingLeft(false);
+            case Input.Keys.D -> player.setMovingRight(false);
+            case Input.Keys.W -> player.setMovingUp(false);
+            case Input.Keys.S -> player.setMovingDown(false);
         }
         return true;
     }

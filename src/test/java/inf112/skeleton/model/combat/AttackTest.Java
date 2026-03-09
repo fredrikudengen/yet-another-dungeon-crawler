@@ -11,7 +11,7 @@ class AttackTest {
 
     @BeforeEach
     void setUp() {
-        attack = new Attack(AttackType.BASIC, 10, 2.0f, 50f, 5f);
+        attack = new Attack(10, 2.0f, 50f, 5f);
     }
 
 
@@ -81,13 +81,8 @@ class AttackTest {
 
 
     @Test
-    void testGetType() {
-        assertEquals(AttackType.BASIC, attack.getType());
-    }
-
-    @Test
     void testGetDamage() {
-        assertEquals(10, attack.getDamage());
+        assertEquals(1, attack.getDamage());
     }
 
     @Test
@@ -102,45 +97,13 @@ class AttackTest {
 
 
     @Test
-    void testBasicAttackFactory() {
-        Attack basic = Attack.basicAttack();
-        assertEquals(AttackType.BASIC, basic.getType());
-        assertEquals(10, basic.getDamage());
+    void testAttackFactory() {
+        Attack basic = Attack.attack();
+        assertEquals(1, basic.getDamage());
         assertEquals(50f, basic.getRange(), 0.001f);
         assertEquals(5f, basic.getKnockback(), 0.001f);
         assertTrue(basic.canUse());
     }
 
-    @Test
-    void testHeavyAttackFactory() {
-        Attack heavy = Attack.heavyAttack();
-        assertEquals(AttackType.HEAVY, heavy.getType());
-        assertEquals(20, heavy.getDamage());
-        assertEquals(50f, heavy.getRange(), 0.001f);
-        assertEquals(10f, heavy.getKnockback(), 0.001f);
-        assertTrue(heavy.canUse());
-    }
 
-    @Test
-    void testPowerupAttackFactory() {
-        Attack powerup = Attack.powerupAttack();
-        assertEquals(AttackType.POWERUP, powerup.getType());
-        assertEquals(40, powerup.getDamage());
-        assertEquals(75f, powerup.getRange(), 0.001f);
-        assertEquals(25f, powerup.getKnockback(), 0.001f);
-        assertTrue(powerup.canUse());
-    }
-
-    @Test
-    void testHeavyAttackHasHigherCooldownThanBasic() {
-        Attack basic = Attack.basicAttack();
-        Attack heavy = Attack.heavyAttack();
-        basic.use();
-        heavy.use();
-        // Advance by 0.5s – just enough to clear basicAttack's 0.5s cooldown. Update this test if you change cooldowns.
-        basic.update(0.5f);
-        heavy.update(0.5f);
-        assertTrue(basic.canUse(), "basic attack should be ready after 0.5s");
-        assertFalse(heavy.canUse(), "heavy attack should still be on cooldown after 0.5s");
-    }
 }

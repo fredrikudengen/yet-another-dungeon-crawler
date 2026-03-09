@@ -1,28 +1,23 @@
 package inf112.skeleton.model.entities;
 
 import inf112.skeleton.model.Direction;
-import inf112.skeleton.model.combat.AttackType;
 import inf112.skeleton.model.combat.Attack;
-import java.util.HashMap;
-import java.util.Map;
 import inf112.skeleton.model.world.GameWorld;
 import inf112.skeleton.model.world.Room;
 
 public class Player extends Entity {
     private boolean movingLeft, movingRight, movingUp, movingDown;
-    private Map<AttackType, Attack> attacks;
-    private Direction facingDirection = Direction.RIGHT; // Default direction
-    private AttackType currentAttackType = AttackType.BASIC;
+    private Attack attack;
+    private Direction facingDirection = Direction.RIGHT;
     private float attackTimer = 0;
     private boolean isAttacking = false;
+    private boolean hasCheckedHits = false;
+    private static final float ATTACK_DURATION = 0.2f; // used in animation
 
 
     public Player(float x, float y) {
         super(x, y, 32, 32, 200, 3);
-
-        attacks = new HashMap<>();
-        attacks.put(AttackType.BASIC, Attack.basicAttack());
-        attacks.put(AttackType.HEAVY, Attack.heavyAttack());
+        this.attack = Attack.attack();
     }
 
     @Override
@@ -34,6 +29,8 @@ public class Player extends Entity {
         if (movingUp)    velocityY += speed;
         if (movingDown)  velocityY -= speed;
 
+        updateFacingDirection();
+
         float newX = x + velocityX * (float)deltaTime;
         float newY = y + velocityY * (float)deltaTime;
 
@@ -42,15 +39,31 @@ public class Player extends Entity {
 
         if (!room.isBlocked(newX, newY, width, height, tileSize)) {
             setPosition(newX, newY);
-            return;
+            } else {
+            if (!room.isBlocked(newX, y, width, height, tileSize)) {
+                setPosition(newX, y);
+            }
+            if (!room.isBlocked(x, newY, width, height, tileSize)) {
+                setPosition(x, newY);
+            }
         }
 
-        if (!room.isBlocked(newX, y, width, height, tileSize)) {
-            setPosition(newX, y);
+        if (isAttacking) {
+            attackTimer += (float)deltaTime;
+
+            if (!hasCheckedHits) {
+                checkAttackHits(world);
+                hasCheckedHits = true;
+            }
+
+            if (attackTimer >= ATTACK_DURATION) {
+                isAttacking = false;
+                attackTimer = 0;
+                hasCheckedHits = false;
+            }
         }
-        if (!room.isBlocked(x, newY, width, height, tileSize)) {
-            setPosition(x, newY);
-        }
+
+        attack.update((float)deltaTime);
     }
 
     private void updateFacingDirection() {
@@ -60,20 +73,52 @@ public class Player extends Entity {
         else if (movingDown) facingDirection = Direction.DOWN;
     }
 
-    public Direction getFacingDirection() { return facingDirection; }
+    private void checkAttackHits(GameWorld world) {
+        float range = attack.getRange();
 
-    public boolean isAttacking() { return isAttacking; }
+        for (Entity entity : world.getEntities()) {
+            if (entity instanceof Enemy && entity != this) {
 
-    public Attack getCurrentAttack() { return attacks.get(currentAttackType); }
+                if (isEnemyInAttackRange(entity, range)) {
+                    entity.takeDamage(attack.getDamage());
+                    System.out.print("Enemy hit!");
+                    // TODO Apply knockback based on currentAttack.getKnockback()
+                }
+            }
+        }
+    }
 
-    public void performAttack(AttackType attackType) {
-        Attack attack = attacks.get(attackType);
+    private boolean isEnemyInAttackRange(Entity entity, float range) {
+        float dx = entity.getX() - x;
+        float dy = entity.getY() - y;
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
 
+        if (distance > range) {
+            return false;
+        }
+
+        // cone-shaped attack area
+        switch (facingDirection) {
+            case UP:
+                return dy > 0 && Math.abs(dx) < range / 2;
+            case DOWN:
+                return dy < 0 && Math.abs(dx) < range / 2;
+            case LEFT:
+                return dx < 0 && Math.abs(dy) < range / 2;
+            case RIGHT:
+                return dx > 0 && Math.abs(dy) < range / 2;
+            default:
+                return false;
+        }
+    }
+
+    public void performAttack(Direction direction) {
         if (attack != null && attack.canUse() && !isAttacking) {
             attack.use();
             isAttacking = true;
             attackTimer = 0;
-            currentAttackType = attackType;
+            facingDirection = direction;
+            hasCheckedHits = false;
         }
     }
 
