@@ -18,19 +18,22 @@ public class Enemy extends Entity {
             this.onCollision(player);
         }
 
-        float xNeededToMove = player.getX() - x;
-        float yNeededToMove = player.getY() - y;
+        float dx = player.getX() - x;
+        float dy = player.getY() - y;
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
 
-        velocityX = 0;
-        velocityY = 0;
-
-        if (xNeededToMove < 0)  velocityX -= speed;
-        if (xNeededToMove > 0) velocityX += speed;
-        if (yNeededToMove > 0)    velocityY += speed;
-        if (yNeededToMove < 0)  velocityY -= speed;
+        if (distance > 0) {
+            velocityX = (dx / distance) * speed;
+            velocityY = (dy / distance) * speed;
+        } else {
+            velocityX = 0;
+            velocityY = 0;
+        }
 
         float newX = x + velocityX * (float)deltaTime;
         float newY = y + velocityY * (float)deltaTime;
+
+        // TODO implement smarter enemy AI to walk around obstacles
 
         Room room = world.getRoom();
         int tileSize = 32;
