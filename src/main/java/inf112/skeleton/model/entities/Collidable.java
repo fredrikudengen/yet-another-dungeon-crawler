@@ -6,11 +6,14 @@ public interface Collidable {
     float getWidth();
     float getHeight();
 
-    // Default method - added in Java 8
     default boolean collidesWith(Collidable other) {
         return this.getX() < other.getX() + other.getWidth() &&
                 this.getX() + this.getWidth() > other.getX() &&
                 this.getY() < other.getY() + other.getHeight() &&
                 this.getY() + this.getHeight() > other.getY();
     }
+
+    default void onCollision(Entity entity) {
+        entity.health -= 1;
+    };
 }

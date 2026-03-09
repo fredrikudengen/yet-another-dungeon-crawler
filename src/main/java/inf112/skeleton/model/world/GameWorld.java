@@ -1,6 +1,8 @@
 package inf112.skeleton.model.world;
 
 import inf112.skeleton.model.entities.Entity;
+import inf112.skeleton.model.entities.Player;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,10 +23,11 @@ public class GameWorld implements Iterable<Entity> {
 
         for (Entity entity : entities) {
             entity.step(this, deltaTime);
-        }
 
-        // TODO: Sjekk entity-til-entity kollisjon
-        // TODO: Fjern døde entities
+            if (entity.getHealth() <= 0) {
+                removeEntity(entity);
+            }
+        }
     }
 
     public void addEntity(Entity entity) {

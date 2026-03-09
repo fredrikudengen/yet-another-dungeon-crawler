@@ -6,12 +6,13 @@ public abstract class Entity implements Collidable {
     protected float x, y, width, height, velocityX, velocityY;
     protected int health, speed;
 
-    public Entity(float x, float y, float width, float height, int speed) {
+    public Entity(float x, float y, float width, float height, int speed, int health) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.speed = speed;
+        this.health = health;
     }
 
     @Override
@@ -36,4 +37,8 @@ public abstract class Entity implements Collidable {
     public abstract void step(GameWorld world, double deltaTime);
 
     public abstract String getTextureName();
+
+    public int getHealth() {
+        return health;
+    }
 }

@@ -13,6 +13,7 @@ import inf112.skeleton.model.world.GameWorld;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.GameView;
 import inf112.skeleton.view.Menu.PauseScreen;
+import inf112.skeleton.view.Menu.TitleScreen;
 
 public class GameScreen implements Screen {
     private Game game;
@@ -37,7 +38,7 @@ public class GameScreen implements Screen {
         player = new Player(200, 200);
         gameWorld.addEntity(player);
 
-        fastEnemy = new FastEnemy(300, 300, 32, 32, 48, player);
+        fastEnemy = new FastEnemy(300, 300, 32, 32, 48, 2, player);
         gameWorld.addEntity(fastEnemy);
 
         playerInputHandler = new PlayerInputHandler(player);
@@ -71,6 +72,10 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         gameWorld.step(delta);
+
+        if (player.getHealth() <= 0) {
+            game.setScreen(new TitleScreen(game));
+        }
 
         gameView.updateCamera(player.getX(), player.getY());
 

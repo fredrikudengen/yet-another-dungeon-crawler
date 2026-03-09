@@ -18,7 +18,7 @@ public class Player extends Entity {
 
 
     public Player(float x, float y) {
-        super(x, y, 32, 32, 200);
+        super(x, y, 32, 32, 200, 3);
 
         attacks = new HashMap<>();
         attacks.put(AttackType.BASIC, Attack.basicAttack());

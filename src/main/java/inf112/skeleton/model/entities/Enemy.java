@@ -7,18 +7,23 @@ public class Enemy extends Entity {
 
     protected Player player;
 
-    public Enemy(float x, float y, float width, float height, int speed, Player player) {
-        super(x, y, width, height, speed);
+    public Enemy(float x, float y, float width, float height, int speed, int health, Player player) {
+        super(x, y, width, height, speed, health);
         this.player = player;
     }
 
     @Override
     public void step(GameWorld world, double deltaTime) {
+        if (this.collidesWith(player)) {
+            this.onCollision(player);
+        }
+
         float xNeededToMove = player.getX() - x;
         float yNeededToMove = player.getY() - y;
 
         velocityX = 0;
         velocityY = 0;
+
         if (xNeededToMove < 0)  velocityX -= speed;
         if (xNeededToMove > 0) velocityX += speed;
         if (yNeededToMove > 0)    velocityY += speed;
