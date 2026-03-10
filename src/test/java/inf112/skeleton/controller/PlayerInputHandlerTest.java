@@ -21,13 +21,13 @@ public class PlayerInputHandlerTest {
     @Test
     void testMoveUp() {
         // Simulate key press for up
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.UP);
+        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.W);
         
         // Check that movingUp is set to true
         assertTrue(player.isMovingUp());
         
         // Release the key
-        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.UP);
+        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.W);
         
         // Check that movingUp is set to false
         assertFalse(player.isMovingUp());
@@ -35,28 +35,28 @@ public class PlayerInputHandlerTest {
 
     @Test
     void testMoveDown() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.DOWN);
+        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.S);
         assertTrue(player.isMovingDown());
         
-        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.DOWN);
+        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.S);
         assertFalse(player.isMovingDown());
     }
 
     @Test
     void testMoveLeft() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.LEFT);
+        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.A);
         assertTrue(player.isMovingLeft());
         
-        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.LEFT);
+        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.A);
         assertFalse(player.isMovingLeft());
     }
 
     @Test
     void testMoveRight() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.RIGHT);
+        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.D);
         assertTrue(player.isMovingRight());
         
-        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.RIGHT);
+        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.D);
         assertFalse(player.isMovingRight());
     }
 
