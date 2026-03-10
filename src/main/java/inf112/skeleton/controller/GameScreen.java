@@ -8,7 +8,7 @@ import com.badlogic.gdx.Screen;
 import inf112.skeleton.model.entities.FastEnemy;
 import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.factories.RoomFactory;
-import inf112.skeleton.model.generation.RoomTemplate;
+import inf112.skeleton.model.generation.RoomLoader;
 import inf112.skeleton.model.world.GameWorld;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.GameView;
@@ -48,24 +48,7 @@ public class GameScreen implements Screen {
     }
 
     private Room createExampleRoom() {
-        String[] pattern = {
-                "####################",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "#..................#",
-                "####################"
-        };
-        RoomFactory factory = new RoomTemplate(pattern);
+        RoomFactory factory = new RoomLoader("rooms/room1.txt");
         return factory.createRoom();
     }
 
