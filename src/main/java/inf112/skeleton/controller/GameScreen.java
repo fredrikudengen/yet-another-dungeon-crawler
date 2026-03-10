@@ -48,7 +48,7 @@ public class GameScreen implements Screen {
     }
 
     private Room createExampleRoom() {
-        RoomFactory factory = new RoomLoader("rooms/room1.txt");
+        RoomFactory factory = new RoomLoader("rooms/room3.txt");
         return factory.createRoom();
     }
 
