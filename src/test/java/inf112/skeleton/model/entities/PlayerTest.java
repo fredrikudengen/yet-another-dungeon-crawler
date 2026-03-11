@@ -1,5 +1,104 @@
 package inf112.skeleton.model.entities;
 
-public class PlayerTest {
-    
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import inf112.skeleton.model.Direction;
+import inf112.skeleton.model.world.GameWorld;
+import inf112.skeleton.model.world.Room;
+
+class PlayerTest {
+
+    private Room room;
+    private GameWorld world;
+    private Player player;
+
+    @BeforeEach
+    void setUp() {
+        room = new Room(20, 20); // 640x640 px open floor room
+        world = new GameWorld(room);
+        player = new Player(300, 300);
+    }
+
+    @Test
+    void testGetTextureNameReturnsObligatorPng() {
+        assertEquals("obligator.png", player.getTextureName());
+    }
+
+    @Test
+    void testStepMovingRightIncreasesX() {
+        float initialX = player.getX();
+        player.setMovingRight(true);
+        player.step(world, 1.0);
+        assertTrue(player.getX() > initialX, "Moving right should increase X");
+    }
+
+    @Test
+    void testStepMovingLeftDecreasesX() {
+        float initialX = player.getX();
+        player.setMovingLeft(true);
+        player.step(world, 1.0);
+        assertTrue(player.getX() < initialX, "Moving left should decrease X");
+    }
+
+    @Test
+    void testStepMovingUpIncreasesY() {
+        float initialY = player.getY();
+        player.setMovingUp(true);
+        player.step(world, 1.0);
+        assertTrue(player.getY() > initialY, "Moving up should increase Y");
+    }
+
+    @Test
+    void testStepMovingDownDecreasesY() {
+        float initialY = player.getY();
+        player.setMovingDown(true);
+        player.step(world, 1.0);
+        assertTrue(player.getY() < initialY, "Moving down should decrease Y");
+    }
+
+    @Test
+    void testStepDoesNotMoveThroughRoomBoundary() {
+        Player nearEdge = new Player(580, 300);
+        nearEdge.setMovingRight(true);
+        nearEdge.step(world, 1.0);
+        assertEquals(580f, nearEdge.getX(), "Player should not move outside the room boundary");
+    }
+
+    @Test
+    void testPerformAttackDamagesEnemyInRange() {
+        Enemy enemy = new Enemy(360, 300, 32, 32, 50, 5, player);
+        world.addEntity(enemy);
+        int healthBefore = enemy.getHealth();
+        player.performAttack(Direction.RIGHT);
+        player.step(world, 0.1);
+        assertTrue(enemy.getHealth() < healthBefore, "Attack should damage an enemy within range");
+    }
+
+    @Test
+    void testMovingFlagsSettersAndGetters() {
+        player.setMovingLeft(true);
+        assertTrue(player.isMovingLeft());
+        player.setMovingRight(true);
+        assertTrue(player.isMovingRight());
+        player.setMovingUp(true);
+        assertTrue(player.isMovingUp());
+        player.setMovingDown(true);
+        assertTrue(player.isMovingDown());
+
+        player.setMovingLeft(false);
+        assertFalse(player.isMovingLeft());
+        player.setMovingRight(false);
+        assertFalse(player.isMovingRight());
+        player.setMovingUp(false);
+        assertFalse(player.isMovingUp());
+        player.setMovingDown(false);
+        assertFalse(player.isMovingDown());
+    }
+
+    @Test
+    void testCollidesWithReturnsTrueOnOverlap() {
+        Player other = new Player(310, 310);
+        assertTrue(player.collidesWith(other), "Overlapping players should collide");
+    }
 }
