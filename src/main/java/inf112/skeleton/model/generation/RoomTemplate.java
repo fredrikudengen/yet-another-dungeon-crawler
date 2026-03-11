@@ -20,12 +20,16 @@ public class RoomTemplate implements RoomFactory {
         Room room = new Room(width, height);
 
         for (int y = 0; y < height; y++) {
-            String row = pattern[y];
-            for (int x = 0; x < Math.min(width, row.length()); x++) {
+             String row = pattern[height - 1 - y]; // read from the bottom to match LibGDX's y = 0 at the bottom
+             for (int x = 0; x < Math.min(width, row.length()); x++) {
                 char c = row.charAt(x);
-                TileType type = charToTileType(c);
-                room.setTileAt(x, y, type);
-            }
+                room.setTileAt(x, y, charToTileType(c));
+
+                int tileSize = 32;
+
+                if (c == 'E') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.ENEMY));
+                if (c == 'P') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.PLAYER));
+             }
         }
         return room;
     }
