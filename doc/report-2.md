@@ -48,7 +48,7 @@ Når temaet er ferdig i den aktuelle branchen, sender de merge request til git m
 Google Docs brukes til referat. 
 
 ## Progresjon
-Implementert enemy og lagt til flere sprites. 
+Implementert enemy og lagt til flere sprites. Implementert .txt -> spill-map. 
 
 ## Mål
 Implementere musikk, lyder, rom, attack, interagere med enemy og gjøre/ta skade, grafikk
