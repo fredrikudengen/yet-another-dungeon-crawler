@@ -11,7 +11,7 @@ class AttackTest {
 
     @BeforeEach
     void setUp() {
-        attack = new Attack(10, 2.0f, 50f, 5f);
+        attack = new Attack(2.0f, 50f, 5f);
     }
 
 
@@ -77,12 +77,6 @@ class AttackTest {
         attack.update(1.0f);
         assertTrue(attack.canUse());
         assertEquals(0.0f, attack.getCooldownProgress(), 0.001f);
-    }
-
-
-    @Test
-    void testGetDamage() {
-        assertEquals(1, attack.getDamage());
     }
 
     @Test
