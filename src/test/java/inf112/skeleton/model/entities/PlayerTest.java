@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import inf112.skeleton.model.Direction;
 import inf112.skeleton.model.world.GameWorld;
 import inf112.skeleton.model.world.Room;
+import inf112.skeleton.model.entities.enemies.NormalEnemy;
+import inf112.skeleton.model.entities.enemies.Enemy;
 
 class PlayerTest {
 
@@ -15,14 +17,17 @@ class PlayerTest {
 
     @BeforeEach
     void setUp() {
-        room = new Room(20, 20); // 640x640 px open floor room
+        room = new Room(20, 20);
         world = new GameWorld(room);
         player = new Player(300, 300);
+        // Sett health manuelt for tester
+        player.health = 5;
     }
 
     @Test
     void testGetTextureNameReturnsObligatorPng() {
-        assertEquals("obligator.png", player.getTextureName());
+        assertEquals("src/main/resources/Player/Weapon1/Walk/Player_walk_weapon1_up1.png", 
+            player.getTextureName());
     }
 
     @Test
@@ -67,12 +72,16 @@ class PlayerTest {
 
     @Test
     void testPerformAttackDamagesEnemyInRange() {
-        Enemy enemy = new Enemy(360, 300, 32, 32, 50, 5, player);
+        // Bruk NormalEnemy i stedet for abstrakt Enemy
+        Enemy enemy = new NormalEnemy(350, 300, player);
         world.addEntity(enemy);
+        
         int healthBefore = enemy.getHealth();
         player.performAttack(Direction.RIGHT);
-        player.step(world, 0.1);
-        assertTrue(enemy.getHealth() < healthBefore, "Attack should damage an enemy within range");
+        player.step(world, 0.1); // Gir tid for attack å prosessere
+        
+        assertTrue(enemy.getHealth() < healthBefore, 
+            "Attack should damage an enemy within range");
     }
 
     @Test
@@ -100,5 +109,12 @@ class PlayerTest {
     void testCollidesWithReturnsTrueOnOverlap() {
         Player other = new Player(310, 310);
         assertTrue(player.collidesWith(other), "Overlapping players should collide");
+    }
+
+    @Test
+    void testTakeDamageReducesHealth() {
+        int initialHealth = player.getHealth();
+        player.takeDamage(2);
+        assertEquals(initialHealth - 2, player.getHealth());
     }
 }
