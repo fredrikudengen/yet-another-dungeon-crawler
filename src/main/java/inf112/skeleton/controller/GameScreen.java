@@ -5,10 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 
-import inf112.skeleton.model.entities.FastEnemy;
-import inf112.skeleton.model.entities.HealthPowerup;
+import inf112.skeleton.model.entities.enemies.FastEnemy;
+import inf112.skeleton.model.entities.enemies.NormalEnemy;
+import inf112.skeleton.model.entities.enemies.SlowEnemy;
+import inf112.skeleton.model.entities.powerups.AttackPowerup;
+import inf112.skeleton.model.entities.powerups.HealthPowerup;
 import inf112.skeleton.model.entities.Player;
-import inf112.skeleton.model.entities.SpeedPowerup;
+import inf112.skeleton.model.entities.powerups.SpeedPowerup;
 import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.generation.RoomLoader;
 import inf112.skeleton.model.generation.SpawnPoint;
@@ -48,8 +51,23 @@ public class GameScreen implements Screen {
             }
         }
         for (SpawnPoint sp : room.getSpawnPoints()) {
-            if (sp.type == SpawnPoint.Type.ENEMY) {
-                gameWorld.addEntity(new FastEnemy(sp.x, sp.y, 32, 32, 48, 3, player));
+            if (sp.type == SpawnPoint.Type.FASTENEMY) {
+                gameWorld.addEntity(new FastEnemy(sp.x, sp.y, player));
+            }
+            else if (sp.type == SpawnPoint.Type.NORMALENEMY) {
+                gameWorld.addEntity(new NormalEnemy(sp.x, sp.y, player));
+            }
+            else if (sp.type == SpawnPoint.Type.SLOWENEMY) {
+                gameWorld.addEntity(new SlowEnemy(sp.x, sp.y, player));
+            }
+            else if (sp.type == SpawnPoint.Type.SPEEDPOWERUP) {
+                gameWorld.addPowerup(new SpeedPowerup(sp.x, sp.y));
+            }
+            else if (sp.type == SpawnPoint.Type.ATTACKPOWERUP) {
+                gameWorld.addPowerup(new AttackPowerup(sp.x, sp.y));
+            }
+            else if (sp.type == SpawnPoint.Type.HEALTHPOWERUP) {
+                gameWorld.addPowerup(new HealthPowerup(sp.x, sp.y));
             }
         }
 

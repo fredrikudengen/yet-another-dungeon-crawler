@@ -27,8 +27,13 @@ public class RoomTemplate implements RoomFactory {
 
                 int tileSize = 32;
 
-                if (c == 'E') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.ENEMY));
                 if (c == 'P') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.PLAYER));
+                else if (c == 'F') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.FASTENEMY));
+                else if (c == 'N') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.NORMALENEMY));
+                else if (c == 'L') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.SLOWENEMY));
+                else if (c == 'S') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.SPEEDPOWERUP));
+                else if (c == 'H') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.HEALTHPOWERUP));
+                else if (c == 'A') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.ATTACKPOWERUP));
              }
         }
         return room;

@@ -4,15 +4,13 @@ import inf112.skeleton.model.world.GameWorld;
 
 public abstract class Entity implements Collidable {
     protected float x, y, width, height, velocityX, velocityY;
-    protected int health, speed, damage;
+    public int health;
+    public int speed;
+    public int damage;
 
-    public Entity(float x, float y, float width, float height, int speed, int health) {
+    public Entity(float x, float y) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
-        this.speed = speed;
-        this.health = health;
     }
 
     @Override

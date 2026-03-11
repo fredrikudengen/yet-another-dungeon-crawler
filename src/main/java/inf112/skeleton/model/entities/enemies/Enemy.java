@@ -1,5 +1,7 @@
-package inf112.skeleton.model.entities;
+package inf112.skeleton.model.entities.enemies;
 
+import inf112.skeleton.model.entities.Entity;
+import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.world.GameWorld;
 import inf112.skeleton.model.world.Room;
 
@@ -7,8 +9,8 @@ public class Enemy extends Entity {
 
     protected Player player;
 
-    public Enemy(float x, float y, float width, float height, int speed, int health, Player player) {
-        super(x, y, width, height, speed, health);
+    public Enemy(float x, float y, Player player) {
+        super(x, y);
         this.player = player;
     }
 
@@ -42,7 +44,6 @@ public class Enemy extends Entity {
             setPosition(newX, newY);
             return;
         }
-
         if (!room.isBlocked(newX, y, width, height, tileSize)) {
             setPosition(newX, y);
         }

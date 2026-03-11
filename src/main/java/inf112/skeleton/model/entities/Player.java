@@ -2,6 +2,7 @@ package inf112.skeleton.model.entities;
 
 import inf112.skeleton.model.Direction;
 import inf112.skeleton.model.combat.Attack;
+import inf112.skeleton.model.entities.enemies.Enemy;
 import inf112.skeleton.model.world.GameWorld;
 import inf112.skeleton.model.world.Room;
 
@@ -15,7 +16,11 @@ public class Player extends Entity {
     private static final float ATTACK_DURATION = 0.2f; // used in animation
 
     public Player(float x, float y) {
-        super(x, y, 32, 32, 200, 3);
+        super(x, y);
+        this.height = 32;
+        this.width = 32;
+        this.speed = 200;
+        this.health = 5;
         this.damage = 1;
         this.attack = Attack.attack();
     }

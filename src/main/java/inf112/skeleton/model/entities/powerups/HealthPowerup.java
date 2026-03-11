@@ -1,23 +1,24 @@
-package inf112.skeleton.model.entities;
+package inf112.skeleton.model.entities.powerups;
+
+import inf112.skeleton.model.entities.Entity;
+import inf112.skeleton.model.entities.Player;
 
 public class HealthPowerup extends Powerup {
 
-    public HealthPowerup(float x, float y, float width, float height) {
-            super(x, y, width, height);
+    public HealthPowerup(float x, float y) {
+            super(x, y);
         }
 
-        @Override
-        public String getTextureName() {
+    @Override
+    public String getTextureName() {
             return "src/main/resources/Life/Life.png";
-        }
-
-        @Override
-        public void endPowerup(Entity entity) {
         }
 
     @Override
     public void step(Player player, double deltaTime) {
-
+        if (this.collidesWith(player)) {
+            this.onCollision(player);
+        }
     }
 
     @Override

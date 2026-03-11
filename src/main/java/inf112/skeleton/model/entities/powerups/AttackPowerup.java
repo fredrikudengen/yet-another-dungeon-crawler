@@ -1,11 +1,14 @@
-package inf112.skeleton.model.entities;
+package inf112.skeleton.model.entities.powerups;
+
+import inf112.skeleton.model.entities.Entity;
+import inf112.skeleton.model.entities.Player;
 
 public class AttackPowerup extends Powerup {
     private boolean hasDamage;
     protected double attackTimer, currentTime;
 
-    public AttackPowerup(float x, float y, float width, float height) {
-        super(x, y, width, height);
+    public AttackPowerup(float x, float y) {
+        super(x, y);
     }
 
     @Override
@@ -40,8 +43,7 @@ public class AttackPowerup extends Powerup {
         System.out.println("Player picked up powerup and got attack++!");
     }
 
-    @Override
-    public void endPowerup(Entity entity) {
+    private void endPowerup(Entity entity) {
         System.out.println("Player got normal attack back!");
         entity.damage -= 3;
     }

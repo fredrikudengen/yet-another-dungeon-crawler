@@ -2,7 +2,7 @@ package inf112.skeleton.model.world;
 
 import inf112.skeleton.model.entities.Entity;
 import inf112.skeleton.model.entities.Player;
-import inf112.skeleton.model.entities.Powerup;
+import inf112.skeleton.model.entities.powerups.Powerup;
 
 import java.util.ArrayList;
 import java.util.Iterator;

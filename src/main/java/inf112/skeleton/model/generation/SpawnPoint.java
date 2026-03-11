@@ -2,7 +2,14 @@ package inf112.skeleton.model.generation;
 
 public class SpawnPoint {
 
-    public enum Type { ENEMY, PLAYER }
+    public enum Type {
+        FASTENEMY,
+        NORMALENEMY,
+        SLOWENEMY,
+        SPEEDPOWERUP,
+        ATTACKPOWERUP,
+        HEALTHPOWERUP,
+        PLAYER }
 
     public final int x;
     public final int y;

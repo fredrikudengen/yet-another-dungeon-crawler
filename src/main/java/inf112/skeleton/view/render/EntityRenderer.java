@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import inf112.skeleton.model.entities.Entity;
-import inf112.skeleton.model.entities.Powerup;
+import inf112.skeleton.model.entities.powerups.Powerup;
 
 import java.util.HashMap;
 import java.util.List;

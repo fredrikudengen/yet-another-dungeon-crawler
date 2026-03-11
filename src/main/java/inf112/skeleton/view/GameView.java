@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import inf112.skeleton.model.entities.Entity;
-import inf112.skeleton.model.entities.Powerup;
+import inf112.skeleton.model.entities.powerups.Powerup;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.render.WorldRenderer;
 import inf112.skeleton.view.render.EntityRenderer;

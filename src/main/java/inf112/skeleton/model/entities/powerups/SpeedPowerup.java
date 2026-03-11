@@ -1,12 +1,15 @@
-package inf112.skeleton.model.entities;
+package inf112.skeleton.model.entities.powerups;
+
+import inf112.skeleton.model.entities.Entity;
+import inf112.skeleton.model.entities.Player;
 
 public class SpeedPowerup extends Powerup {
 
     private boolean hasSpeed;
     protected double speedTimer, currentTime;
 
-    public SpeedPowerup(float x, float y, float width, float height) {
-        super(x, y, width, height);
+    public SpeedPowerup(float x, float y) {
+        super(x, y);
     }
 
     @Override
@@ -41,8 +44,7 @@ public class SpeedPowerup extends Powerup {
         System.out.println("Player picked up powerup and got speed!");
     }
 
-    @Override
-    public void endPowerup(Entity entity) {
+    private void endPowerup(Entity entity) {
         System.out.println("Player got normal speed back!");
         entity.speed -= 100;
     }
