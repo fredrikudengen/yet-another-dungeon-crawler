@@ -11,7 +11,7 @@ class AttackTest {
 
     @BeforeEach
     void setUp() {
-        attack = new Attack(2.0f, 50f, 5f);  // Fjern damage
+        attack = new Attack(2.0f, 50f, 5f);  
     }
 
     @Test
