@@ -6,7 +6,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 
 import inf112.skeleton.model.entities.FastEnemy;
+import inf112.skeleton.model.entities.HealthPowerup;
 import inf112.skeleton.model.entities.Player;
+import inf112.skeleton.model.entities.SpeedPowerup;
 import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.generation.RoomLoader;
 import inf112.skeleton.model.generation.SpawnPoint;
@@ -22,6 +24,8 @@ public class GameScreen implements Screen {
     private GameWorld gameWorld;
     private Player player;
     private FastEnemy fastEnemy;
+    private HealthPowerup healthPowerup;
+    private SpeedPowerup speedPowerup;
     private PlayerInputHandler playerInputHandler;
 
     public GameScreen(Game game) {
@@ -61,7 +65,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        gameWorld.step(delta);
+        gameWorld.step(delta, player);
 
         if (player.getHealth() <= 0) {
             game.setScreen(new TitleScreen(game));
@@ -69,7 +73,7 @@ public class GameScreen implements Screen {
 
         gameView.updateCamera(player.getX(), player.getY());
 
-        gameView.render(gameWorld.getRoom(), gameWorld.getEntities());
+        gameView.render(gameWorld.getRoom(), gameWorld.getEntities(), gameWorld.getPowerups());
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new PauseScreen(game, this));

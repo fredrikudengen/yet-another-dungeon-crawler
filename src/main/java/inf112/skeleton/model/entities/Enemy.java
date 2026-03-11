@@ -52,6 +52,11 @@ public class Enemy extends Entity {
     }
 
     @Override
+    public void onCollision(Entity entity) {
+        this.health -= 1;
+    }
+
+    @Override
     public String getTextureName() {
         return "";
     }

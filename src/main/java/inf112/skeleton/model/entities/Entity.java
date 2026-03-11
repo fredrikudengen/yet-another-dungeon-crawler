@@ -4,7 +4,7 @@ import inf112.skeleton.model.world.GameWorld;
 
 public abstract class Entity implements Collidable {
     protected float x, y, width, height, velocityX, velocityY;
-    protected int health, speed;
+    protected int health, speed, damage;
 
     public Entity(float x, float y, float width, float height, int speed, int health) {
         this.x = x;

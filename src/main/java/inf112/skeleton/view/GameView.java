@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import inf112.skeleton.model.entities.Entity;
+import inf112.skeleton.model.entities.Powerup;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.render.WorldRenderer;
 import inf112.skeleton.view.render.EntityRenderer;
@@ -50,7 +51,7 @@ public class GameView {
         Gdx.graphics.setForegroundFPS(60);
     }
 
-    public void render(Room room, List<Entity> entities) {
+    public void render(Room room, List<Entity> entities, List<Powerup> powerups) {
         ScreenUtils.clear(Color.BLACK);
 
         batch.begin();
@@ -59,7 +60,7 @@ public class GameView {
         try {
             worldRenderer.render(room);
 
-            entityRenderer.render(entities);
+            entityRenderer.render(entities, powerups);
 
         } finally {
             batch.end();
