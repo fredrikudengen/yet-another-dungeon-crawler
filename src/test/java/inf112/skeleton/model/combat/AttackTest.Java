@@ -11,9 +11,8 @@ class AttackTest {
 
     @BeforeEach
     void setUp() {
-        attack = new Attack(2.0f, 50f, 5f);
+        attack = new Attack(2.0f, 50f, 5f);  // Fjern damage
     }
-
 
     @Test
     void testCanUseInitially() {
@@ -24,7 +23,6 @@ class AttackTest {
     void testCooldownProgressInitially() {
         assertEquals(0.0f, attack.getCooldownProgress(), 0.001f);
     }
-
 
     @Test
     void testCannotUseAfterUsing() {
@@ -45,7 +43,6 @@ class AttackTest {
         attack.use(); 
         assertEquals(progressAfterFirstUse, attack.getCooldownProgress(), 0.001f);
     }
-
 
     @Test
     void testUpdateReducesCooldown() {
