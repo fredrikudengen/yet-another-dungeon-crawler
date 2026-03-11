@@ -1,8 +1,8 @@
 package inf112.skeleton.model.world;
 
 public enum TileType {
-    FLOOR("floor1.png", false),
-    WALL("wall1.png", true);
+    FLOOR("floor2.png", false),
+    WALL("wall2.png", true);
 
     private final String textureName;
     private final boolean blocksMovement;

@@ -1,21 +1,19 @@
 package inf112.skeleton.model.combat;
 
 public class Attack {
-    private final int damage;
     private final float cooldown;
     private final float range;
     private final float knockback;
     private float currentCooldown;
 
-    public Attack(int damage, float cooldown, float range, float knockback) {
-        this.damage = damage;
+    public Attack(float cooldown, float range, float knockback) {
         this.cooldown = cooldown;
         this.range = range;
         this.knockback = knockback;
     }
 
     public static Attack attack() {
-        return new Attack(1, 1f, 100f, 5f);
+        return new Attack(1f, 100f, 5f);
     }
 
     public void update(float deltaTime) {
@@ -34,7 +32,6 @@ public class Attack {
         }
     }
 
-    public int getDamage() { return damage; }
     public float getRange() { return range; }
     public float getKnockback() { return knockback; }
     public float getCooldownProgress() { return currentCooldown / cooldown; }

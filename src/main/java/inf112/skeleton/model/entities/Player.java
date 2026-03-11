@@ -14,9 +14,9 @@ public class Player extends Entity {
     private boolean hasCheckedHits = false;
     private static final float ATTACK_DURATION = 0.2f; // used in animation
 
-
     public Player(float x, float y) {
         super(x, y, 32, 32, 200, 3);
+        this.damage = 1;
         this.attack = Attack.attack();
     }
 
@@ -80,7 +80,7 @@ public class Player extends Entity {
             if (entity instanceof Enemy && entity != this) {
 
                 if (isEnemyInAttackRange(entity, range)) {
-                    entity.takeDamage(attack.getDamage());
+                    entity.takeDamage(damage);
                     System.out.print("Enemy hit!");
                     // TODO Apply knockback based on currentAttack.getKnockback()
                 }

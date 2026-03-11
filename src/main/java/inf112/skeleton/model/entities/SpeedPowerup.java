@@ -2,6 +2,9 @@ package inf112.skeleton.model.entities;
 
 public class SpeedPowerup extends Powerup {
 
+    private boolean hasSpeed;
+    protected double speedTimer, currentTime;
+
     public SpeedPowerup(float x, float y, float width, float height) {
         super(x, y, width, height);
     }
@@ -39,8 +42,25 @@ public class SpeedPowerup extends Powerup {
     }
 
     @Override
-    public void endSpeed(Entity entity) {
+    public void endPowerup(Entity entity) {
         System.out.println("Player got normal speed back!");
         entity.speed -= 100;
+    }
+
+    @Override
+    public void step(Player player, double deltaTime) {
+        currentTime += deltaTime;
+
+        if (this.collidesWith(player)) {
+            this.onCollision(player);
+            speedTimer = currentTime + 100;
+        }
+
+        if (hasSpeed) {
+            if (currentTime >= speedTimer) {
+                this.endPowerup(player);
+                hasSpeed = false;
+            }
+        }
     }
 }

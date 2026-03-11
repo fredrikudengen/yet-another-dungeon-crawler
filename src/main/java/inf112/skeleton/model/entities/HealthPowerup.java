@@ -2,7 +2,7 @@ package inf112.skeleton.model.entities;
 
 public class HealthPowerup extends Powerup {
 
-        public HealthPowerup(float x, float y, float width, float height) {
+    public HealthPowerup(float x, float y, float width, float height) {
             super(x, y, width, height);
         }
 
@@ -11,8 +11,13 @@ public class HealthPowerup extends Powerup {
             return "src/main/resources/Life/Life.png";
         }
 
+        @Override
+        public void endPowerup(Entity entity) {
+        }
+
     @Override
-    public void endSpeed(Entity entity) {
+    public void step(Player player, double deltaTime) {
+
     }
 
     @Override
