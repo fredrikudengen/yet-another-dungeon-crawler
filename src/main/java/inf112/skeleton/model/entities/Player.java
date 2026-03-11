@@ -124,7 +124,7 @@ public class Player extends Entity {
 
     @Override
     public String getTextureName() {
-        return "obligator.png";
+        return "src/main/resources/Player/Weapon1/Walk/Player_walk_weapon1_up1.png";
     }
 
     public boolean isMovingLeft() { return movingLeft; }

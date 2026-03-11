@@ -13,7 +13,5 @@ public interface Collidable {
                 this.getY() + this.getHeight() > other.getY();
     }
 
-    default void onCollision(Entity entity) {
-        entity.health -= 1;
-    };
+    default void onCollision(Entity entity) {};
 }

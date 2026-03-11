@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 
 import inf112.skeleton.model.entities.FastEnemy;
+import inf112.skeleton.model.entities.HealthPowerup;
 import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.generation.RoomLoader;
@@ -21,6 +22,7 @@ public class GameScreen implements Screen {
     private GameWorld gameWorld;
     private Player player;
     private FastEnemy fastEnemy;
+    private HealthPowerup healthPowerup;
     private PlayerInputHandler playerInputHandler;
 
     public GameScreen(Game game) {
@@ -38,8 +40,10 @@ public class GameScreen implements Screen {
         player = new Player(200, 200);
         gameWorld.addEntity(player);
 
-        fastEnemy = new FastEnemy(300, 300, 32, 32, 48, 3, player);
+        fastEnemy = new FastEnemy(300, 200, 32, 32, 48, 3, player);
+        healthPowerup = new HealthPowerup(300, 150, 32, 32);
         gameWorld.addEntity(fastEnemy);
+        gameWorld.addPowerup(healthPowerup);
 
         playerInputHandler = new PlayerInputHandler(player);
         Gdx.input.setInputProcessor(playerInputHandler);
@@ -54,7 +58,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        gameWorld.step(delta);
+        gameWorld.step(delta, player);
 
         if (player.getHealth() <= 0) {
             game.setScreen(new TitleScreen(game));
@@ -62,7 +66,7 @@ public class GameScreen implements Screen {
 
         gameView.updateCamera(player.getX(), player.getY());
 
-        gameView.render(gameWorld.getRoom(), gameWorld.getEntities());
+        gameView.render(gameWorld.getRoom(), gameWorld.getEntities(), gameWorld.getPowerups());
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new PauseScreen(game, this));
