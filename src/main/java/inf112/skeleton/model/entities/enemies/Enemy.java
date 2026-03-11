@@ -5,7 +5,7 @@ import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.world.GameWorld;
 import inf112.skeleton.model.world.Room;
 
-public class Enemy extends Entity {
+public abstract class Enemy extends Entity {
 
     protected Player player;
 
@@ -53,9 +53,7 @@ public class Enemy extends Entity {
     }
 
     @Override
-    public void onCollision(Entity entity) {
-        this.health -= 1;
-    }
+    public abstract void onCollision(Entity entity);
 
     @Override
     public String getTextureName() {

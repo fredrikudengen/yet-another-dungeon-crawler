@@ -1,5 +1,6 @@
 package inf112.skeleton.model.entities.enemies;
 
+import inf112.skeleton.model.entities.Entity;
 import inf112.skeleton.model.entities.Player;
 
 public class NormalEnemy extends Enemy {
@@ -11,6 +12,11 @@ public class NormalEnemy extends Enemy {
         this.height = 32;
         this.health = 2;
         this.speed = 100;
+    }
+
+    @Override
+    public void onCollision(Entity entity) {
+        entity.health -= damage;
     }
 
     @Override

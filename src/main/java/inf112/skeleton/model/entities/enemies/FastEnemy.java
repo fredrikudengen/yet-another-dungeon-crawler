@@ -1,5 +1,6 @@
 package inf112.skeleton.model.entities.enemies;
 
+import inf112.skeleton.model.entities.Entity;
 import inf112.skeleton.model.entities.Player;
 
 public class FastEnemy extends Enemy {
@@ -14,7 +15,12 @@ public class FastEnemy extends Enemy {
     }
 
     @Override
+    public void onCollision(Entity entity) {
+        entity.health -= damage;
+    }
+
+    @Override
     public String getTextureName() {
-        return "blue.jpg";
+        return "src/main/resources/Enemy/enemy_up2.png";
     }
 }
