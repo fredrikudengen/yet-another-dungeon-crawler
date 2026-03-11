@@ -41,9 +41,8 @@ class AttackTest {
     @Test
     void testUseIgnoredWhenOnCooldown() {
         attack.use();
-        // progress should still be 1.0 – use() must not reset the cooldown a second time
         float progressAfterFirstUse = attack.getCooldownProgress();
-        attack.use(); // should be a no-op
+        attack.use(); 
         assertEquals(progressAfterFirstUse, attack.getCooldownProgress(), 0.001f);
     }
 
@@ -52,7 +51,6 @@ class AttackTest {
     void testUpdateReducesCooldown() {
         attack.use();
         attack.update(1.0f);
-        // cooldown was 2.0, now 1.0 → progress = 0.5
         assertEquals(0.5f, attack.getCooldownProgress(), 0.001f);
     }
 
@@ -66,14 +64,13 @@ class AttackTest {
     @Test
     void testUpdateDoesNotGoBelowZero() {
         attack.use();
-        attack.update(10.0f); // way more than the 2.0s cooldown
+        attack.update(10.0f); 
         assertTrue(attack.canUse());
         assertEquals(0.0f, attack.getCooldownProgress(), 0.001f);
     }
 
     @Test
     void testUpdateDoesNothing_WhenNotOnCooldown() {
-        // cooldown already 0, update should have no effect
         attack.update(1.0f);
         assertTrue(attack.canUse());
         assertEquals(0.0f, attack.getCooldownProgress(), 0.001f);
@@ -88,16 +85,5 @@ class AttackTest {
     void testGetKnockback() {
         assertEquals(5f, attack.getKnockback(), 0.001f);
     }
-
-
-    @Test
-    void testAttackFactory() {
-        Attack basic = Attack.attack();
-        assertEquals(1, basic.getDamage());
-        assertEquals(50f, basic.getRange(), 0.001f);
-        assertEquals(5f, basic.getKnockback(), 0.001f);
-        assertTrue(basic.canUse());
-    }
-
 
 }

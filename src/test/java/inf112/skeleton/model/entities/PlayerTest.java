@@ -20,7 +20,6 @@ class PlayerTest {
         room = new Room(20, 20);
         world = new GameWorld(room);
         player = new Player(300, 300);
-        // Sett health manuelt for tester
         player.health = 5;
     }
 
@@ -72,14 +71,12 @@ class PlayerTest {
 
     @Test
     void testPerformAttackDamagesEnemyInRange() {
-        // Bruk NormalEnemy i stedet for abstrakt Enemy
         Enemy enemy = new NormalEnemy(350, 300, player);
         world.addEntity(enemy);
         
         int healthBefore = enemy.getHealth();
         player.performAttack(Direction.RIGHT);
-        player.step(world, 0.1); // Gir tid for attack å prosessere
-        
+        player.step(world, 0.1); 
         assertTrue(enemy.getHealth() < healthBefore, 
             "Attack should damage an enemy within range");
     }
