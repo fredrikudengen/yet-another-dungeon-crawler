@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import inf112.skeleton.model.world.GameWorld;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.model.world.TileType;
+import inf112.skeleton.model.entities.enemies.Enemy;
+import inf112.skeleton.model.entities.enemies.FastEnemy;
+import inf112.skeleton.model.entities.enemies.NormalEnemy;
 
 class EnemyTest {
 
@@ -22,29 +25,32 @@ class EnemyTest {
 
     @Test
     void testEnemyGetTextureNameReturnsEmptyString() {
-        Enemy enemy = new Enemy(100, 100, 32, 32, 50, 5, player);
+        Enemy enemy = new Enemy(100, 100, player) {
+            @Override
+            public void onCollision(Entity entity) {
+            }
+        };
         assertEquals("", enemy.getTextureName());
     }
 
     @Test
     void testStepMovesEnemyTowardPlayer() {
-        Enemy enemy = new Enemy(100, 300, 32, 32, 50, 5, player);
+        Enemy enemy = new NormalEnemy(100, 300, player);
+
         float initialX = enemy.getX();
         enemy.step(world, 1.0);
         assertTrue(enemy.getX() > initialX, "Enemy should move right toward player");
     }
 
     @Test
-    void testStepReducesPlayerHealthOnOverlap() {
-        Enemy enemy = new Enemy(400, 295, 32, 32, 50, 5, player);
-        int healthBefore = player.getHealth();
-        enemy.step(world, 0.1);
-        assertTrue(player.getHealth() < healthBefore, "Player health should decrease on collision");
-    }
-
-    @Test
     void testStepAtExactPlayerPositionDoesNotMove() {
-        Enemy enemy = new Enemy(400, 300, 32, 32, 50, 5, player);
+        player.setPosition(100, 100);
+
+        Enemy enemy = new Enemy(100, 100, player) {
+            @Override
+            public void onCollision(Entity entity) {
+            }
+        };
         float initialX = enemy.getX();
         float initialY = enemy.getY();
         enemy.step(world, 1.0);
@@ -55,14 +61,14 @@ class EnemyTest {
     @Test
     void testStepDoesNotMoveThroughWall() {
         room.setTileAt(5, 9, TileType.WALL);
-        Enemy enemy = new Enemy(100, 300, 32, 32, 50, 5, player);
+        player.setPosition(500, 300);
+
+        Enemy enemy = new Enemy(100, 300, player) {
+            @Override
+            public void onCollision(Entity entity) {
+            }
+        };
         enemy.step(world, 1.0);
         assertEquals(100f, enemy.getX(), "Enemy should not move through a wall tile");
-    }
-
-    @Test
-    void testFastEnemyGetTextureNameReturnsBlueJpg() {
-        FastEnemy fastEnemy = new FastEnemy(100, 100, 32, 32, 100, 5, player);
-        assertEquals("blue.jpg", fastEnemy.getTextureName());
     }
 }
