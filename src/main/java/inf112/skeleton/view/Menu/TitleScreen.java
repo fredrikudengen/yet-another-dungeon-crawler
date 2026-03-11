@@ -103,7 +103,6 @@ public class TitleScreen implements Screen {
                     game.setScreen(new GameScreen(game));
                     break;
                 case OPTIONS:
-                    // You can create an OptionsScreen later
                     System.out.println("Options - Not implemented yet");
                     break;
                 case EXIT:
