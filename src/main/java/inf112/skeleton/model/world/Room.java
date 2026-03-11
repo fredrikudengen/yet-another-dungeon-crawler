@@ -1,6 +1,8 @@
 package inf112.skeleton.model.world;
 
 import inf112.skeleton.model.entities.Entity;
+import inf112.skeleton.model.generation.SpawnPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ public class Room {
     private final int height;
     private final TileType[][] tiles;
     private final List<Entity> entities;
+    private final List<SpawnPoint> spawnPoints = new ArrayList<>();
 
     public Room(int width, int height) {
         this.width = width;
@@ -51,6 +54,14 @@ public class Room {
             return true;
         }
         return getTileAt(gridX, gridY).blocksMovement();
+    }
+
+    public void addSpawnPoint(SpawnPoint spawnPoint) {
+        spawnPoints.add(spawnPoint);
+    }
+
+    public List<SpawnPoint> getSpawnPoints() {
+        return spawnPoints;
     }
 
     public void addEntity(Entity entity) {

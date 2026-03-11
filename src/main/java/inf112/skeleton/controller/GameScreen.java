@@ -9,6 +9,7 @@ import inf112.skeleton.model.entities.FastEnemy;
 import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.generation.RoomLoader;
+import inf112.skeleton.model.generation.SpawnPoint;
 import inf112.skeleton.model.world.GameWorld;
 import inf112.skeleton.model.world.Room;
 import inf112.skeleton.view.GameView;
@@ -29,21 +30,27 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        gameView = new GameView();
-        gameView.create(1280, 768);
-
         Room room = createExampleRoom();
         gameWorld = new GameWorld(room);
 
-        player = new Player(200, 200);
-        gameWorld.addEntity(player);
+        gameView = new GameView();
+        gameView.create(1280, 768);
 
-        fastEnemy = new FastEnemy(300, 300, 32, 32, 48, 3, player);
-        gameWorld.addEntity(fastEnemy);
+        for (SpawnPoint sp : room.getSpawnPoints()) {
+            if (sp.type == SpawnPoint.Type.PLAYER) {
+                player = new Player(sp.x, sp.y);
+                gameWorld.addEntity(player);
+                break;
+            }
+        }
+        for (SpawnPoint sp : room.getSpawnPoints()) {
+            if (sp.type == SpawnPoint.Type.ENEMY) {
+                gameWorld.addEntity(new FastEnemy(sp.x, sp.y, 32, 32, 48, 3, player));
+            }
+        }
 
         playerInputHandler = new PlayerInputHandler(player);
         Gdx.input.setInputProcessor(playerInputHandler);
-
         gameView.updateCamera(player.getX(), player.getY());
     }
 
