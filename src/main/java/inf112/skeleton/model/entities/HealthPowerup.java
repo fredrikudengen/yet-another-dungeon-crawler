@@ -11,7 +11,11 @@ public class HealthPowerup extends Powerup {
             return "src/main/resources/Life/Life.png";
         }
 
-        @Override
+    @Override
+    public void endSpeed(Entity entity) {
+    }
+
+    @Override
         public float getX() {
             return x;
         }

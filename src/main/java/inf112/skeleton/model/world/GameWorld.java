@@ -11,25 +11,22 @@ import java.util.List;
 public class GameWorld implements Iterable<Entity> {
     private Room room;
     private List<Entity> entities;
-    private List <Powerup> powerups;
-    private double currentTime;
+    private List<Powerup> powerups;
 
     public GameWorld(Room room) {
         this.room = room;
         this.entities = new ArrayList<>();
         this.powerups = new ArrayList<>();
-        this.currentTime = 0;
     }
 
     public void step(double deltaTime, Player player) {
-        currentTime += deltaTime;
 
         for (Entity entity : entities) {
             entity.step(this, deltaTime);
         }
 
         for (Powerup powerup : powerups) {
-            powerup.step(player);
+            powerup.step(player, deltaTime);
         }
 
         entities.removeIf(entity -> entity.getHealth() <= 0);
@@ -51,10 +48,6 @@ public class GameWorld implements Iterable<Entity> {
 
     public Room getRoom() {
         return room;
-    }
-
-    public double getCurrentTime() {
-        return currentTime;
     }
 
     @Override

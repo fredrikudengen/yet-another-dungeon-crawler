@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import inf112.skeleton.model.entities.FastEnemy;
 import inf112.skeleton.model.entities.HealthPowerup;
 import inf112.skeleton.model.entities.Player;
+import inf112.skeleton.model.entities.SpeedPowerup;
 import inf112.skeleton.model.factories.RoomFactory;
 import inf112.skeleton.model.generation.RoomLoader;
 import inf112.skeleton.model.world.GameWorld;
@@ -23,6 +24,7 @@ public class GameScreen implements Screen {
     private Player player;
     private FastEnemy fastEnemy;
     private HealthPowerup healthPowerup;
+    private SpeedPowerup speedPowerup;
     private PlayerInputHandler playerInputHandler;
 
     public GameScreen(Game game) {
@@ -41,9 +43,9 @@ public class GameScreen implements Screen {
         gameWorld.addEntity(player);
 
         fastEnemy = new FastEnemy(300, 200, 32, 32, 48, 3, player);
-        healthPowerup = new HealthPowerup(300, 150, 32, 32);
+        speedPowerup = new SpeedPowerup(300, 150, 32, 32);
         gameWorld.addEntity(fastEnemy);
-        gameWorld.addPowerup(healthPowerup);
+        gameWorld.addPowerup(speedPowerup);
 
         playerInputHandler = new PlayerInputHandler(player);
         Gdx.input.setInputProcessor(playerInputHandler);
