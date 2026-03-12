@@ -22,7 +22,7 @@ public class TitleScreen implements Screen {
     private BitmapFont menuFont;
 
     private enum MenuOption {
-        START, HELP, EXIT
+        START, CONTROLS, EXIT
     }
 
     private MenuOption[] options = MenuOption.values();
@@ -103,7 +103,7 @@ public class TitleScreen implements Screen {
                 case START:
                     game.setScreen(new GameScreen(game));
                     break;
-                case HELP:
+                case CONTROLS:
                     game.setScreen(new HelpScreen(game));
                     break;
                 case EXIT:
