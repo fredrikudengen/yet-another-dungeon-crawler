@@ -21,7 +21,7 @@ public class TitleScreen implements Screen {
     private BitmapFont titleFont;
     private BitmapFont menuFont;
 
-    private enum MenuOption {
+    public enum MenuOption {
         START, CONTROLS, EXIT
     }
 

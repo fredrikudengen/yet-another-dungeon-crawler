@@ -9,17 +9,16 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import inf112.skeleton.controller.GameScreen;
 
 public class PauseScreen implements Screen {
 
     private Game game;
-    private Screen gameScreen; // The screen we paused from
+    private Screen gameScreen;
     private SpriteBatch batch;
     private BitmapFont font;
     private GlyphLayout layout;
 
-    private enum MenuOption {
+    public enum MenuOption {
         RESUME, MAIN_MENU, EXIT
     }
 
@@ -47,7 +46,6 @@ public class PauseScreen implements Screen {
     public void render(float delta) {
         handleInput();
 
-        // Semi-transparent dark overlay
         ScreenUtils.clear(0, 0, 0, 0.7f);
 
         batch.begin();
@@ -55,7 +53,6 @@ public class PauseScreen implements Screen {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        // Title
         String title = "PAUSED";
         font.setColor(Color.WHITE);
         layout.setText(font, title);
@@ -63,7 +60,6 @@ public class PauseScreen implements Screen {
         float titleY = screenHeight - 200;
         font.draw(batch, layout, titleX, titleY);
 
-        // Menu options
         float startY = screenHeight / 2 + options.length * 25;
         for (int i = 0; i < options.length; i++) {
             String text = (i == currentIndex ? "> " : "  ") + options[i].name().replace("_", " ");
@@ -91,27 +87,28 @@ public class PauseScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
             currentIndex = (currentIndex - 1 + options.length) % options.length;
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
-                Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(gameScreen);
+            return;
+        }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-                // ESC always resumes
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            handleSelection(options[currentIndex]);
+        }
+    }
+
+    public void handleSelection(MenuOption option) {
+        switch (option) {
+            case RESUME:
                 game.setScreen(gameScreen);
-                return;
-            }
-
-            switch (options[currentIndex]) {
-                case RESUME:
-                    game.setScreen(gameScreen);
-                    break;
-                case MAIN_MENU:
-                    gameScreen.dispose(); // Clean up game screen
-                    game.setScreen(new TitleScreen(game));
-                    break;
-                case EXIT:
-                    Gdx.app.exit();
-                    break;
-            }
+                break;
+            case MAIN_MENU:
+                gameScreen.dispose();
+                game.setScreen(new TitleScreen(game));
+                break;
+            case EXIT:
+                Gdx.app.exit();
+                break;
         }
     }
 
