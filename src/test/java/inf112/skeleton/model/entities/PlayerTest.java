@@ -24,7 +24,7 @@ class PlayerTest {
     }
 
     @Test
-    void testGetTextureNameReturnsObligatorPng() {
+    void testGetTextureNameReturnsPlayersPng() {
         assertEquals("src/main/resources/Player/Weapon1/Walk/Player_walk_weapon1_up1.png", 
             player.getTextureName());
     }
