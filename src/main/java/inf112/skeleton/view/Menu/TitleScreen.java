@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -20,6 +21,12 @@ public class TitleScreen implements Screen {
 
     private BitmapFont titleFont;
     private BitmapFont menuFont;
+
+    private Texture flame1;
+    private Texture flame2; 
+
+    private float flameTimer = 0;
+    private int flameFlame = 0; 
 
     private enum MenuOption {
         START, OPTIONS, EXIT
@@ -56,14 +63,15 @@ public class TitleScreen implements Screen {
         //menuFont.getData().setScale(2f);
         //menuFont.setColor(Color.WHITE);
 
+        flame1 = new Texture("StartMenu/flamme1.png");
+        flame2 = new Texture("StartMenu/flamme2.png");
+
     }
 
     @Override
     public void render(float delta) {
         handleInput();
-
         ScreenUtils.clear(0.2f, 0.13f, 0.07f, 1);   // Brown
-
         batch.begin();
 
         float screenWidth = Gdx.graphics.getWidth();
@@ -87,12 +95,33 @@ public class TitleScreen implements Screen {
             }
 
             layout.setText(menuFont, text);
-
             float x = screenWidth * 0.65f;
             float y = startY - i * 50;
-
             menuFont.draw(batch, layout, x, y);
         }
+
+
+        // flame
+        flameTimer += delta;
+        if (flameTimer > 0.25f) {
+            flameFlame = (flameFlame + 1) % 2; 
+            flameTimer = 0; 
+        }
+
+        Texture currentFlame;
+        if(flameFlame == 0) {
+            currentFlame = flame1; 
+        } else {
+            currentFlame = flame2; 
+        }
+
+        float torchY = screenHeight * 0.45f;
+        float flameWidth = 250;
+        float flameHeight = 250;
+        float leftX = screenWidth * 0.05f;
+        float rightX = screenWidth * 0.80f;
+        batch.draw(currentFlame, leftX, torchY, flameWidth, flameHeight);
+        batch.draw(currentFlame, rightX, torchY, flameWidth, flameHeight);
 
         batch.end();
     }
@@ -140,5 +169,7 @@ public class TitleScreen implements Screen {
         batch.dispose();
         titleFont.dispose();
         menuFont.dispose();
+        flame1.dispose();
+        flame2.dispose();
     }
 }
