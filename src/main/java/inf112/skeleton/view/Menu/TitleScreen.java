@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator; 
 import inf112.skeleton.controller.GameScreen;
 
 public class TitleScreen implements Screen {
@@ -36,52 +37,58 @@ public class TitleScreen implements Screen {
         batch = new SpriteBatch();
         layout = new GlyphLayout();
 
-        titleFont = new BitmapFont();
-        titleFont.getData().setScale(2.5f);
-        titleFont.setColor(Color.WHITE);
-        // Apply linear filtering to reduce blurriness
-        titleFont.getRegion().getTexture().setFilter(
-                com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
-                com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
+        FreeTypeFontGenerator titleGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter(); 
+        
+        parameter.size = 75;
+        titleFont = titleGenerator.generateFont(parameter);
+        titleFont.setColor(Color.valueOf("F4BB44"));    // Gold
 
-        menuFont = new BitmapFont();
-        menuFont.getData().setScale(1.5f);
-        menuFont.setColor(Color.WHITE);
-        // reduce font blurriness
-        menuFont.getRegion().getTexture().setFilter(
-                com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
-                com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
+        //titleGenerator.dispose();
+
+        parameter.size = 30;
+        menuFont = titleGenerator.generateFont(parameter); 
+        menuFont.setColor(Color.WHITE); 
+        
+        titleGenerator.dispose();
+
+        //menuFont = new BitmapFont();
+        //menuFont.getData().setScale(2f);
+        //menuFont.setColor(Color.WHITE);
+
     }
 
     @Override
     public void render(float delta) {
         handleInput();
 
-        ScreenUtils.clear(0, 0, 0, 1);
+        ScreenUtils.clear(0.2f, 0.13f, 0.07f, 1);   // Brown
 
         batch.begin();
 
         float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight(); 
 
-        String gameTitle = "MY AWESOME GAME";
+        String gameTitle = "Dungeon Crawler";
         layout.setText(titleFont, gameTitle);
         float titleX = (screenWidth - layout.width) / 2;
-        float titleY = Gdx.graphics.getHeight() - 300;
+        float titleY = screenHeight * 0.75f;
         titleFont.draw(batch, layout, titleX, titleY);
 
-        float startY = Gdx.graphics.getHeight() / 2 + options.length * 25;
+        float startY = Gdx.graphics.getHeight() / 2;
         for (int i = 0; i < options.length; i++) {
             String text = (i == currentIndex ? "> " : "  ") + options[i].name();
 
             // Highlight selected option
             if (i == currentIndex) {
-                menuFont.setColor(Color.YELLOW);
+                menuFont.setColor(Color.valueOf("F4BB44"));
             } else {
                 menuFont.setColor(Color.WHITE);
             }
 
             layout.setText(menuFont, text);
-            float x = (screenWidth - layout.width) / 2;
+
+            float x = screenWidth * 0.65f;
             float y = startY - i * 50;
 
             menuFont.draw(batch, layout, x, y);
