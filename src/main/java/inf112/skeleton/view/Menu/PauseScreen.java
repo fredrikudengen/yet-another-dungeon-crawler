@@ -66,7 +66,7 @@ public class PauseScreen implements Screen {
         // Menu options
         float startY = screenHeight / 2 + options.length * 25;
         for (int i = 0; i < options.length; i++) {
-            String text = (i == currentIndex ? "> " : "  ") + options[i].name();
+            String text = (i == currentIndex ? "> " : "  ") + options[i].name().replace("_", " ");
 
             if (i == currentIndex) {
                 font.setColor(Color.YELLOW);

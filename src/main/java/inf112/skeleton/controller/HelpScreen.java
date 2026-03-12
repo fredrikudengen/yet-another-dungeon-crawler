@@ -27,7 +27,6 @@ public class HelpScreen implements Screen {
     // ── palette ───────────────────────────────────────────────────────────────
     private static final Color BG_COLOR = new Color(0.04f, 0.03f, 0.06f, 1f);
     private static final Color PANEL_COLOR = new Color(0.08f, 0.06f, 0.12f, 0.95f);
-    private static final Color BORDER_COLOR = new Color(0.45f, 0.25f, 0.65f, 1f);
     private static final Color TITLE_COLOR = new Color(1.00f, 0.82f, 0.25f, 1f); // gold
     private static final Color KEY_BG = new Color(0.15f, 0.10f, 0.22f, 1f);
     private static final Color KEY_BORDER = new Color(0.60f, 0.35f, 0.80f, 1f);
@@ -41,11 +40,6 @@ public class HelpScreen implements Screen {
             { "S / DOWN", "Move South" },
             { "A / LEFT", "Move West" },
             { "D / RIGHT", "Move East" },
-            { "SPACE", "Attack / Interact" },
-            { "E", "Open Inventory" },
-            { "I", "Inspect Tile" },
-            { "M", "Toggle Map" },
-            { "SHIFT + D", "Dash / Dodge" },
             { "ESC", "Pause / Back" },
     };
 
@@ -159,16 +153,6 @@ public class HelpScreen implements Screen {
         shapes.setColor(PANEL_COLOR);
         shapes.rect(x, y, w, h);
         shapes.end();
-
-        // Border — two-pass (outer dim, inner bright) for a neon glow feel
-        shapes.begin(ShapeRenderer.ShapeType.Line);
-        shapes.setColor(BORDER_COLOR);
-        shapes.rect(x, y, w, h);
-        shapes.setColor(DIVIDER);
-        shapes.rect(x + 2, y + 2, w - 4, h - 4);
-        shapes.end();
-
-        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     /** Pulsing gold title at the top of the panel. */
@@ -177,7 +161,7 @@ public class HelpScreen implements Screen {
         float pulse = 0.85f + 0.15f * (float) Math.sin(elapsedTime * 3.0);
         titleFont.setColor(TITLE_COLOR.r, TITLE_COLOR.g, TITLE_COLOR.b, pulse);
 
-        String title = "[ CONTROLS ]";
+        String title = "CONTROLS";
         layout.setText(titleFont, title);
         float tx = (W - layout.width) / 2f;
         float ty = H - PANEL_PAD_Y - 22f;
