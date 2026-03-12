@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.ScreenUtils;
 import inf112.skeleton.controller.GameScreen;
+import inf112.skeleton.controller.HelpScreen;
 
 public class TitleScreen implements Screen {
 
@@ -21,7 +22,7 @@ public class TitleScreen implements Screen {
     private BitmapFont menuFont;
 
     private enum MenuOption {
-        START, OPTIONS, EXIT
+        START, HELP, EXIT
     }
 
     private MenuOption[] options = MenuOption.values();
@@ -102,8 +103,8 @@ public class TitleScreen implements Screen {
                 case START:
                     game.setScreen(new GameScreen(game));
                     break;
-                case OPTIONS:
-                    System.out.println("Options - Not implemented yet");
+                case HELP:
+                    game.setScreen(new HelpScreen(game));
                     break;
                 case EXIT:
                     Gdx.app.exit();
