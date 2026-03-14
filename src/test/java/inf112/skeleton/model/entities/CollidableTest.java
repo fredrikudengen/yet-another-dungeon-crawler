@@ -1,122 +1,42 @@
 package inf112.skeleton.model.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import inf112.skeleton.model.entities.enemies.NormalEnemy;
+import inf112.skeleton.model.world.GameWorld;
+import inf112.skeleton.model.world.Room;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CollidableTest {
 
-    private Collidable collidable1;
-    private Collidable collidable2;
+    private Room room;
+    private GameWorld world;
+    private Player player;
+    private NormalEnemy normalEnemy;
 
     @BeforeEach
     void setUp() {
-        // Create mock implementations of Collidable for testing
-        collidable1 = new Collidable() {
-            @Override
-            public float getX() {
-                return 0;
-            }
-
-            @Override
-            public float getY() {
-                return 0;
-            }
-
-            @Override
-            public float getWidth() {
-                return 10;
-            }
-
-            @Override
-            public float getHeight() {
-                return 10;
-            }
-        };
-
-        collidable2 = new Collidable() {
-            @Override
-            public float getX() {
-                return 5;
-            }
-
-            @Override
-            public float getY() {
-                return 5;
-            }
-
-            @Override
-            public float getWidth() {
-                return 10;
-            }
-
-            @Override
-            public float getHeight() {
-                return 10;
-            }
-        };
+        room = new Room(20, 20);
+        world = new GameWorld(room);
+        player = new Player(300, 300);
+        normalEnemy = new NormalEnemy(300,300, player);
     }
 
     @Test
     void testCollidesWith_True() {
-        // collidable1 and collidable2 overlap
-        assertTrue(collidable1.collidesWith(collidable2));
+        assertTrue(player.collidesWith(normalEnemy));
     }
 
     @Test
     void testCollidesWith_False() {
-        // Move collidable2 far away so they don't overlap
-        Collidable collidable3 = new Collidable() {
-            @Override
-            public float getX() {
-                return 20;
-            }
-
-            @Override
-            public float getY() {
-                return 20;
-            }
-
-            @Override
-            public float getWidth() {
-                return 10;
-            }
-
-            @Override
-            public float getHeight() {
-                return 10;
-            }
-        };
-
-        assertFalse(collidable1.collidesWith(collidable3));
+        normalEnemy.setPosition(500, 500);
+        assertFalse(player.collidesWith(normalEnemy));
     }
 
     @Test
-    void testCollidesWith_EdgeTouching() {
-        // Move collidable2 so it just touches the edge of collidable1
-        Collidable collidable4 = new Collidable() {
-            @Override
-            public float getX() {
-                return 10;
-            }
-
-            @Override
-            public float getY() {
-                return 10;
-            }
-
-            @Override
-            public float getWidth() {
-                return 10;
-            }
-
-            @Override
-            public float getHeight() {
-                return 10;
-            }
-        };
-
-        // Edge touching should not count as a collision
-        assertFalse(collidable1.collidesWith(collidable4));
+    void testCollidesEdge() {
+        normalEnemy.setPosition(player.getX() + player.getWidth(), player.getY() + player.getHeight());
+        assertFalse(player.collidesWith(normalEnemy));
     }
 }
