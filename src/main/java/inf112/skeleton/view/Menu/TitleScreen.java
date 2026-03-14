@@ -112,19 +112,18 @@ public class TitleScreen implements Screen {
 
             layout.setText(menuFont, text);
             float x = screenWidth * 0.60f;
-            float y = startY - i * 80;
+            float y = startY - i * 90;
             menuFont.draw(batch, layout, x, y);
         }
-
-
+        
         // floor
         float tileSize = 300; 
-        float tileHeight = 200; 
+        float tileHeight = 260; 
         float floorTop = screenHeight * 0.08f - 75; 
         for (float x = 0; x < screenWidth; x += tileSize) {
             batch.draw(floor, x, floorTop, tileSize, tileHeight);
-            }
-        
+        }
+
         flameFrame = animate(delta, 0.25f, flameFrames, flameFrame, true);
         playerFrame = animate(delta, 0.25f, playerFrames, playerFrame, false); 
 
@@ -133,11 +132,11 @@ public class TitleScreen implements Screen {
 
         // flame
         float torchY = screenHeight * 0.40f;
-        batch.draw(currentFlame, screenWidth * 0.80f, torchY, 250, 250);
-        batch.draw(currentFlame, screenWidth * 0.05f, torchY, 250, 250);
+        batch.draw(currentFlame, screenWidth * 0.78f, torchY, 280, 280);
+        batch.draw(currentFlame, screenWidth * 0.05f, torchY, 280, 280);
 
         // player
-        batch.draw(currentPlayer, screenWidth * 0.20f, screenHeight * 0.08f, 350, 350);
+        batch.draw(currentPlayer, screenWidth * 0.15f, screenHeight * 0.12f, 350, 350);
 
         batch.end();
     }
