@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator; 
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import inf112.skeleton.controller.GameScreen;
 
 public class TitleScreen implements Screen {
@@ -18,15 +18,17 @@ public class TitleScreen implements Screen {
     private Game game;
     private SpriteBatch batch;
     private GlyphLayout layout;
-
     private BitmapFont titleFont;
     private BitmapFont menuFont;
 
-    private Texture flame1;
-    private Texture flame2; 
+    private Texture[] flameFrames;
+    private Texture[] playerFrames;
+    private Texture floor; 
 
     private float flameTimer = 0;
-    private int flameFlame = 0; 
+    private int flameFrame = 0; 
+    private float playerTimer = 0;
+    private int playerFrame = 0; 
 
     private enum MenuOption {
         START, OPTIONS, EXIT
@@ -47,25 +49,29 @@ public class TitleScreen implements Screen {
         FreeTypeFontGenerator titleGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter(); 
         
+        // title
         parameter.size = 75;
         titleFont = titleGenerator.generateFont(parameter);
         titleFont.setColor(Color.valueOf("F4BB44"));    // Gold
 
-        //titleGenerator.dispose();
-
+        // menu
         parameter.size = 30;
         menuFont = titleGenerator.generateFont(parameter); 
         menuFont.setColor(Color.WHITE); 
         
         titleGenerator.dispose();
 
-        //menuFont = new BitmapFont();
-        //menuFont.getData().setScale(2f);
-        //menuFont.setColor(Color.WHITE);
+        flameFrames = new Texture[] {
+            new Texture("StartMenu/flamme1.png"),
+            new Texture("StartMenu/flamme2.png")
+        };
 
-        flame1 = new Texture("StartMenu/flamme1.png");
-        flame2 = new Texture("StartMenu/flamme2.png");
+        playerFrames = new Texture[] {
+            new Texture("Player/withoutWeapon/Walk/Player_walk_left1.png"), 
+            new Texture("Player/withoutWeapon/Walk/Player_walk_left2.png")
+        };
 
+        floor = new Texture("StartMenu/menyfloor.png"); 
     }
 
     @Override
@@ -77,13 +83,23 @@ public class TitleScreen implements Screen {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight(); 
 
-        String gameTitle = "Dungeon Crawler";
-        layout.setText(titleFont, gameTitle);
+        // title
+        String gameTitle1 = "Yet Another";
+        String gameTitle2 = "Dungeon-Crawler";
+
+        layout.setText(titleFont, gameTitle1);
         float titleX = (screenWidth - layout.width) / 2;
-        float titleY = screenHeight * 0.75f;
+        float titleY = screenHeight * 0.85f;
         titleFont.draw(batch, layout, titleX, titleY);
 
-        float startY = Gdx.graphics.getHeight() / 2;
+        layout.setText(titleFont, gameTitle2);
+        float titleX2 = (screenWidth - layout.width) / 2;
+        float titleY2 = titleY - 80;
+        titleFont.draw(batch, layout, titleX2, titleY2);
+
+
+        // menu
+        float startY = screenHeight * 0.55f; 
         for (int i = 0; i < options.length; i++) {
             String text = (i == currentIndex ? "> " : "  ") + options[i].name();
 
@@ -95,36 +111,58 @@ public class TitleScreen implements Screen {
             }
 
             layout.setText(menuFont, text);
-            float x = screenWidth * 0.65f;
-            float y = startY - i * 50;
+            float x = screenWidth * 0.60f;
+            float y = startY - i * 80;
             menuFont.draw(batch, layout, x, y);
         }
 
 
+        // floor
+        float tileSize = 300; 
+        float tileHeight = 200; 
+        float floorTop = screenHeight * 0.08f - 75; 
+        for (float x = 0; x < screenWidth; x += tileSize) {
+            batch.draw(floor, x, floorTop, tileSize, tileHeight);
+            }
+        
+        flameFrame = animate(delta, 0.25f, flameFrames, flameFrame, true);
+        playerFrame = animate(delta, 0.25f, playerFrames, playerFrame, false); 
+
+        Texture currentFlame = flameFrames[flameFrame];
+        Texture currentPlayer = playerFrames[playerFrame];
+
         // flame
-        flameTimer += delta;
-        if (flameTimer > 0.25f) {
-            flameFlame = (flameFlame + 1) % 2; 
-            flameTimer = 0; 
-        }
+        float torchY = screenHeight * 0.40f;
+        batch.draw(currentFlame, screenWidth * 0.80f, torchY, 250, 250);
+        batch.draw(currentFlame, screenWidth * 0.05f, torchY, 250, 250);
 
-        Texture currentFlame;
-        if(flameFlame == 0) {
-            currentFlame = flame1; 
-        } else {
-            currentFlame = flame2; 
-        }
-
-        float torchY = screenHeight * 0.45f;
-        float flameWidth = 250;
-        float flameHeight = 250;
-        float leftX = screenWidth * 0.05f;
-        float rightX = screenWidth * 0.80f;
-        batch.draw(currentFlame, leftX, torchY, flameWidth, flameHeight);
-        batch.draw(currentFlame, rightX, torchY, flameWidth, flameHeight);
+        // player
+        batch.draw(currentPlayer, screenWidth * 0.20f, screenHeight * 0.08f, 350, 350);
 
         batch.end();
     }
+
+    private int animate(float delta, float interval, Texture[] frames, int index, boolean isFlame) {
+        if (isFlame) {
+            flameTimer += delta;
+
+            if (flameTimer > interval) {
+                index = (index + 1) % frames.length;
+                flameTimer = 0;
+            }
+        } else {
+            playerTimer += delta;
+
+            if (playerTimer > interval) {
+                index = (index + 1) % frames.length;
+                playerTimer = 0;
+            }
+
+        }
+        return index;
+    }
+
+
 
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN))
@@ -169,7 +207,9 @@ public class TitleScreen implements Screen {
         batch.dispose();
         titleFont.dispose();
         menuFont.dispose();
-        flame1.dispose();
-        flame2.dispose();
+        floor.dispose(); 
+        
+        for (Texture t : flameFrames) t.dispose();
+        for (Texture t : playerFrames) t.dispose();
     }
 }
