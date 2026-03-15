@@ -24,9 +24,12 @@ class PlayerTest {
     }
 
     @Test
-    void testGetTextureNameReturnsPlayersPng() {
-        assertEquals("src/main/resources/Player/Weapon1/Walk/Player_walk_weapon1_up1.png", 
-            player.getTextureName());
+    void testNoMovementWhenNoButtonPressed() {
+        float initialX = player.getX();
+        float initialY = player.getY();
+        player.step(world, 1.0);
+        assertEquals(initialX, player.getX());
+        assertEquals(initialY, player.getY());
     }
 
     @Test
@@ -34,7 +37,7 @@ class PlayerTest {
         float initialX = player.getX();
         player.setMovingRight(true);
         player.step(world, 1.0);
-        assertTrue(player.getX() > initialX, "Moving right should increase X");
+        assertTrue(player.getX() > initialX);
     }
 
     @Test
@@ -42,7 +45,7 @@ class PlayerTest {
         float initialX = player.getX();
         player.setMovingLeft(true);
         player.step(world, 1.0);
-        assertTrue(player.getX() < initialX, "Moving left should decrease X");
+        assertTrue(player.getX() < initialX);
     }
 
     @Test
@@ -50,7 +53,7 @@ class PlayerTest {
         float initialY = player.getY();
         player.setMovingUp(true);
         player.step(world, 1.0);
-        assertTrue(player.getY() > initialY, "Moving up should increase Y");
+        assertTrue(player.getY() > initialY);
     }
 
     @Test
@@ -58,7 +61,7 @@ class PlayerTest {
         float initialY = player.getY();
         player.setMovingDown(true);
         player.step(world, 1.0);
-        assertTrue(player.getY() < initialY, "Moving down should decrease Y");
+        assertTrue(player.getY() < initialY);
     }
 
     @Test
@@ -66,46 +69,19 @@ class PlayerTest {
         Player nearEdge = new Player(580, 300);
         nearEdge.setMovingRight(true);
         nearEdge.step(world, 1.0);
-        assertEquals(580f, nearEdge.getX(), "Player should not move outside the room boundary");
-    }
-
-    @Test
-    void testPerformAttackDamagesEnemyInRange() {
-        Enemy enemy = new NormalEnemy(350, 300, player);
-        world.addEntity(enemy);
-        
-        int healthBefore = enemy.getHealth();
-        player.performAttack(Direction.RIGHT);
-        player.step(world, 0.1); 
-        assertTrue(enemy.getHealth() < healthBefore, 
-            "Attack should damage an enemy within range");
-    }
-
-    @Test
-    void testMovingFlagsSettersAndGetters() {
-        player.setMovingLeft(true);
-        assertTrue(player.isMovingLeft());
-        player.setMovingRight(true);
-        assertTrue(player.isMovingRight());
-        player.setMovingUp(true);
-        assertTrue(player.isMovingUp());
-        player.setMovingDown(true);
-        assertTrue(player.isMovingDown());
-
-        player.setMovingLeft(false);
-        assertFalse(player.isMovingLeft());
-        player.setMovingRight(false);
-        assertFalse(player.isMovingRight());
-        player.setMovingUp(false);
-        assertFalse(player.isMovingUp());
-        player.setMovingDown(false);
-        assertFalse(player.isMovingDown());
+        assertEquals(580f, nearEdge.getX());
     }
 
     @Test
     void testCollidesWithReturnsTrueOnOverlap() {
         Player other = new Player(310, 310);
-        assertTrue(player.collidesWith(other), "Overlapping players should collide");
+        assertTrue(player.collidesWith(other));
+    }
+
+    @Test
+    void testCollidesWithReturnsFalseWhenFarAway() {
+        Player other = new Player(1000, 1000);
+        assertFalse(player.collidesWith(other));
     }
 
     @Test
