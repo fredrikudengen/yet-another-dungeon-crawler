@@ -27,13 +27,13 @@
 		<dependency>
 			<!--libGDX graphics library – https://libgdx.com/ -->
 			<groupId>com.badlogicgames.gdx</groupId>
-			<artifactId>gdx</artifactId>
+			<artifactId>gdx-freetype</artifactId>
 			<version>${libgdx.version}</version>
 		</dependency>
 		<dependency>
 			<!-- Platform-specific libraries -->
 			<groupId>com.badlogicgames.gdx</groupId>
-			<artifactId>gdx-platform</artifactId>
+			<artifactId>gdx-freetype-platform</artifactId>
 			<version>${libgdx.version}</version>
 			<classifier>natives-desktop</classifier>
 		</dependency>
@@ -42,6 +42,13 @@
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx-backend-lwjgl3</artifactId>
 			<version>${libgdx.version}</version>
+		</dependency>
+		<dependency>
+			<!-- Platform-specific libraries -->
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-platform</artifactId>
+			<version>${libgdx.version}</version>
+			<classifier>natives-desktop</classifier>
 		</dependency>
 		<dependency>
 			<!-- run libgdx without graphics (for testing)-->
