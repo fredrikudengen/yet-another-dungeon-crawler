@@ -75,6 +75,6 @@ public class ExampleIT {
 	@Test
 	void dummy1() {
 		// check that we can find a file using the LibGDX file API
-		assertNotNull(Gdx.files.internal("src/main/resources/Player/Weapon1/Walk/Player_walk_weapon1_up1.png"));
+		assertNotNull(Gdx.files.internal("src/main/resources/Player/Weapon1/Walk/Player_walk_weapon_up1.png"));
 	}
 }

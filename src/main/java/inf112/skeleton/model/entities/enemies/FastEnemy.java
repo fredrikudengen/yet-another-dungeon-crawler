@@ -8,10 +8,10 @@ public class FastEnemy extends Enemy {
     public FastEnemy(float x, float y, Player player) {
         super(x, y, player);
         this.damage = 1;
-        this.width = 16;
-        this.height = 16;
+        this.width  = 32;
+        this.height = 32;
         this.health = 1;
-        this.speed = 180;
+        this.speed  = 180;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class FastEnemy extends Enemy {
     }
 
     @Override
-    public String getTextureName() {
-        return "src/main/resources/Enemy/enemy_up2.png";
+    public String getBaseTexturePath() {
+        return "src/main/resources/Enemy/Fast";
     }
 }

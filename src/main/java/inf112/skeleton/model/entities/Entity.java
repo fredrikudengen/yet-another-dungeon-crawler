@@ -36,8 +36,6 @@ public abstract class Entity implements Collidable {
 
     public abstract void step(GameWorld world, double deltaTime);
 
-    public abstract String getTextureName();
-
     public int getHealth() {
         return health;
     }

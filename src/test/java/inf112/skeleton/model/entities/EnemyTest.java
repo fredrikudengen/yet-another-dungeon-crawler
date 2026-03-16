@@ -29,8 +29,13 @@ class EnemyTest {
             @Override
             public void onCollision(Entity entity) {
             }
+
+            @Override
+            public String getBaseTexturePath() {
+                return "test";
+            }
         };
-        assertEquals("", enemy.getTextureName());
+        assertEquals("test", enemy.getBaseTexturePath());
     }
 
     @Test
@@ -50,6 +55,11 @@ class EnemyTest {
             @Override
             public void onCollision(Entity entity) {
             }
+
+            @Override
+            public String getBaseTexturePath() {
+                return "test";
+            }
         };
         float initialX = enemy.getX();
         float initialY = enemy.getY();
@@ -66,6 +76,11 @@ class EnemyTest {
         Enemy enemy = new Enemy(100, 300, player) {
             @Override
             public void onCollision(Entity entity) {
+            }
+
+            @Override
+            public String getBaseTexturePath() {
+                return "test";
             }
         };
         enemy.step(world, 1.0);

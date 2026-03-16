@@ -8,10 +8,10 @@ public class NormalEnemy extends Enemy {
     public NormalEnemy(float x, float y, Player player) {
         super(x, y, player);
         this.damage = 2;
-        this.width = 32;
+        this.width  = 32;
         this.height = 32;
         this.health = 2;
-        this.speed = 100;
+        this.speed  = 100;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class NormalEnemy extends Enemy {
     }
 
     @Override
-    public String getTextureName() {
-        return "blue.jpg";
+    public String getBaseTexturePath() {
+        return "src/main/resources/Enemy/Normal";
     }
 }

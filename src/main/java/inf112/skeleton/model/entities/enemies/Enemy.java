@@ -1,5 +1,6 @@
 package inf112.skeleton.model.entities.enemies;
 
+import inf112.skeleton.model.Direction;
 import inf112.skeleton.model.entities.Entity;
 import inf112.skeleton.model.entities.Player;
 import inf112.skeleton.model.world.GameWorld;
@@ -32,10 +33,10 @@ public abstract class Enemy extends Entity {
             velocityY = 0;
         }
 
-        float newX = x + velocityX * (float)deltaTime;
-        float newY = y + velocityY * (float)deltaTime;
+        float newX = x + velocityX * (float) deltaTime;
+        float newY = y + velocityY * (float) deltaTime;
 
-        // TODO implement smarter enemy AI to walk around obstacles
+        // TODO: implement smarter enemy AI to walk around obstacles
 
         Room room = world.getRoom();
         int tileSize = 32;
@@ -55,8 +56,16 @@ public abstract class Enemy extends Entity {
     @Override
     public abstract void onCollision(Entity entity);
 
-    @Override
-    public String getTextureName() {
-        return "";
+    public abstract String getBaseTexturePath();
+
+    public Direction getFacingDirection() {
+        if (Math.abs(velocityX) >= Math.abs(velocityY)) {
+            return (velocityX >= 0) ? Direction.RIGHT : Direction.LEFT;
+        }
+        return (velocityY >= 0) ? Direction.UP : Direction.DOWN;
+    }
+
+    public boolean isMoving() {
+        return velocityX != 0 || velocityY != 0;
     }
 }

@@ -8,10 +8,10 @@ public class SlowEnemy extends Enemy {
     public SlowEnemy(float x, float y, Player player) {
         super(x, y, player);
         this.damage = 3;
-        this.width = 48;
+        this.width  = 48;
         this.height = 48;
         this.health = 3;
-        this.speed = 75;
+        this.speed  = 75;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class SlowEnemy extends Enemy {
     }
 
     @Override
-    public String getTextureName() {
-        return "blue.jpg";
+    public String getBaseTexturePath() {
+        return "src/main/resources/Enemy/Slow";
     }
 }
