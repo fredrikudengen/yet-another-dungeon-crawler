@@ -30,7 +30,7 @@ public class TitleScreen implements Screen {
     private float playerTimer = 0;
     private int playerFrame = 0; 
 
-    private enum MenuOption {
+    public enum MenuOption {
         START, OPTIONS, EXIT
     }
 
