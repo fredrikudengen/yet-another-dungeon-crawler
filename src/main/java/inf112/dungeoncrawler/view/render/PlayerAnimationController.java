@@ -9,7 +9,7 @@ public class PlayerAnimationController {
 
     private static final float ATTACK_DURATION = Player.ATTACK_DURATION;
 
-    private static final String BASE_PATH = "src/main/resources/Player/Weapon1";
+    private static final String BASE_PATH = "Player/Weapon1";
 
     private float walkTimer = 0f;
     private int   walkFrame = 1; // alternates between 1 and 2
