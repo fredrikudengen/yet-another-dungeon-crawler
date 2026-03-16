@@ -1,4 +1,4 @@
-package inf112.skeleton.view.Menu;
+package inf112.dungeoncrawler.view.Menu;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
