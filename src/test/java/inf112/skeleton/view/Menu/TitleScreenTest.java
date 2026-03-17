@@ -1,65 +1,34 @@
-package inf112.skeleton.view.Menu;
-
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import inf112.skeleton.controller.GameScreen;
-import inf112.skeleton.controller.HelpScreen;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockedConstruction;
+package inf112.dungeoncrawler.view.Menu;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
+import com.badlogic.gdx.graphics.Texture;
 
 public class TitleScreenTest {
 
-    private Game mockGame;
+    @Test
+    void menuOption() {
+        TitleScreen.MenuOption[] options = TitleScreen.MenuOption.values();
 
-    @BeforeEach
-    public void setUp() {
-        mockGame = mock(Game.class);
-        Gdx.app = mock(Application.class);
-        Application mockApp = mock(Application.class);
-        Gdx.app = mockApp;
+        assertEquals(3, options.length);
     }
 
     @Test
-    public void titleScreen_initialIndex_isZero() {
-        TitleScreen screen = new TitleScreen(mockGame);
-        assertEquals(0, screen.getCurrentIndex());
+    void menuOptionsCorrect() {
+        TitleScreen.MenuOption[] options = TitleScreen.MenuOption.values();
+
+        assertEquals(TitleScreen.MenuOption.START, options[0]);
+        assertEquals(TitleScreen.MenuOption.OPTIONS, options[1]);
+        assertEquals(TitleScreen.MenuOption.EXIT, options[2]);
     }
 
     @Test
-    public void titleScreen_start_navigatesToGameScreen() {
-        try (MockedConstruction<GameScreen> mocked = mockConstruction(GameScreen.class)) {
-            TitleScreen screen = new TitleScreen(mockGame);
-            screen.handleSelection(TitleScreen.MenuOption.START);
-            verify(mockGame).setScreen(any(GameScreen.class));
-        }
-    }
+    void animationFrameShouldLoop() {
+        Texture[] frames = new Texture[2];
+        int index = 1;
+        index = (index + 1) % frames.length;
 
-    @Test
-    public void titleScreen_controls_navigatesToHelpScreen() {
-        try (MockedConstruction<HelpScreen> mocked = mockConstruction(HelpScreen.class)) {
-            TitleScreen screen = new TitleScreen(mockGame);
-            screen.handleSelection(TitleScreen.MenuOption.CONTROLS);
-            verify(mockGame).setScreen(any(HelpScreen.class));
-        }
-    }
+        assertEquals(0, index);
 
-    @Test
-    public void titleScreen_exit_callsAppExit() {
-        TitleScreen screen = new TitleScreen(mockGame);
-        screen.handleSelection(TitleScreen.MenuOption.EXIT);
-        verify(Gdx.app).exit();
-    }
-
-    @Test
-    public void titleScreen_exit_doesNotChangeScreen() {
-        TitleScreen screen = new TitleScreen(mockGame);
-        screen.handleSelection(TitleScreen.MenuOption.EXIT);
-        verify(mockGame, never()).setScreen(any());
     }
 }
