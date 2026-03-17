@@ -32,6 +32,24 @@ public class TitleScreen implements Screen {
         this.game = game;
     }
 
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public void handleSelection(MenuOption option) {
+        switch (option) {
+            case START:
+                game.setScreen(new GameScreen(game));
+                break;
+            case CONTROLS:
+                game.setScreen(new HelpScreen(game));
+                break;
+            case EXIT:
+                Gdx.app.exit();
+                break;
+        }
+    }
+
     @Override
     public void show() {
         batch = new SpriteBatch();
@@ -40,7 +58,6 @@ public class TitleScreen implements Screen {
         titleFont = new BitmapFont();
         titleFont.getData().setScale(2.5f);
         titleFont.setColor(Color.WHITE);
-        // Apply linear filtering to reduce blurriness
         titleFont.getRegion().getTexture().setFilter(
                 com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
                 com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
@@ -48,7 +65,6 @@ public class TitleScreen implements Screen {
         menuFont = new BitmapFont();
         menuFont.getData().setScale(1.5f);
         menuFont.setColor(Color.WHITE);
-        // reduce font blurriness
         menuFont.getRegion().getTexture().setFilter(
                 com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
                 com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
@@ -56,7 +72,7 @@ public class TitleScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        handleSelection(null);
+        handleInput();
 
         ScreenUtils.clear(0, 0, 0, 1);
 
@@ -90,29 +106,15 @@ public class TitleScreen implements Screen {
         batch.end();
     }
 
-    public int getCurrentIndex() {
-        return currentIndex;
-    }
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN))
+            currentIndex = (currentIndex + 1) % options.length;
 
-    public void moveDown() {
-        currentIndex = (currentIndex + 1) % options.length;
-    }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
+            currentIndex = (currentIndex - 1 + options.length) % options.length;
 
-    public void moveUp() {
-        currentIndex = (currentIndex - 1 + options.length) % options.length;
-    }
-
-    public void handleSelection(MenuOption option) {
-        switch (option) {
-            case START:
-                game.setScreen(new GameScreen(game));
-                break;
-            case CONTROLS:
-                game.setScreen(new HelpScreen(game));
-                break;
-            case EXIT:
-                Gdx.app.exit();
-                break;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            handleSelection(options[currentIndex]);
         }
     }
 
