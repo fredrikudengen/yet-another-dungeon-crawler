@@ -56,7 +56,7 @@ public class TitleScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        handleInput();
+        handleSelection(null);
 
         ScreenUtils.clear(0, 0, 0, 1);
 
@@ -74,7 +74,6 @@ public class TitleScreen implements Screen {
         for (int i = 0; i < options.length; i++) {
             String text = (i == currentIndex ? "> " : "  ") + options[i].name();
 
-            // Highlight selected option
             if (i == currentIndex) {
                 menuFont.setColor(Color.YELLOW);
             } else {
@@ -91,25 +90,29 @@ public class TitleScreen implements Screen {
         batch.end();
     }
 
-    private void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN))
-            currentIndex = (currentIndex + 1) % options.length;
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
-            currentIndex = (currentIndex - 1 + options.length) % options.length;
+    public void moveDown() {
+        currentIndex = (currentIndex + 1) % options.length;
+    }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            switch (options[currentIndex]) {
-                case START:
-                    game.setScreen(new GameScreen(game));
-                    break;
-                case CONTROLS:
-                    game.setScreen(new HelpScreen(game));
-                    break;
-                case EXIT:
-                    Gdx.app.exit();
-                    break;
-            }
+    public void moveUp() {
+        currentIndex = (currentIndex - 1 + options.length) % options.length;
+    }
+
+    public void handleSelection(MenuOption option) {
+        switch (option) {
+            case START:
+                game.setScreen(new GameScreen(game));
+                break;
+            case CONTROLS:
+                game.setScreen(new HelpScreen(game));
+                break;
+            case EXIT:
+                Gdx.app.exit();
+                break;
         }
     }
 
