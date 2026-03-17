@@ -18,12 +18,16 @@ public abstract class Enemy extends Entity {
 
     protected Player player;
 
-    private static final int   TILE_SIZE        = 32;
-    private static final float PATH_REFRESH_RATE = 0.5f;
-    private static final float WAYPOINT_RADIUS   = TILE_SIZE * 0.6f;
+    private static final int   TILE_SIZE          = 32;
+    private static final float PATH_REFRESH_RATE   = 0.5f;
+    private static final float WAYPOINT_RADIUS     = TILE_SIZE * 0.6f;
 
-    private List<int[]> path  = new ArrayList<>();
-    private float pathTimer   = PATH_REFRESH_RATE;
+    private static final float DETECTION_RADIUS    = TILE_SIZE * 10f;
+    private static final float LOSE_SIGHT_RADIUS   = TILE_SIZE * 11f;
+
+    private List<int[]> path    = new ArrayList<>();
+    private float pathTimer     = PATH_REFRESH_RATE;
+    private boolean isChasing   = false;
 
     public Enemy(float x, float y, Player player) {
         super(x, y);
@@ -37,6 +41,23 @@ public abstract class Enemy extends Entity {
         }
 
         Room room = world.getRoom();
+
+        float pdx = player.getX() - x;
+        float pdy = player.getY() - y;
+        float distToPlayer = (float) Math.sqrt(pdx * pdx + pdy * pdy);
+
+        if (!isChasing && distToPlayer <= DETECTION_RADIUS) {
+            isChasing = true;
+        } else if (isChasing && distToPlayer > LOSE_SIGHT_RADIUS) {
+            isChasing = false;
+            path.clear();
+        }
+
+        if (!isChasing) {
+            velocityX = 0;
+            velocityY = 0;
+            return;
+        }
 
         pathTimer += (float) deltaTime;
         if (pathTimer >= PATH_REFRESH_RATE) {
@@ -101,7 +122,7 @@ public abstract class Enemy extends Entity {
             return new ArrayList<>();
         }
 
-        Queue<int[]> open        = new LinkedList<>();
+        Queue<int[]> open            = new LinkedList<>();
         Map<String, String> cameFrom = new HashMap<>();
         // tile coordinates as keys ("x,y")
         String startKey = startX + "," + startY;
@@ -168,5 +189,9 @@ public abstract class Enemy extends Entity {
 
     public boolean isMoving() {
         return velocityX != 0 || velocityY != 0;
+    }
+
+    public boolean isChasing() {
+        return isChasing;
     }
 }
