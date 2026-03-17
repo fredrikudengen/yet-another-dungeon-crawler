@@ -91,7 +91,7 @@ public class GameScreen implements Screen {
 
         gameView.updateCamera(player.getX(), player.getY());
 
-        gameView.render(delta, gameWorld.getRoom(), gameWorld.getEntities(), gameWorld.getPowerups());
+        gameView.render(delta, gameWorld.getRoom(), gameWorld.getEntities(), gameWorld.getPowerups(), player.getHealth());
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new PauseScreen(game, this));
