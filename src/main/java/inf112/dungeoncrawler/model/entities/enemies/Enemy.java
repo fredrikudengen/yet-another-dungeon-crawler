@@ -22,12 +22,18 @@ public abstract class Enemy extends Entity {
     private static final float PATH_REFRESH_RATE   = 0.5f;
     private static final float WAYPOINT_RADIUS     = TILE_SIZE * 0.6f;
 
-    private static final float DETECTION_RADIUS    = TILE_SIZE * 10f;
-    private static final float LOSE_SIGHT_RADIUS   = TILE_SIZE * 11f;
+    private static final float DETECTION_RADIUS    = TILE_SIZE * 12f;
+
+    private static final float PLAYER_KNOCKBACK_FORCE = 400f;
+    private static final float ENEMY_KNOCKBACK_FORCE  = 350f;
+    private static final float KNOCKBACK_FRICTION     = 800f;
 
     private List<int[]> path    = new ArrayList<>();
     private float pathTimer     = PATH_REFRESH_RATE;
     private boolean isChasing   = false;
+    private float stunTimer     = 0f;
+    private float knockbackX    = 0f;
+    private float knockbackY    = 0f;
 
     public Enemy(float x, float y, Player player) {
         super(x, y);
@@ -36,11 +42,45 @@ public abstract class Enemy extends Entity {
 
     @Override
     public void step(GameWorld world, double deltaTime) {
-        if (this.collidesWith(player)) {
+        if (this.collidesWith(player) && !player.isInvincible()) {
+            applyKnockbackToPlayer();
+            stunTimer = Player.INVINCIBILITY_DURATION;
             this.onCollision(player);
         }
 
         Room room = world.getRoom();
+
+        if (knockbackX != 0 || knockbackY != 0) {
+            float kbSpeed   = (float) Math.sqrt(knockbackX * knockbackX + knockbackY * knockbackY);
+            float reduction = KNOCKBACK_FRICTION * (float) deltaTime;
+            if (reduction >= kbSpeed) {
+                knockbackX = 0;
+                knockbackY = 0;
+            } else {
+                float factor = (kbSpeed - reduction) / kbSpeed;
+                knockbackX *= factor;
+                knockbackY *= factor;
+            }
+        }
+
+        if (knockbackX != 0 || knockbackY != 0) {
+            float kbNewX = x + knockbackX * (float) deltaTime;
+            float kbNewY = y + knockbackY * (float) deltaTime;
+            if (!room.isBlocked(kbNewX, kbNewY, width, height, TILE_SIZE)) {
+                setPosition(kbNewX, kbNewY);
+            } else if (!room.isBlocked(kbNewX, y, width, height, TILE_SIZE)) {
+                setPosition(kbNewX, y);
+            } else if (!room.isBlocked(x, kbNewY, width, height, TILE_SIZE)) {
+                setPosition(x, kbNewY);
+            }
+        }
+
+        if (stunTimer > 0) {
+            stunTimer -= (float) deltaTime;
+            velocityX  = 0;
+            velocityY  = 0;
+            return;
+        }
 
         float pdx = player.getX() - x;
         float pdy = player.getY() - y;
@@ -48,7 +88,7 @@ public abstract class Enemy extends Entity {
 
         if (!isChasing && distToPlayer <= DETECTION_RADIUS) {
             isChasing = true;
-        } else if (isChasing && distToPlayer > LOSE_SIGHT_RADIUS) {
+        } else if (isChasing && distToPlayer > DETECTION_RADIUS) {
             isChasing = false;
             path.clear();
         }
@@ -112,6 +152,29 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    private void applyKnockbackToPlayer() {
+        float dx   = player.getX() - x;
+        float dy   = player.getY() - y;
+        float dist = (float) Math.sqrt(dx * dx + dy * dy);
+        if (dist > 0) {
+            player.applyKnockback((dx / dist) * PLAYER_KNOCKBACK_FORCE,
+                    (dy / dist) * PLAYER_KNOCKBACK_FORCE);
+        }
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        super.takeDamage(damage);
+        float dx   = x - player.getX();
+        float dy   = y - player.getY();
+        float dist = (float) Math.sqrt(dx * dx + dy * dy);
+        if (dist > 0) {
+            knockbackX = (dx / dist) * ENEMY_KNOCKBACK_FORCE;
+            knockbackY = (dy / dist) * ENEMY_KNOCKBACK_FORCE;
+        }
+        stunTimer = Player.INVINCIBILITY_DURATION;
+    }
+
     private List<int[]> bfsPath(Room room) {
         int startX = (int) (x / TILE_SIZE);
         int startY = (int) (y / TILE_SIZE);
@@ -170,7 +233,6 @@ public abstract class Enemy extends Entity {
                     Integer.parseInt(parts[1]) });
             current = cameFrom.get(current);
         }
-
         Collections.reverse(result);
         return result;
     }
