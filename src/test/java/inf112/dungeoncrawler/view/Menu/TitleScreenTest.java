@@ -18,7 +18,7 @@ public class TitleScreenTest {
         TitleScreen.MenuOption[] options = TitleScreen.MenuOption.values();
 
         assertEquals(TitleScreen.MenuOption.START, options[0]);
-        assertEquals(TitleScreen.MenuOption.OPTIONS, options[1]);
+        assertEquals(TitleScreen.MenuOption.HELP, options[1]);
         assertEquals(TitleScreen.MenuOption.EXIT, options[2]);
     }
 

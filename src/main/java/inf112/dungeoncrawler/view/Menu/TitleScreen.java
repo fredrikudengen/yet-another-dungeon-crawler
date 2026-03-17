@@ -31,7 +31,7 @@ public class TitleScreen implements Screen {
     private int playerFrame = 0; 
 
     public enum MenuOption {
-        START, OPTIONS, EXIT
+        START, HELP, EXIT
     }
 
     private MenuOption[] options = MenuOption.values();
@@ -175,8 +175,8 @@ public class TitleScreen implements Screen {
                 case START:
                     game.setScreen(new GameScreen(game));
                     break;
-                case OPTIONS:
-                    System.out.println("Options - Not implemented yet");
+                case HELP:
+                    game.setScreen(new HelpScreen(game));
                     break;
                 case EXIT:
                     Gdx.app.exit();
