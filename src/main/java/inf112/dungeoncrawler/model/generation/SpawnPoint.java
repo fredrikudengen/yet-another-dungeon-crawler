@@ -1,0 +1,23 @@
+package inf112.dungeoncrawler.model.generation;
+
+public class SpawnPoint {
+
+    public enum Type {
+        FASTENEMY,
+        NORMALENEMY,
+        SLOWENEMY,
+        SPEEDPOWERUP,
+        ATTACKPOWERUP,
+        HEALTHPOWERUP,
+        PLAYER }
+
+    public final int x;
+    public final int y;
+    public final Type type;
+
+    public SpawnPoint(int x, int y, Type type) {
+        this.x = x;
+        this.y = y;
+        this.type = type;
+    }
+}
