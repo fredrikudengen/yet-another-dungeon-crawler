@@ -11,7 +11,7 @@ class AttackTest {
 
     @BeforeEach
     void setUp() {
-        attack = new Attack(2.0f, 50f, 5f);  
+        attack = new Attack(2.0f, 50f, 5f);
     }
 
     @Test
@@ -40,7 +40,7 @@ class AttackTest {
     void testUseIgnoredWhenOnCooldown() {
         attack.use();
         float progressAfterFirstUse = attack.getCooldownProgress();
-        attack.use(); 
+        attack.use();
         assertEquals(progressAfterFirstUse, attack.getCooldownProgress(), 0.001f);
     }
 
@@ -61,7 +61,7 @@ class AttackTest {
     @Test
     void testUpdateDoesNotGoBelowZero() {
         attack.use();
-        attack.update(10.0f); 
+        attack.update(10.0f);
         assertTrue(attack.canUse());
         assertEquals(0.0f, attack.getCooldownProgress(), 0.001f);
     }
