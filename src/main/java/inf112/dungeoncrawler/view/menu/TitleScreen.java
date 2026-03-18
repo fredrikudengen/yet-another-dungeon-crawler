@@ -141,7 +141,7 @@ public class TitleScreen implements Screen {
         batch.end();
     }
 
-    private int animate(float delta, float interval, Texture[] frames, int index, boolean isFlame) {
+    public int animate(float delta, float interval, Texture[] frames, int index, boolean isFlame) {
         if (isFlame) {
             flameTimer += delta;
 
