@@ -18,18 +18,17 @@ import inf112.dungeoncrawler.model.generation.SpawnPoint;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.view.GameView;
-import inf112.dungeoncrawler.view.Menu.PauseScreen;
-import inf112.dungeoncrawler.view.Menu.TitleScreen;
+import inf112.dungeoncrawler.view.menu.PauseOverlay;
+import inf112.dungeoncrawler.view.menu.TitleScreen;
 
 public class GameScreen implements Screen {
     private Game game;
     private GameView gameView;
     private GameWorld gameWorld;
     private Player player;
-    private FastEnemy fastEnemy;
-    private HealthPowerup healthPowerup;
-    private SpeedPowerup speedPowerup;
     private PlayerInputHandler playerInputHandler;
+    private PauseOverlay pauseOverlay;
+    private boolean isPaused = false;
 
     public GameScreen(Game game) {
         this.game = game;
@@ -53,20 +52,15 @@ public class GameScreen implements Screen {
         for (SpawnPoint sp : room.getSpawnPoints()) {
             if (sp.type == SpawnPoint.Type.FASTENEMY) {
                 gameWorld.addEntity(new FastEnemy(sp.x, sp.y, player));
-            }
-            else if (sp.type == SpawnPoint.Type.NORMALENEMY) {
+            } else if (sp.type == SpawnPoint.Type.NORMALENEMY) {
                 gameWorld.addEntity(new NormalEnemy(sp.x, sp.y, player));
-            }
-            else if (sp.type == SpawnPoint.Type.SLOWENEMY) {
+            } else if (sp.type == SpawnPoint.Type.SLOWENEMY) {
                 gameWorld.addEntity(new SlowEnemy(sp.x, sp.y, player));
-            }
-            else if (sp.type == SpawnPoint.Type.SPEEDPOWERUP) {
+            } else if (sp.type == SpawnPoint.Type.SPEEDPOWERUP) {
                 gameWorld.addPowerup(new SpeedPowerup(sp.x, sp.y));
-            }
-            else if (sp.type == SpawnPoint.Type.ATTACKPOWERUP) {
+            } else if (sp.type == SpawnPoint.Type.ATTACKPOWERUP) {
                 gameWorld.addPowerup(new AttackPowerup(sp.x, sp.y));
-            }
-            else if (sp.type == SpawnPoint.Type.HEALTHPOWERUP) {
+            } else if (sp.type == SpawnPoint.Type.HEALTHPOWERUP) {
                 gameWorld.addPowerup(new HealthPowerup(sp.x, sp.y));
             }
         }
@@ -74,6 +68,13 @@ public class GameScreen implements Screen {
         playerInputHandler = new PlayerInputHandler(player);
         Gdx.input.setInputProcessor(playerInputHandler);
         gameView.updateCamera(player.getX(), player.getY());
+
+        pauseOverlay = new PauseOverlay(
+                game,
+                () -> isPaused = false,
+                () -> this.dispose()
+        );
+        pauseOverlay.init();
     }
 
     private Room createExampleRoom() {
@@ -83,18 +84,23 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        gameWorld.step(delta, player);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            isPaused = !isPaused;
+        }
+
+        if (!isPaused) {
+            gameWorld.step(delta, player);
+            gameView.updateCamera(player.getX(), player.getY());
+            gameView.render(delta, gameWorld.getRoom(), gameWorld.getEntities(), gameWorld.getPowerups());
+        }
 
         if (player.getHealth() <= 0) {
             game.setScreen(new TitleScreen(game));
+            return;
         }
 
-        gameView.updateCamera(player.getX(), player.getY());
-
-        gameView.render(delta, gameWorld.getRoom(), gameWorld.getEntities(), gameWorld.getPowerups());
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new PauseScreen(game, this));
+        if (isPaused) {
+            pauseOverlay.render();
         }
     }
 
@@ -117,5 +123,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         gameView.dispose();
+        pauseOverlay.dispose();
     }
 }

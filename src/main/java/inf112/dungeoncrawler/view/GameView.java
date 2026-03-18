@@ -25,7 +25,7 @@ public class GameView {
     private WorldRenderer worldRenderer;
     private EntityRenderer entityRenderer;
 
-    private static final int TILE_SIZE = 32;
+    public static final int TILE_SIZE = 32;
 
     public void create(double worldWidth, double worldHeight) {
         this.viewport = new FillViewport((float) worldWidth, (float) worldHeight);
