@@ -3,6 +3,7 @@ package inf112.dungeoncrawler.model.world;
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.Player;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
+import inf112.dungeoncrawler.model.sound.SoundPlayer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,7 +32,13 @@ public class GameWorld implements Iterable<Entity> {
 
         entities.removeIf(entity -> entity.getHealth() <= 0);
 
-        powerups.removeIf(powerup -> powerup.collidesWith(player));
+        powerups.removeIf(powerup -> {
+            if (powerup.collidesWith(player)) {
+                SoundPlayer.getInstance().play(SoundPlayer.SoundEffect.POWERUP_PICKUP);
+                return true;
+            }
+            return false;
+        });
     }
 
     public void addEntity(Entity entity) {
