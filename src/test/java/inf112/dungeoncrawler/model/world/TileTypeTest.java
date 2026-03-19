@@ -6,51 +6,28 @@ import org.junit.jupiter.api.Test;
 
 class TileTypeTest {
 
-    @Test
-    void testEmptyTextureNameIsCorrect() {
-        assertEquals("Floor_wall_door/empty.png", TileType.EMPTY.getTextureName());
-    }
+	@Test
+	void testFloorTextureNameIsCorrect() {
+		assertEquals("Floor_wall_door/floor2.png", TileType.FLOOR.getTextureName());
+	}
 
-    @Test
-    void testFloorTextureNameIsCorrect() {
-        assertEquals("Floor_wall_door/wall2.png", TileType.FLOOR.getTextureName());
-    }
+	@Test
+	void testWallTextureNameIsCorrect() {
+		assertEquals("Floor_wall_door/wall2.png", TileType.WALL.getTextureName());
+	}
 
-    @Test
-    void testWallTextureNameIsCorrect() {
-        assertEquals("Floor_wall_door/wall3.png", TileType.WALL.getTextureName());
-    }
+	@Test
+	void testFloorDoesNotBlockMovement() {
+		assertFalse(TileType.FLOOR.blocksMovement());
+	}
 
-    @Test
-    void testEmptyBlocksMovement() {
-        assertTrue(TileType.EMPTY.blocksMovement(), "EMPTY should block movement");
-    }
+	@Test
+	void testWallBlocksMovement() {
+		assertTrue(TileType.WALL.blocksMovement());
+	}
 
-    @Test
-    void testFloorDoesNotBlockMovement() {
-        assertFalse(TileType.FLOOR.blocksMovement(), "FLOOR should not block movement");
-    }
-
-    @Test
-    void testWallBlocksMovement() {
-        assertTrue(TileType.WALL.blocksMovement(), "WALL should block movement");
-    }
-
-    @Test
-    void testEnumContainsAllTileTypes() {
-        TileType[] expected = {TileType.EMPTY, TileType.FLOOR, TileType.WALL};
-        assertArrayEquals(expected, TileType.values());
-    }
-
-    @Test
-    void testTileTypeCount() {
-        assertEquals(3, TileType.values().length);
-    }
-
-    @Test
-    void testTextureNamesAreNotNull() {
-        assertNotNull(TileType.EMPTY.getTextureName());
-        assertNotNull(TileType.FLOOR.getTextureName());
-        assertNotNull(TileType.WALL.getTextureName());
-    }
+	@Test
+	void testEnumContainsExpectedTileTypes() {
+		assertArrayEquals(new TileType[] { TileType.FLOOR, TileType.WALL }, TileType.values());
+	}
 }
