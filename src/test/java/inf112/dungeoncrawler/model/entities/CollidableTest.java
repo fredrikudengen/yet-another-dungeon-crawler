@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 class CollidableTest {
 
     private Room room;
+    @SuppressWarnings("unused")
     private GameWorld world;
     private Player player;
     private NormalEnemy normalEnemy;
