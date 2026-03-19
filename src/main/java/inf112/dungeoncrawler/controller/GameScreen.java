@@ -15,6 +15,7 @@ import inf112.dungeoncrawler.model.entities.powerups.SpeedPowerup;
 import inf112.dungeoncrawler.model.factories.RoomFactory;
 import inf112.dungeoncrawler.model.generation.RoomLoader;
 import inf112.dungeoncrawler.model.generation.SpawnPoint;
+import inf112.dungeoncrawler.model.sound.SoundPlayer;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.view.GameView;
@@ -41,6 +42,8 @@ public class GameScreen implements Screen {
 
         gameView = new GameView();
         gameView.create(1280, 768);
+
+        SoundPlayer.getInstance().playMusic();
 
         for (SpawnPoint sp : room.getSpawnPoints()) {
             if (sp.type == SpawnPoint.Type.PLAYER) {
@@ -123,5 +126,6 @@ public class GameScreen implements Screen {
     public void dispose() {
         gameView.dispose();
         pauseOverlay.dispose();
+        SoundPlayer.getInstance().dispose();
     }
 }

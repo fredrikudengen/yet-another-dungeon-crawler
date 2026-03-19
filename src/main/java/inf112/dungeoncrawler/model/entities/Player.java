@@ -3,6 +3,7 @@ package inf112.dungeoncrawler.model.entities;
 import inf112.dungeoncrawler.model.Direction;
 import inf112.dungeoncrawler.model.combat.Attack;
 import inf112.dungeoncrawler.model.entities.enemies.Enemy;
+import inf112.dungeoncrawler.model.sound.SoundPlayer;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 
@@ -114,6 +115,7 @@ public class Player extends Entity {
             super.takeDamage(damage);
             isInvincible       = true;
             invincibilityTimer = INVINCIBILITY_DURATION;
+            SoundPlayer.getInstance().play(SoundPlayer.SoundEffect.DAMAGE_TAKEN);
         }
     }
 
@@ -164,6 +166,7 @@ public class Player extends Entity {
             attackTimer     = 0;
             facingDirection = direction;
             hasCheckedHits  = false;
+            SoundPlayer.getInstance().play(SoundPlayer.SoundEffect.SWORD_SWING);
         }
     }
 
