@@ -5,8 +5,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.utils.Os;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
-
-import inf112.dungeoncrawler.view.Menu.TitleScreen;
+import inf112.dungeoncrawler.view.menu.TitleScreen;
 import org.lwjgl.system.Configuration;
 
 public class Main extends Game {

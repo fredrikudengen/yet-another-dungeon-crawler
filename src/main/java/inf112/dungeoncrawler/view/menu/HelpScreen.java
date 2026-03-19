@@ -1,4 +1,4 @@
-package inf112.dungeoncrawler.view.Menu;
+package inf112.dungeoncrawler.view.menu;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -10,89 +10,76 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.ScreenUtils;
 
-/**
- * HelpScreen — Controls & Keybinds reference for the dungeon crawler.
- *
- * Usage:
- * game.setScreen(new HelpScreen(game));
- *
- * Replace every occurrence of "YourGame" with your actual Game subclass name.
- */
 public class HelpScreen implements Screen {
 
-    // ── palette ───────────────────────────────────────────────────────────────
-    private static final Color BG_COLOR = new Color(0.04f, 0.03f, 0.06f, 1f);
-    private static final Color PANEL_COLOR = new Color(0.08f, 0.06f, 0.12f, 0.95f);
-    private static final Color TITLE_COLOR = new Color(1.00f, 0.82f, 0.25f, 1f); // gold
-    private static final Color KEY_BG = new Color(0.15f, 0.10f, 0.22f, 1f);
-    private static final Color KEY_BORDER = new Color(0.60f, 0.35f, 0.80f, 1f);
-    private static final Color TEXT_MAIN = new Color(0.90f, 0.85f, 1.00f, 1f);
-    private static final Color TEXT_DIM = new Color(0.50f, 0.40f, 0.60f, 1f);
-    private static final Color DIVIDER = new Color(0.30f, 0.18f, 0.42f, 1f);
+    // ── palette (matches TitleScreen) ────────────────────────────────────────
+    private static final Color GOLD     = Color.valueOf("F4BB44");
+    private static final Color DIVIDER  = new Color(0.45f, 0.28f, 0.10f, 1f); // warm brown
+    private static final Color KEY_BG   = new Color(0.30f, 0.18f, 0.08f, 1f);
+    private static final Color KEY_BORDER = new Color(0.65f, 0.40f, 0.10f, 1f);
+    private static final Color TEXT_DIM = new Color(0.70f, 0.60f, 0.50f, 1f);
 
-    // ── keybind table {key label, action description} ───────────────────────
+    // ── keybind table ────────────────────────────────────────────────────────
     private static final String[][] BINDS = {
-            { "W / UP", "Move North" },
-            { "S / DOWN", "Move South" },
-            { "A / LEFT", "Move West" },
-            { "D / RIGHT", "Move East" },
-            { "ESC", "Pause / Back" },
+            { "W", "Move North" },
+            { "S", "Move South" },
+            { "A", "Move West"  },
+            { "D", "Move East"  },
+            { "E", "Pause / Back" },
+            { "SPACE", "Attack" }
     };
 
-    // ── layout constants (tweak to fit your resolution) ───────────────────────
-    private static final float PANEL_PAD_X = 80f; // horizontal margin to panel
-    private static final float PANEL_PAD_Y = 60f; // vertical margin to panel
-    private static final float ROW_HEIGHT = 44f; // height of each keybind row
-    private static final float KEY_COL_W = 220f; // width of the key-label column
-    private static final float HEADER_H = 90f; // space reserved for the title
-    private static final float FOOTER_H = 50f; // space reserved for the hint
+    // ── layout constants ─────────────────────────────────────────────────────
+    private static final float PANEL_PAD_X = 80f;
+    private static final float PANEL_PAD_Y = 60f;
+    private static final float ROW_HEIGHT  = 60f;
+    private static final float KEY_COL_W   = 220f;
+    private static final float HEADER_H    = 90f;
+    private static final float FOOTER_H    = 50f;
 
     // ── fields ────────────────────────────────────────────────────────────────
-    private final Game game; // ← swap type with your Game class
+    private final Game game;
     private final SpriteBatch batch;
     private final ShapeRenderer shapes;
     private final OrthographicCamera camera;
 
-    /**
-     * Use your project's pixel/bitmap font; these defaults use the built-in font.
-     */
-    private final BitmapFont titleFont;
-    private final BitmapFont bodyFont;
-    private final BitmapFont hintFont;
+    private BitmapFont titleFont;
+    private BitmapFont bodyFont;
+    private BitmapFont hintFont;
 
     private final GlyphLayout layout = new GlyphLayout();
-
     private float elapsedTime = 0f;
 
     // ── constructor ───────────────────────────────────────────────────────────
 
-    /**
-     * @param game Your main Game instance (same object passed everywhere else).
-     */
     public HelpScreen(Game game) {
         this.game = game;
 
-        batch = new SpriteBatch();
+        batch  = new SpriteBatch();
         shapes = new ShapeRenderer();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // ── fonts ──────────────────────────────────────────────────────────────
-        // Replace these with your AssetManager / BitmapFont loader, e.g.:
-        // titleFont = game.assets.get("fonts/pixel_large.fnt", BitmapFont.class);
-        titleFont = new BitmapFont();
-        titleFont.getData().setScale(2.6f);
-        titleFont.setColor(TITLE_COLOR);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-        bodyFont = new BitmapFont();
-        bodyFont.getData().setScale(1.5f);
-        bodyFont.setColor(TEXT_MAIN);
+        parameter.size = 75;
+        titleFont = generator.generateFont(parameter);
+        titleFont.setColor(GOLD);
 
-        hintFont = new BitmapFont();
-        hintFont.getData().setScale(1.2f);
+        parameter.size = 30;
+        bodyFont = generator.generateFont(parameter);
+        bodyFont.setColor(Color.WHITE);
+
+        parameter.size = 24;
+        hintFont = generator.generateFont(parameter);
         hintFont.setColor(TEXT_DIM);
+
+        generator.dispose();
     }
 
     // ── Screen lifecycle ──────────────────────────────────────────────────────
@@ -107,20 +94,17 @@ public class HelpScreen implements Screen {
         elapsedTime += delta;
         handleInput();
 
-        float W = Gdx.graphics.getWidth();
-        float H = Gdx.graphics.getHeight();
-
-        // Clear
-        Gdx.gl.glClearColor(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        ScreenUtils.clear(0.2f, 0.13f, 0.07f, 1);
 
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         shapes.setProjectionMatrix(camera.combined);
 
-        drawPanel(W, H);
-        drawTitle(W, H);
+        float W = Gdx.graphics.getWidth();
+        float H = Gdx.graphics.getHeight();
+
         drawDivider(W, H);
+        drawTitle(W, H);
         drawBinds(W, H);
         drawFooter(W, H);
     }
@@ -137,27 +121,8 @@ public class HelpScreen implements Screen {
 
     // ── drawing helpers ───────────────────────────────────────────────────────
 
-    /** Dark frosted-glass panel with a purple border. */
-    private void drawPanel(float W, float H) {
-        float x = PANEL_PAD_X;
-        float y = PANEL_PAD_Y;
-        float w = W - PANEL_PAD_X * 2f;
-        float h = H - PANEL_PAD_Y * 2f;
-
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-        shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(PANEL_COLOR);
-        shapes.rect(x, y, w, h);
-        shapes.end();
-    }
-
-    /** Pulsing gold title at the top of the panel. */
     private void drawTitle(float W, float H) {
-        // Gentle alpha pulse using a sine wave
-        float pulse = 0.85f + 0.15f * (float) Math.sin(elapsedTime * 3.0);
-        titleFont.setColor(TITLE_COLOR.r, TITLE_COLOR.g, TITLE_COLOR.b, pulse);
+        titleFont.setColor(GOLD);
 
         String title = "CONTROLS";
         layout.setText(titleFont, title);
@@ -168,11 +133,9 @@ public class HelpScreen implements Screen {
         titleFont.draw(batch, title, tx, ty);
         batch.end();
 
-        // Reset alpha
-        titleFont.setColor(TITLE_COLOR);
+        titleFont.setColor(GOLD);
     }
 
-    /** Horizontal rule between title and bind list. */
     private void drawDivider(float W, float H) {
         float lx = PANEL_PAD_X + 20f;
         float rx = W - PANEL_PAD_X - 20f;
@@ -184,36 +147,31 @@ public class HelpScreen implements Screen {
         shapes.end();
     }
 
-    /** Draws each keybind row: [KEY BOX] description */
     private void drawBinds(float W, float H) {
-        float listTop = H - PANEL_PAD_Y - HEADER_H - 10f;
+        float listTop  = H - PANEL_PAD_Y - HEADER_H - 10f;
         float listLeft = PANEL_PAD_X + 30f;
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         for (int i = 0; i < BINDS.length; i++) {
-            String key = BINDS[i][0];
+            String key    = BINDS[i][0];
             String action = BINDS[i][1];
-
             float rowY = listTop - i * ROW_HEIGHT;
 
-            // Alternate row tint for readability
             if (i % 2 == 0) {
                 shapes.begin(ShapeRenderer.ShapeType.Filled);
-                shapes.setColor(0.10f, 0.07f, 0.15f, 0.40f);
+                shapes.setColor(0.25f, 0.15f, 0.07f, 0.40f);
                 shapes.rect(listLeft - 8f, rowY - ROW_HEIGHT + 6f,
                         W - PANEL_PAD_X * 2f - 44f, ROW_HEIGHT - 2f);
                 shapes.end();
             }
 
-            // Key badge background
             shapes.begin(ShapeRenderer.ShapeType.Filled);
             shapes.setColor(KEY_BG);
             shapes.rect(listLeft, rowY - ROW_HEIGHT + 10f, KEY_COL_W - 10f, ROW_HEIGHT - 12f);
             shapes.end();
 
-            // Key badge border
             shapes.begin(ShapeRenderer.ShapeType.Line);
             shapes.setColor(KEY_BORDER);
             shapes.rect(listLeft, rowY - ROW_HEIGHT + 10f, KEY_COL_W - 10f, ROW_HEIGHT - 12f);
@@ -221,15 +179,13 @@ public class HelpScreen implements Screen {
 
             batch.begin();
 
-            // Key label (centered in badge)
-            bodyFont.setColor(TEXT_MAIN);
+            bodyFont.setColor(GOLD);
             layout.setText(bodyFont, key);
             float kx = listLeft + (KEY_COL_W - 10f - layout.width) / 2f;
-            float ky = rowY - 6f;
+            float ky = rowY - 15f;
             bodyFont.draw(batch, key, kx, ky);
 
-            // Action description
-            bodyFont.setColor(TEXT_DIM);
+            bodyFont.setColor(Color.WHITE);
             float ax = listLeft + KEY_COL_W + 14f;
             bodyFont.draw(batch, action, ax, ky);
 
@@ -258,17 +214,9 @@ public class HelpScreen implements Screen {
         camera.setToOrtho(false, width, height);
     }
 
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
+    @Override public void pause() {}
+    @Override public void resume() {}
+    @Override public void hide() {}
 
     @Override
     public void dispose() {

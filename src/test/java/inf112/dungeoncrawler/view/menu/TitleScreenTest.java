@@ -1,4 +1,4 @@
-package inf112.dungeoncrawler.view.Menu;
+package inf112.dungeoncrawler.view.menu;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
@@ -30,5 +30,32 @@ public class TitleScreenTest {
 
         assertEquals(0, index);
         
+    }
+
+    @Test
+    void animateShouldChangeFrame() {
+        TitleScreen screen = new TitleScreen(null); 
+        Texture[] frames = new Texture[2];
+
+        int index = screen.animate(1f, 0.25f, frames, 0, true); 
+        assertEquals(1, index); 
+    }
+
+    @Test
+    void animatePlayerShouldChangeFrame() {
+        TitleScreen screen = new TitleScreen(null); 
+        Texture[] frames = new Texture[2];
+
+        int index = screen.animate(1f, 0.25f, frames, 0, true); 
+        assertEquals(1, index); 
+    }
+
+    @Test
+    void animateShouldNotChangeFrame() {
+        TitleScreen screen = new TitleScreen(null); 
+        Texture[] frames = new Texture[2];
+
+        int index = screen.animate(0.1f, 0.25f, frames, 0, true); 
+        assertEquals(0, index); 
     }
 }
