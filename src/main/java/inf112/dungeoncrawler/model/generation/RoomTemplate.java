@@ -42,6 +42,7 @@ public class RoomTemplate implements RoomFactory {
     private TileType charToTileType(char c) {
         return switch (c) {
             case '#' -> TileType.WALL;
+            case ' ' -> TileType.EMPTY;
             default -> TileType.FLOOR;
         };
     }

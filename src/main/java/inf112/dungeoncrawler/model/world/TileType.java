@@ -1,8 +1,9 @@
 package inf112.dungeoncrawler.model.world;
 
 public enum TileType {
-    FLOOR("Floor_wall_door/floor2.png", false),
-    WALL("Floor_wall_door/wall2.png", true);
+    EMPTY("Floor_wall_door/empty.png", true),
+    FLOOR("Floor_wall_door/wall2.png", false),
+    WALL("Floor_wall_door/wall3.png", true);
 
     private final String textureName;
     private final boolean blocksMovement;

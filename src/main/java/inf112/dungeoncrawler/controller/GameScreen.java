@@ -91,8 +91,7 @@ public class GameScreen implements Screen {
         if (!isPaused) {
             gameWorld.step(delta, player);
             gameView.updateCamera(player.getX(), player.getY());
-            gameView.render(delta, gameWorld.getRoom(), gameWorld.getEntities(), gameWorld.getPowerups());
-        }
+            gameView.render(delta, gameWorld.getRoom(), gameWorld.getEntities(), gameWorld.getPowerups(), player.getHealth());        }
 
         if (player.getHealth() <= 0) {
             game.setScreen(new TitleScreen(game));

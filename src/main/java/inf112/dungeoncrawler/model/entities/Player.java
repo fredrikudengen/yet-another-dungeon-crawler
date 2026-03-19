@@ -127,6 +127,7 @@ public class Player extends Entity {
     public float getAttackTimer() {
         return attackTimer;
     }
+    
 
     public Direction getFacingDirection() {
         return facingDirection;

@@ -12,6 +12,7 @@ import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
 import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.view.render.EntityRenderer;
+import inf112.dungeoncrawler.view.render.UIRenderer;
 import inf112.dungeoncrawler.view.render.WorldRenderer;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class GameView {
 
     private WorldRenderer worldRenderer;
     private EntityRenderer entityRenderer;
+    private UIRenderer uiRenderer;
 
     public static final int TILE_SIZE = 32;
 
@@ -35,6 +37,7 @@ public class GameView {
 
         this.worldRenderer  = new WorldRenderer(batch, viewport.getCamera(), TILE_SIZE);
         this.entityRenderer = new EntityRenderer(batch, viewport.getCamera());
+        this.uiRenderer     = new UIRenderer(batch, viewport.getCamera());
 
         Gdx.graphics.setForegroundFPS(60);
     }
@@ -42,7 +45,7 @@ public class GameView {
     /**
      * @param deltaTime seconds since the last frame – pass {@code Gdx.graphics.getDeltaTime()}
      */
-    public void render(float deltaTime, Room room, List<Entity> entities, List<Powerup> powerups) {
+    public void render(float deltaTime, Room room, List<Entity> entities, List<Powerup> powerups, int playerHealth) {
         ScreenUtils.clear(Color.BLACK);
 
         batch.begin();
@@ -50,6 +53,7 @@ public class GameView {
         try {
             worldRenderer.render(room);
             entityRenderer.render(deltaTime, entities, powerups);
+            uiRenderer.renderPlayerHealth(playerHealth);
         } finally {
             batch.end();
         }
@@ -69,6 +73,7 @@ public class GameView {
         font.dispose();
         worldRenderer.dispose();
         entityRenderer.dispose();
+        uiRenderer.dispose();
     }
 
     public int getTileSize()       { return TILE_SIZE; }
