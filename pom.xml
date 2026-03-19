@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<!-- FIXME - set group id -->
-	<groupId>no.uib.ii.inf112</groupId>
-	<!-- FIXME - set artifact name -->
-	<artifactId>gdx-template-26v</artifactId>
+	<groupId>com.spritezero.dungeoncrawler</groupId>
+	<artifactId>dungeoncrawler</artifactId>
 	<version>1.26-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<!-- FIXME - set app name -->
-	<name>gdx-app</name>
-	<!-- FIXME change it to the project's website -->
-	<url>http://www.example.com</url>
+	<name>Yet Another Dungeon-Crawler</name>
+	<url>https://git.app.uib.no/inf112/26v/proj/sprite-zero</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>25</maven.compiler.release>
 		<libgdx.version>1.14.0</libgdx.version>
 		<slf4j.version>2.0.17</slf4j.version>
 		<junit.version>6.0.2</junit.version>
-		<!-- FIXME - set to app's main class' -->
-		<main.class>inf112.skeleton.app.MvcMain</main.class>
+		<main.class>inf112.dungeoncrawler.app.Main</main.class>
 		<jvm.extra.args>--enable-native-access=ALL-UNNAMED</jvm.extra.args>
 	</properties>
 	<dependencies>
 		<dependency>
+			<!-- libGDX core -->
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-freetype</artifactId>
+			<version>${libgdx.version}</version>
+		</dependency>
+		<dependency>
 			<!--libGDX graphics library – https://libgdx.com/ -->
 			<groupId>com.badlogicgames.gdx</groupId>
-			<artifactId>gdx</artifactId>
+			<artifactId>gdx-freetype</artifactId>
 			<version>${libgdx.version}</version>
 		</dependency>
 		<dependency>
 			<!-- Platform-specific libraries -->
 			<groupId>com.badlogicgames.gdx</groupId>
-			<artifactId>gdx-platform</artifactId>
+			<artifactId>gdx-freetype-platform</artifactId>
 			<version>${libgdx.version}</version>
 			<classifier>natives-desktop</classifier>
 		</dependency>
@@ -42,6 +43,13 @@
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx-backend-lwjgl3</artifactId>
 			<version>${libgdx.version}</version>
+		</dependency>
+		<dependency>
+			<!-- Platform-specific libraries -->
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-platform</artifactId>
+			<version>${libgdx.version}</version>
+			<classifier>natives-desktop</classifier>
 		</dependency>
 		<dependency>
 			<!-- run libgdx without graphics (for testing)-->
@@ -144,7 +152,7 @@
 									</manifestEntries>
 								</transformer>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-				                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>
 							</transformers>
 							<outputFile>
 								${project.build.directory}/${project.artifactId}-${project.version}-fat.jar</outputFile>
@@ -157,7 +165,7 @@
 									<exclude>META-INF/**/*MultiReleaseMemCopy.class</exclude>
 									<exclude>META-INF/MANIFEST.MF</exclude>
 								</excludes>
-								</filter>
+							</filter>
 							</filters>
 						</configuration>
 					</execution>
@@ -325,16 +333,16 @@
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.21.0</version>
 				</plugin>
-    			<plugin>
-	    			<groupId>com.github.spotbugs</groupId>
-	    			<artifactId>spotbugs-maven-plugin</artifactId>
-	    			<version>4.9.8.2</version>
-    			</plugin>
-    			<plugin>
-    				<groupId>org.apache.maven.plugins</groupId>
-    				<artifactId>maven-checkstyle-plugin</artifactId>
-    				<version>3.6.0</version>
-                </plugin>
+				<plugin>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
+					<version>4.9.8.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>3.6.0</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
