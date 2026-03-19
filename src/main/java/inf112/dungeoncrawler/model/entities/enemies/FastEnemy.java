@@ -10,7 +10,7 @@ public class FastEnemy extends Enemy {
         this.damage = 1;
         this.width  = 32;
         this.height = 32;
-        this.health = 1;
+        this.health = 3;
         this.speed  = 180;
     }
 

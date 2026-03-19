@@ -10,12 +10,21 @@ public class Player extends Entity {
 
     public static final float ATTACK_DURATION = 0.2f;
 
+    public static final float INVINCIBILITY_DURATION = 1.0f;
+
+    private static final float KNOCKBACK_FRICTION = 800f;
+
     private boolean movingLeft, movingRight, movingUp, movingDown;
     private Attack attack;
     private Direction facingDirection = Direction.RIGHT;
     private float attackTimer = 0;
     private boolean isAttacking = false;
     private boolean hasCheckedHits = false;
+
+    private float knockbackX = 0;
+    private float knockbackY = 0;
+    private float invincibilityTimer = 0;
+    private boolean isInvincible = false;
 
     public Player(float x, float y) {
         super(x, y);
@@ -29,6 +38,27 @@ public class Player extends Entity {
 
     @Override
     public void step(GameWorld world, double deltaTime) {
+        if (isInvincible) {
+            invincibilityTimer -= (float) deltaTime;
+            if (invincibilityTimer <= 0) {
+                isInvincible       = false;
+                invincibilityTimer = 0;
+            }
+        }
+
+        if (knockbackX != 0 || knockbackY != 0) {
+            float kbSpeed   = (float) Math.sqrt(knockbackX * knockbackX + knockbackY * knockbackY);
+            float reduction = KNOCKBACK_FRICTION * (float) deltaTime;
+            if (reduction >= kbSpeed) {
+                knockbackX = 0;
+                knockbackY = 0;
+            } else {
+                float factor = (kbSpeed - reduction) / kbSpeed;
+                knockbackX *= factor;
+                knockbackY *= factor;
+            }
+        }
+
         velocityX = 0;
         velocityY = 0;
         if (movingLeft)  velocityX -= speed;
@@ -38,8 +68,8 @@ public class Player extends Entity {
 
         if (!isAttacking) updateFacingDirection();
 
-        float newX = x + velocityX * (float) deltaTime;
-        float newY = y + velocityY * (float) deltaTime;
+        float newX = x + (velocityX + knockbackX) * (float) deltaTime;
+        float newY = y + (velocityY + knockbackY) * (float) deltaTime;
 
         Room room = world.getRoom();
         int tileSize = 32;
@@ -55,6 +85,7 @@ public class Player extends Entity {
             }
         }
 
+        // --- Attack logic ---
         if (isAttacking) {
             attackTimer += (float) deltaTime;
 
@@ -72,6 +103,24 @@ public class Player extends Entity {
         attack.update((float) deltaTime);
     }
 
+    public void applyKnockback(float vx, float vy) {
+        this.knockbackX = vx;
+        this.knockbackY = vy;
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        if (!isInvincible) {
+            super.takeDamage(damage);
+            isInvincible       = true;
+            invincibilityTimer = INVINCIBILITY_DURATION;
+        }
+    }
+
+    public boolean isInvincible() {
+        return isInvincible;
+    }
+
     private void updateFacingDirection() {
         if      (movingLeft)  facingDirection = Direction.LEFT;
         else if (movingRight) facingDirection = Direction.RIGHT;
@@ -85,8 +134,6 @@ public class Player extends Entity {
             if (entity instanceof Enemy && entity != this) {
                 if (isEnemyInAttackRange(entity, range)) {
                     entity.takeDamage(damage);
-                    System.out.print("Enemy hit!");
-                    // TODO: apply knockback based on currentAttack.getKnockback()
                 }
             }
         }
@@ -113,10 +160,10 @@ public class Player extends Entity {
     public void performAttack(Direction direction) {
         if (attack != null && attack.canUse() && !isAttacking) {
             attack.use();
-            isAttacking    = true;
-            attackTimer    = 0;
+            isAttacking     = true;
+            attackTimer     = 0;
             facingDirection = direction;
-            hasCheckedHits = false;
+            hasCheckedHits  = false;
         }
     }
 
@@ -152,8 +199,4 @@ public class Player extends Entity {
         return super.collidesWith(other);
     }
 
-    @Override
-    public int getHealth() {
-        return health;
-    }
 }
