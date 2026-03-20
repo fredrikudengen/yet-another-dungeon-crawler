@@ -2,6 +2,7 @@ package inf112.dungeoncrawler.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import inf112.dungeoncrawler.model.sound.SoundService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import inf112.dungeoncrawler.model.entities.Player;
@@ -10,10 +11,11 @@ public class PlayerInputHandlerTest {
 
     private PlayerInputHandler playerInputHandler;
     private Player player;
+    private static final SoundService NO_SOUND = effect -> {};
 
     @BeforeEach
     void setUp() {
-        player = new Player(100, 100);
+        player = new Player(100, 100, NO_SOUND);
         playerInputHandler = new PlayerInputHandler(player);
     }
     @Test

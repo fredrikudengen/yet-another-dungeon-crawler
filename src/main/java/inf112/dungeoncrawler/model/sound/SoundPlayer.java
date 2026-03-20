@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
-public class SoundPlayer {
+public class SoundPlayer implements SoundService{
 
     public enum SoundEffect {
         DAMAGE_TAKEN,

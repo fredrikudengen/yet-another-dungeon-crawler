@@ -14,7 +14,7 @@ public class SpeedPowerup extends Powerup {
 
     @Override
     public String getTextureName() {
-        return "src/main/resources/Life/Life.png";
+        return "src/main/resources/powerups/Life.png";
     }
 
     @Override
@@ -41,11 +41,9 @@ public class SpeedPowerup extends Powerup {
     public void onCollision(Entity entity) {
         entity.speed += 100;
         this.hasSpeed = true;
-        System.out.println("Player picked up powerup and got speed!");
     }
 
     private void endPowerup(Entity entity) {
-        System.out.println("Player got normal speed back!");
         entity.speed -= 100;
     }
 

@@ -16,11 +16,12 @@ import inf112.dungeoncrawler.model.factories.RoomFactory;
 import inf112.dungeoncrawler.model.generation.RoomLoader;
 import inf112.dungeoncrawler.model.generation.SpawnPoint;
 import inf112.dungeoncrawler.model.sound.SoundPlayer;
+import inf112.dungeoncrawler.model.sound.SoundService;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.view.GameView;
-import inf112.dungeoncrawler.view.menu.PauseOverlay;
-import inf112.dungeoncrawler.view.menu.TitleScreen;
+import inf112.dungeoncrawler.view.screens.GameOverScreen;
+import inf112.dungeoncrawler.view.screens.PauseOverlay;
 
 public class GameScreen implements Screen {
     private Game game;
@@ -38,7 +39,8 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         Room room = createExampleRoom();
-        gameWorld = new GameWorld(room);
+        SoundService sound = SoundPlayer.getInstance();
+        gameWorld = new GameWorld(room, sound);
 
         gameView = new GameView();
         gameView.create(1280, 768);
@@ -47,7 +49,7 @@ public class GameScreen implements Screen {
 
         for (SpawnPoint sp : room.getSpawnPoints()) {
             if (sp.type == SpawnPoint.Type.PLAYER) {
-                player = new Player(sp.x, sp.y);
+                player = new Player(sp.x, sp.y, sound);
                 gameWorld.addEntity(player);
                 break;
             }
@@ -97,7 +99,7 @@ public class GameScreen implements Screen {
             gameView.render(delta, gameWorld.getRoom(), gameWorld.getEntities(), gameWorld.getPowerups(), player.getHealth());        }
 
         if (player.getHealth() <= 0) {
-            game.setScreen(new TitleScreen(game));
+            game.setScreen(new GameOverScreen(game, gameWorld));
             return;
         }
 

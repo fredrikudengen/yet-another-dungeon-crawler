@@ -1,6 +1,8 @@
 package inf112.dungeoncrawler.model.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import inf112.dungeoncrawler.model.sound.SoundService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import inf112.dungeoncrawler.model.world.GameWorld;
@@ -14,12 +16,13 @@ class EnemyTest {
     private Room room;
     private GameWorld world;
     private Player player;
+    private static final SoundService NO_SOUND = effect -> {};
 
     @BeforeEach
     void setUp() {
         room = new Room(20, 20);
-        world = new GameWorld(room);
-        player = new Player(400, 300);
+        world = new GameWorld(room, NO_SOUND);
+        player = new Player(400, 300, NO_SOUND);
     }
 
     @Test

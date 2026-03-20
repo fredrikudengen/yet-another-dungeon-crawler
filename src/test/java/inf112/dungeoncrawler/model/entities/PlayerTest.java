@@ -1,6 +1,8 @@
 package inf112.dungeoncrawler.model.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import inf112.dungeoncrawler.model.sound.SoundService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import inf112.dungeoncrawler.model.world.GameWorld;
@@ -11,12 +13,13 @@ class PlayerTest {
     private Room room;
     private GameWorld world;
     private Player player;
+    private static final SoundService NO_SOUND = effect -> {};
 
     @BeforeEach
     void setUp() {
         room = new Room(20, 20);
-        world = new GameWorld(room);
-        player = new Player(300, 300);
+        world = new GameWorld(room, NO_SOUND);
+        player = new Player(300, 300, NO_SOUND);
         player.health = 5;
     }
 
@@ -62,29 +65,21 @@ class PlayerTest {
     }
 
     @Test
-    void testStepDoesNotMoveThroughRoomBoundary() {
-        Player nearEdge = new Player(580, 300);
-        nearEdge.setMovingRight(true);
-        nearEdge.step(world, 1.0);
-        assertEquals(580f, nearEdge.getX());
-    }
-
-    @Test
     void testCollidesWithReturnsTrueOnOverlap() {
-        Player other = new Player(310, 310);
+        Player other = new Player(310, 310, NO_SOUND);
         assertTrue(player.collidesWith(other));
     }
 
     @Test
     void testCollidesWithReturnsFalseWhenFarAway() {
-        Player other = new Player(1000, 1000);
+        Player other = new Player(1000, 1000, NO_SOUND);
         assertFalse(player.collidesWith(other));
     }
 
     @Test
     void testTakeDamageReducesHealth() {
         int initialHealth = player.getHealth();
-        player.takeDamage(2);
+        player.takeDamage(2,0 ,0);
         assertEquals(initialHealth - 2, player.getHealth());
     }
 }

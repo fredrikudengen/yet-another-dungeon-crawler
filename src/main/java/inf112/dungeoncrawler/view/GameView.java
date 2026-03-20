@@ -27,15 +27,13 @@ public class GameView {
     private EntityRenderer entityRenderer;
     private UIRenderer uiRenderer;
 
-    public static final int TILE_SIZE = 32;
-
     public void create(double worldWidth, double worldHeight) {
         this.viewport = new FillViewport((float) worldWidth, (float) worldHeight);
         this.batch    = new SpriteBatch();
         this.font     = new BitmapFont();
         font.setColor(Color.WHITE);
 
-        this.worldRenderer  = new WorldRenderer(batch, viewport.getCamera(), TILE_SIZE);
+        this.worldRenderer  = new WorldRenderer(batch, viewport.getCamera());
         this.entityRenderer = new EntityRenderer(batch, viewport.getCamera());
         this.uiRenderer     = new UIRenderer(batch, viewport.getCamera());
 
@@ -75,7 +73,4 @@ public class GameView {
         entityRenderer.dispose();
         uiRenderer.dispose();
     }
-
-    public int getTileSize()       { return TILE_SIZE; }
-    public Viewport getViewport()  { return viewport;  }
 }

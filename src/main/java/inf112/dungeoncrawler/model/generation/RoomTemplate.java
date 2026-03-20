@@ -3,7 +3,7 @@ package inf112.dungeoncrawler.model.generation;
 import inf112.dungeoncrawler.model.factories.RoomFactory;
 import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.model.world.TileType;
-
+import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
 public class RoomTemplate implements RoomFactory {
     private final String[] pattern;
@@ -25,15 +25,13 @@ public class RoomTemplate implements RoomFactory {
                 char c = row.charAt(x);
                 room.setTileAt(x, y, charToTileType(c));
 
-                int tileSize = 32;
-
-                if (c == 'P') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.PLAYER));
-                else if (c == 'F') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.FASTENEMY));
-                else if (c == 'N') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.NORMALENEMY));
-                else if (c == 'L') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.SLOWENEMY));
-                else if (c == 'S') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.SPEEDPOWERUP));
-                else if (c == 'H') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.HEALTHPOWERUP));
-                else if (c == 'A') room.addSpawnPoint(new SpawnPoint(x * tileSize, y * tileSize, SpawnPoint.Type.ATTACKPOWERUP));
+                if (c == 'P') room.addSpawnPoint(new SpawnPoint(x * TILE_SIZE, y * TILE_SIZE, SpawnPoint.Type.PLAYER));
+                else if (c == 'F') room.addSpawnPoint(new SpawnPoint(x * TILE_SIZE, y * TILE_SIZE, SpawnPoint.Type.FASTENEMY));
+                else if (c == 'N') room.addSpawnPoint(new SpawnPoint(x * TILE_SIZE, y * TILE_SIZE, SpawnPoint.Type.NORMALENEMY));
+                else if (c == 'L') room.addSpawnPoint(new SpawnPoint(x * TILE_SIZE, y * TILE_SIZE, SpawnPoint.Type.SLOWENEMY));
+                else if (c == 'S') room.addSpawnPoint(new SpawnPoint(x * TILE_SIZE, y * TILE_SIZE, SpawnPoint.Type.SPEEDPOWERUP));
+                else if (c == 'H') room.addSpawnPoint(new SpawnPoint(x * TILE_SIZE, y * TILE_SIZE, SpawnPoint.Type.HEALTHPOWERUP));
+                else if (c == 'A') room.addSpawnPoint(new SpawnPoint(x * TILE_SIZE, y * TILE_SIZE, SpawnPoint.Type.ATTACKPOWERUP));
              }
         }
         return room;
