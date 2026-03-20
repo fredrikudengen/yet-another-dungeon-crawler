@@ -17,7 +17,7 @@ public class UIRenderer {
 	public UIRenderer(SpriteBatch batch, Camera camera) {
 		this.batch = batch;
 		this.camera = camera;
-		this.heartTexture = new Texture("Life/Life.png");
+		this.heartTexture = new Texture("powerups/Life.png");
 	}
 
 	public void renderPlayerHealth(int health) {

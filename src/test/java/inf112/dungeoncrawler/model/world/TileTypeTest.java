@@ -8,17 +8,17 @@ class TileTypeTest {
 
     @Test
     void testEmptyTextureNameIsCorrect() {
-        assertEquals("Floor_wall_door/empty.png", TileType.EMPTY.getTextureName());
+        assertEquals("tiles/empty.png", TileType.EMPTY.getTextureName());
     }
 
     @Test
     void testFloorTextureNameIsCorrect() {
-        assertEquals("Floor_wall_door/wall2.png", TileType.FLOOR.getTextureName());
+        assertEquals("tiles/wall2.png", TileType.FLOOR.getTextureName());
     }
 
     @Test
     void testWallTextureNameIsCorrect() {
-        assertEquals("Floor_wall_door/wall3.png", TileType.WALL.getTextureName());
+        assertEquals("tiles/wall3.png", TileType.WALL.getTextureName());
     }
 
     @Test

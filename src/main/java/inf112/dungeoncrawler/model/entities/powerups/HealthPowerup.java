@@ -11,7 +11,7 @@ public class HealthPowerup extends Powerup {
 
     @Override
     public String getTextureName() {
-            return "src/main/resources/Life/Life.png";
+            return "src/main/resources/powerups/Life.png";
         }
 
     @Override
@@ -44,6 +44,5 @@ public class HealthPowerup extends Powerup {
     @Override
     public void onCollision(Entity entity) {
         entity.health += 1;
-        System.out.print("Player picked up powerup and got health!");
     }
 }

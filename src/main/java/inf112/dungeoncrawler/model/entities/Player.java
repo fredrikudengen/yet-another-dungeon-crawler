@@ -4,37 +4,48 @@ import inf112.dungeoncrawler.model.Direction;
 import inf112.dungeoncrawler.model.combat.Attack;
 import inf112.dungeoncrawler.model.entities.enemies.Enemy;
 import inf112.dungeoncrawler.model.sound.SoundPlayer;
+import inf112.dungeoncrawler.model.sound.SoundService;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
+import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
 public class Player extends Entity {
 
-    public static final float ATTACK_DURATION = 0.2f;
-
+    public static final float ATTACK_DURATION       = 0.2f;
     public static final float INVINCIBILITY_DURATION = 1.0f;
-
-    private static final float KNOCKBACK_FRICTION = 800f;
 
     private boolean movingLeft, movingRight, movingUp, movingDown;
     private Attack attack;
     private Direction facingDirection = Direction.RIGHT;
-    private float attackTimer = 0;
-    private boolean isAttacking = false;
+    private float attackTimer    = 0;
+    private boolean isAttacking  = false;
     private boolean hasCheckedHits = false;
 
-    private float knockbackX = 0;
-    private float knockbackY = 0;
     private float invincibilityTimer = 0;
-    private boolean isInvincible = false;
+    private boolean isInvincible     = false;
 
-    public Player(float x, float y) {
+    private SoundService sound;
+
+    public Player(float x, float y, SoundService sound) {
         super(x, y);
-        this.height = 32;
-        this.width = 32;
-        this.speed = 200;
+        this.height = TILE_SIZE;
+        this.width  = TILE_SIZE;
+        this.speed  = 350;
         this.health = 5;
         this.damage = 1;
         this.attack = Attack.attack();
+        this.sound  = sound;
+        this.knockBackForce = 400;
+    }
+
+    @Override
+    protected void takeDamage(int damage, float sourceX, float sourceY) {
+        if (!isInvincible) {
+            super.takeDamage(damage, sourceX, sourceY);
+            isInvincible       = true;
+            invincibilityTimer = INVINCIBILITY_DURATION;
+            sound.play(SoundPlayer.SoundEffect.DAMAGE_TAKEN);
+        }
     }
 
     @Override
@@ -47,18 +58,7 @@ public class Player extends Entity {
             }
         }
 
-        if (knockbackX != 0 || knockbackY != 0) {
-            float kbSpeed   = (float) Math.sqrt(knockbackX * knockbackX + knockbackY * knockbackY);
-            float reduction = KNOCKBACK_FRICTION * (float) deltaTime;
-            if (reduction >= kbSpeed) {
-                knockbackX = 0;
-                knockbackY = 0;
-            } else {
-                float factor = (kbSpeed - reduction) / kbSpeed;
-                knockbackX *= factor;
-                knockbackY *= factor;
-            }
-        }
+        updateKnockback((float) deltaTime);
 
         velocityX = 0;
         velocityY = 0;
@@ -69,22 +69,10 @@ public class Player extends Entity {
 
         if (!isAttacking) updateFacingDirection();
 
-        float newX = x + (velocityX + knockbackX) * (float) deltaTime;
-        float newY = y + (velocityY + knockbackY) * (float) deltaTime;
-
         Room room = world.getRoom();
-        int tileSize = 32;
-
-        if (!room.isBlocked(newX, newY, width, height, tileSize)) {
-            setPosition(newX, newY);
-        } else {
-            if (!room.isBlocked(newX, y, width, height, tileSize)) {
-                setPosition(newX, y);
-            }
-            if (!room.isBlocked(x, newY, width, height, tileSize)) {
-                setPosition(x, newY);
-            }
-        }
+        moveWithCollision(room,
+                (velocityX + knockbackX) * (float) deltaTime,
+                (velocityY + knockbackY) * (float) deltaTime);
 
         // --- Attack logic ---
         if (isAttacking) {
@@ -104,21 +92,6 @@ public class Player extends Entity {
         attack.update((float) deltaTime);
     }
 
-    public void applyKnockback(float vx, float vy) {
-        this.knockbackX = vx;
-        this.knockbackY = vy;
-    }
-
-    @Override
-    public void takeDamage(int damage) {
-        if (!isInvincible) {
-            super.takeDamage(damage);
-            isInvincible       = true;
-            invincibilityTimer = INVINCIBILITY_DURATION;
-            SoundPlayer.getInstance().play(SoundPlayer.SoundEffect.DAMAGE_TAKEN);
-        }
-    }
-
     public boolean isInvincible() {
         return isInvincible;
     }
@@ -135,15 +108,15 @@ public class Player extends Entity {
         for (Entity entity : world.getEntities()) {
             if (entity instanceof Enemy && entity != this) {
                 if (isEnemyInAttackRange(entity, range)) {
-                    entity.takeDamage(damage);
+                    entity.takeDamage(damage, x, y);
                 }
             }
         }
     }
 
     private boolean isEnemyInAttackRange(Entity entity, float range) {
-        float dx = entity.getX() - x;
-        float dy = entity.getY() - y;
+        float dx       = entity.getX() - x;
+        float dy       = entity.getY() - y;
         float distance = (float) Math.sqrt(dx * dx + dy * dy);
 
         if (distance > range) return false;
@@ -166,22 +139,14 @@ public class Player extends Entity {
             attackTimer     = 0;
             facingDirection = direction;
             hasCheckedHits  = false;
+            sound.play(SoundPlayer.SoundEffect.SWORD_SWING);
             SoundPlayer.getInstance().play(SoundPlayer.SoundEffect.SWORD_SWING);
         }
     }
 
-    public boolean isAttacking() {
-        return isAttacking;
-    }
-
-    public float getAttackTimer() {
-        return attackTimer;
-    }
-    
-
-    public Direction getFacingDirection() {
-        return facingDirection;
-    }
+    public boolean isAttacking()     { return isAttacking;  }
+    public float getAttackTimer()    { return attackTimer;  }
+    public Direction getFacingDirection() { return facingDirection; }
 
     public boolean isMoving() {
         return movingLeft || movingRight || movingUp || movingDown;
@@ -201,5 +166,4 @@ public class Player extends Entity {
     public boolean collidesWith(Collidable other) {
         return super.collidesWith(other);
     }
-
 }

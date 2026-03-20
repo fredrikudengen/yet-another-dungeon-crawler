@@ -1,5 +1,6 @@
 package inf112.dungeoncrawler.model.generation;
 
+import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -52,12 +53,12 @@ class RoomTemplateTest {
 		assertEquals(7, spawnPoints.size());
 
 		assertSpawn(spawnPoints.get(0), 0, 0, SpawnPoint.Type.PLAYER);
-		assertSpawn(spawnPoints.get(1), 32, 0, SpawnPoint.Type.FASTENEMY);
-		assertSpawn(spawnPoints.get(2), 64, 0, SpawnPoint.Type.NORMALENEMY);
-		assertSpawn(spawnPoints.get(3), 96, 0, SpawnPoint.Type.SLOWENEMY);
-		assertSpawn(spawnPoints.get(4), 128, 0, SpawnPoint.Type.SPEEDPOWERUP);
-		assertSpawn(spawnPoints.get(5), 160, 0, SpawnPoint.Type.HEALTHPOWERUP);
-		assertSpawn(spawnPoints.get(6), 192, 0, SpawnPoint.Type.ATTACKPOWERUP);
+		assertSpawn(spawnPoints.get(1), TILE_SIZE, 0, SpawnPoint.Type.FASTENEMY);
+		assertSpawn(spawnPoints.get(2), TILE_SIZE*2, 0, SpawnPoint.Type.NORMALENEMY);
+		assertSpawn(spawnPoints.get(3), TILE_SIZE*3, 0, SpawnPoint.Type.SLOWENEMY);
+		assertSpawn(spawnPoints.get(4), TILE_SIZE*4, 0, SpawnPoint.Type.SPEEDPOWERUP);
+		assertSpawn(spawnPoints.get(5), TILE_SIZE*5, 0, SpawnPoint.Type.HEALTHPOWERUP);
+		assertSpawn(spawnPoints.get(6), TILE_SIZE*6, 0, SpawnPoint.Type.ATTACKPOWERUP);
 	}
 
 	@Test

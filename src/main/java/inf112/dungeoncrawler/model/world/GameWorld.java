@@ -4,6 +4,7 @@ import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.Player;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
 import inf112.dungeoncrawler.model.sound.SoundPlayer;
+import inf112.dungeoncrawler.model.sound.SoundService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,11 +14,17 @@ public class GameWorld implements Iterable<Entity> {
     private Room room;
     private List<Entity> entities;
     private List<Powerup> powerups;
+    private SoundService sound;
+    private int enemiesKilled;
 
-    public GameWorld(Room room) {
+    public GameWorld(Room room, SoundService sound) {
         this.room = room;
+        this.sound = sound;
         this.entities = new ArrayList<>();
         this.powerups = new ArrayList<>();
+        // -1 because player is in entities
+        this.enemiesKilled = -1;
+
     }
 
     public void step(double deltaTime, Player player) {
@@ -30,11 +37,13 @@ public class GameWorld implements Iterable<Entity> {
             powerup.step(player, deltaTime);
         }
 
+        int before = entities.size();
         entities.removeIf(entity -> entity.getHealth() <= 0);
+        enemiesKilled += before - entities.size();
 
         powerups.removeIf(powerup -> {
             if (powerup.collidesWith(player)) {
-                SoundPlayer.getInstance().play(SoundPlayer.SoundEffect.POWERUP_PICKUP);
+                sound.play(SoundPlayer.SoundEffect.POWERUP_PICKUP);
                 return true;
             }
             return false;
@@ -64,5 +73,9 @@ public class GameWorld implements Iterable<Entity> {
 
     public List<Powerup> getPowerups() {
         return powerups;
+    }
+
+    public int getKilledEnemies() {
+        return enemiesKilled;
     }
 }

@@ -2,6 +2,7 @@ package inf112.dungeoncrawler.model.world;
 
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.generation.SpawnPoint;
+import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +40,16 @@ public class Room {
         }
     }
 
-    public boolean isBlocked(double worldX, double worldY, float width, float height, int tileSize) {
-        return isTileBlocked(worldX, worldY, tileSize) || // nedre venstre
-                isTileBlocked(worldX + width, worldY, tileSize) || // nedre høyre
-                isTileBlocked(worldX,worldY + height, tileSize) || // øvre venstre
-                isTileBlocked(worldX + width,worldY + height, tileSize);   // øvre høyre
+    public boolean isBlocked(double worldX, double worldY, float width, float height) {
+        return isTileBlocked(worldX, worldY) ||
+                isTileBlocked(worldX + width, worldY) ||
+                isTileBlocked(worldX,worldY + height) ||
+                isTileBlocked(worldX + width,worldY + height);
     }
 
-    private boolean isTileBlocked(double worldX, double worldY, int tileSize) {
-        int gridX = (int) (worldX / tileSize);
-        int gridY = (int) (worldY / tileSize);
+    private boolean isTileBlocked(double worldX, double worldY) {
+        int gridX = (int) (worldX / TILE_SIZE);
+        int gridY = (int) (worldY / TILE_SIZE);
 
         if (gridX < 0 || gridY < 0 || gridX >= width || gridY >= height) {
             return true;

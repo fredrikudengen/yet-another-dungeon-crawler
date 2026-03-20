@@ -8,13 +8,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import inf112.dungeoncrawler.model.generation.SpawnPoint;
+import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
 class RoomTest {
 
     private Room room;
     private static final int ROOM_WIDTH = 10;
     private static final int ROOM_HEIGHT = 8;
-    private static final int TILE_SIZE = 32;
 
     @BeforeEach
     void setUp() {
@@ -65,7 +65,7 @@ class RoomTest {
         float x = 1.5f * TILE_SIZE;
         float y = 1.5f * TILE_SIZE;
 
-        assertFalse(room.isBlocked(x, y, 16, 16, TILE_SIZE));
+        assertFalse(room.isBlocked(x, y, 16, 16));
     }
 
     @Test
@@ -77,7 +77,7 @@ class RoomTest {
         float x = wallX * TILE_SIZE + 5;
         float y = wallY * TILE_SIZE + 5;
 
-        assertTrue(room.isBlocked(x, y, 16, 16, TILE_SIZE));
+        assertTrue(room.isBlocked(x, y, 16, 16));
     }
 
     @Test
@@ -87,7 +87,7 @@ class RoomTest {
         float x = 2 * TILE_SIZE - 10; 
         float y = 2 * TILE_SIZE - 10;
 
-        assertTrue(room.isBlocked(x, y, 20, 20, TILE_SIZE));
+        assertTrue(room.isBlocked(x, y, 20, 20));
     }
 
     @Test
@@ -95,12 +95,12 @@ class RoomTest {
         float x = -TILE_SIZE;
         float y = -TILE_SIZE;
 
-        assertTrue(room.isBlocked(x, y, 16, 16, TILE_SIZE));
+        assertTrue(room.isBlocked(x, y, 16, 16));
 
         x = ROOM_WIDTH * TILE_SIZE + 10;
         y = ROOM_HEIGHT * TILE_SIZE + 10;
 
-        assertTrue(room.isBlocked(x, y, 16, 16, TILE_SIZE));
+        assertTrue(room.isBlocked(x, y, 16, 16));
     }
 
     @Test
@@ -110,7 +110,7 @@ class RoomTest {
         float x = 2 * TILE_SIZE;
         float y = 2 * TILE_SIZE;
 
-        assertTrue(room.isBlocked(x, y, 16, 16, TILE_SIZE));
+        assertTrue(room.isBlocked(x, y, 16, 16));
     }
 
     @Test
@@ -144,15 +144,15 @@ class RoomTest {
 
         float x = 2 * TILE_SIZE - 8;
         float y = 2 * TILE_SIZE - 8;
-        assertTrue(room.isBlocked(x, y, 16, 16, TILE_SIZE));
+        assertTrue(room.isBlocked(x, y, 16, 16));
 
         x = 2 * TILE_SIZE - 16;
         y = 2 * TILE_SIZE - 16;
-        assertTrue(room.isBlocked(x, y, 32, 32, TILE_SIZE));
+        assertTrue(room.isBlocked(x, y, 32, 32));
 
         x = 2 * TILE_SIZE - 4;
         y = 2 * TILE_SIZE - 4;
-        assertTrue(room.isBlocked(x, y, 8, 8, TILE_SIZE));
+        assertTrue(room.isBlocked(x, y, 8, 8));
     }
 
     @Test
@@ -163,15 +163,7 @@ class RoomTest {
 
         float x = 2.2f * TILE_SIZE;
         float y = 2.2f * TILE_SIZE;
-        assertTrue(room.isBlocked(x, y, 20, 20, TILE_SIZE));
-
-        x = 1.5f * TILE_SIZE;
-        y = 1.5f * TILE_SIZE;
-        assertTrue(room.isBlocked(x, y, 20, 20, TILE_SIZE)); 
-
-        x = 0.5f * TILE_SIZE;
-        y = 0.5f * TILE_SIZE;
-        assertFalse(room.isBlocked(x, y, 20, 20, TILE_SIZE));
+        assertTrue(room.isBlocked(x, y, 20, 20));
     }
 
     @Test

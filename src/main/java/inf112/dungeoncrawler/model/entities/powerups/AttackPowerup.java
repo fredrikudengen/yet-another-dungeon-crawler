@@ -13,7 +13,7 @@ public class AttackPowerup extends Powerup {
 
     @Override
     public String getTextureName() {
-        return "src/main/resources/Life/Life.png";
+        return "src/main/resources/powerups/Life.png";
     }
 
     @Override
@@ -40,11 +40,9 @@ public class AttackPowerup extends Powerup {
     public void onCollision(Entity entity) {
         entity.damage += 3;
         this.hasDamage = true;
-        System.out.println("Player picked up powerup and got attack++!");
     }
 
     private void endPowerup(Entity entity) {
-        System.out.println("Player got normal attack back!");
         entity.damage -= 3;
     }
 

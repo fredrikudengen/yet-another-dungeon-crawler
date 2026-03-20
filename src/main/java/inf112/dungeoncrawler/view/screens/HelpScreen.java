@@ -1,4 +1,4 @@
-package inf112.dungeoncrawler.view.menu;
+package inf112.dungeoncrawler.view.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -16,14 +16,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class HelpScreen implements Screen {
 
-    // ── palette (matches TitleScreen) ────────────────────────────────────────
     private static final Color GOLD     = Color.valueOf("F4BB44");
     private static final Color DIVIDER  = new Color(0.45f, 0.28f, 0.10f, 1f); // warm brown
     private static final Color KEY_BG   = new Color(0.30f, 0.18f, 0.08f, 1f);
     private static final Color KEY_BORDER = new Color(0.65f, 0.40f, 0.10f, 1f);
     private static final Color TEXT_DIM = new Color(0.70f, 0.60f, 0.50f, 1f);
 
-    // ── keybind table ────────────────────────────────────────────────────────
     private static final String[][] BINDS = {
             { "W", "Move North" },
             { "S", "Move South" },
@@ -33,7 +31,6 @@ public class HelpScreen implements Screen {
             { "SPACE", "Attack" }
     };
 
-    // ── layout constants ─────────────────────────────────────────────────────
     private static final float PANEL_PAD_X = 80f;
     private static final float PANEL_PAD_Y = 60f;
     private static final float ROW_HEIGHT  = 60f;
@@ -41,7 +38,6 @@ public class HelpScreen implements Screen {
     private static final float HEADER_H    = 90f;
     private static final float FOOTER_H    = 50f;
 
-    // ── fields ────────────────────────────────────────────────────────────────
     private final Game game;
     private final SpriteBatch batch;
     private final ShapeRenderer shapes;
@@ -52,9 +48,6 @@ public class HelpScreen implements Screen {
     private BitmapFont hintFont;
 
     private final GlyphLayout layout = new GlyphLayout();
-    private float elapsedTime = 0f;
-
-    // ── constructor ───────────────────────────────────────────────────────────
 
     public HelpScreen(Game game) {
         this.game = game;
@@ -82,16 +75,12 @@ public class HelpScreen implements Screen {
         generator.dispose();
     }
 
-    // ── Screen lifecycle ──────────────────────────────────────────────────────
 
     @Override
-    public void show() {
-        elapsedTime = 0f;
-    }
+    public void show() {}
 
     @Override
     public void render(float delta) {
-        elapsedTime += delta;
         handleInput();
 
         ScreenUtils.clear(0.2f, 0.13f, 0.07f, 1);
@@ -109,8 +98,6 @@ public class HelpScreen implements Screen {
         drawFooter(W, H);
     }
 
-    // ── input ─────────────────────────────────────────────────────────────────
-
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
                 || Gdx.input.isKeyJustPressed(Input.Keys.H)
@@ -118,8 +105,6 @@ public class HelpScreen implements Screen {
             game.setScreen(new TitleScreen(game));
         }
     }
-
-    // ── drawing helpers ───────────────────────────────────────────────────────
 
     private void drawTitle(float W, float H) {
         titleFont.setColor(GOLD);
@@ -195,7 +180,6 @@ public class HelpScreen implements Screen {
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
-    /** "Press ESC to return" hint at the bottom. */
     private void drawFooter(float W, float H) {
         String hint = "Press  ESC  to return";
         layout.setText(hintFont, hint);
@@ -206,8 +190,6 @@ public class HelpScreen implements Screen {
         hintFont.draw(batch, hint, fx, fy);
         batch.end();
     }
-
-    // ── remaining Screen methods ───────────────────────────────────────────────
 
     @Override
     public void resize(int width, int height) {

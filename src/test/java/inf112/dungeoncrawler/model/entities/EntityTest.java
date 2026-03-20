@@ -51,7 +51,7 @@ class EntityTest {
     @Test
     void testTakeDamageReducesHealth() {
         e.health = 10;
-        e.takeDamage(3);
+        e.takeDamage(3, 0, 0);
         assertEquals(7, e.getHealth());
     }
 

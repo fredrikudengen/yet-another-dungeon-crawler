@@ -2,6 +2,7 @@ package inf112.dungeoncrawler.model.entities.powerups;
 
 import inf112.dungeoncrawler.model.entities.Collidable;
 import inf112.dungeoncrawler.model.entities.Player;
+import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
 public abstract class Powerup implements Collidable {
     protected float x, y, width, height;
@@ -9,8 +10,8 @@ public abstract class Powerup implements Collidable {
     public Powerup(float x, float y) {
         this.x = x;
         this.y = y;
-        this.height = 32;
-        this.width = 32;
+        this.height = TILE_SIZE;
+        this.width = TILE_SIZE;
     }
 
     public abstract String getTextureName();

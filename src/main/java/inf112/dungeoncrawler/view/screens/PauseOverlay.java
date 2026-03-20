@@ -1,4 +1,4 @@
-package inf112.dungeoncrawler.view.menu;
+package inf112.dungeoncrawler.view.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

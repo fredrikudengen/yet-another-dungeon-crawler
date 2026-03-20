@@ -1,4 +1,4 @@
-package inf112.dungeoncrawler.view.menu;
+package inf112.dungeoncrawler.view.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -62,16 +62,16 @@ public class TitleScreen implements Screen {
         titleGenerator.dispose();
 
         flameFrames = new Texture[] {
-            new Texture("StartMenu/flamme1.png"),
-            new Texture("StartMenu/flamme2.png")
+            new Texture("titlescreen/flamme1.png"),
+            new Texture("titlescreen/flamme2.png")
         };
 
         playerFrames = new Texture[] {
-            new Texture("Player/withoutWeapon/Walk/Player_walk_left1.png"), 
-            new Texture("Player/withoutWeapon/Walk/Player_walk_left2.png")
+            new Texture("player/withoutWeapon/Walk/Player_walk_left1.png"),
+            new Texture("player/withoutWeapon/Walk/Player_walk_left2.png")
         };
 
-        floor = new Texture("StartMenu/menyfloor.png"); 
+        floor = new Texture("titlescreen/menyfloor.png");
     }
 
     @Override
@@ -160,8 +160,6 @@ public class TitleScreen implements Screen {
         }
         return index;
     }
-
-
 
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN))

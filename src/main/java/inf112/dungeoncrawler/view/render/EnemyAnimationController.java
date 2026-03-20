@@ -35,11 +35,11 @@ public class EnemyAnimationController {
     }
 
     private static String directionToString(Direction direction) {
-        switch (direction) {
-            case UP:    return "up";
-            case LEFT:  return "left";
-            case RIGHT: return "right";
-            default:    return "down";
-        }
+        return switch (direction) {
+            case UP -> "up";
+            case LEFT -> "left";
+            case RIGHT -> "right";
+            default -> "down";
+        };
     }
 }
