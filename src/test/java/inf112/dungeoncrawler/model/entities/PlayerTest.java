@@ -2,7 +2,7 @@ package inf112.dungeoncrawler.model.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import inf112.dungeoncrawler.model.sound.SoundService;
+import inf112.dungeoncrawler.sound.SoundService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import inf112.dungeoncrawler.model.world.GameWorld;
@@ -18,7 +18,7 @@ class PlayerTest {
     @BeforeEach
     void setUp() {
         room = new Room(20, 20);
-        world = new GameWorld(room, NO_SOUND);
+        world = new GameWorld(room, player);
         player = new Player(300, 300, NO_SOUND);
         player.health = 5;
     }

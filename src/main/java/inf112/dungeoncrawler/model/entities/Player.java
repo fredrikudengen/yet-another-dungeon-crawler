@@ -3,13 +3,13 @@ package inf112.dungeoncrawler.model.entities;
 import inf112.dungeoncrawler.model.Direction;
 import inf112.dungeoncrawler.model.combat.Attack;
 import inf112.dungeoncrawler.model.entities.enemies.Enemy;
-import inf112.dungeoncrawler.model.sound.SoundPlayer;
-import inf112.dungeoncrawler.model.sound.SoundService;
+import inf112.dungeoncrawler.sound.SoundPlayer;
+import inf112.dungeoncrawler.sound.SoundService;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
-public class Player extends Entity {
+public class Player extends Entity implements Movable{
 
     public static final float ATTACK_DURATION       = 0.2f;
     public static final float INVINCIBILITY_DURATION = 1.0f;
@@ -30,7 +30,7 @@ public class Player extends Entity {
         super(x, y);
         this.height = TILE_SIZE;
         this.width  = TILE_SIZE;
-        this.speed  = 350;
+        this.speed  = 300;
         this.health = 5;
         this.damage = 1;
         this.attack = Attack.attack();
@@ -39,7 +39,7 @@ public class Player extends Entity {
     }
 
     @Override
-    protected void takeDamage(int damage, float sourceX, float sourceY) {
+    public void takeDamage(int damage, float sourceX, float sourceY) {
         if (!isInvincible) {
             super.takeDamage(damage, sourceX, sourceY);
             isInvincible       = true;
@@ -92,6 +92,11 @@ public class Player extends Entity {
         attack.update((float) deltaTime);
     }
 
+    @Override
+    public String getBaseTexturePath() {
+        return "player/weapon/Player_walk_weapon_";
+    }
+
     public boolean isInvincible() {
         return isInvincible;
     }
@@ -140,18 +145,23 @@ public class Player extends Entity {
             facingDirection = direction;
             hasCheckedHits  = false;
             sound.play(SoundPlayer.SoundEffect.SWORD_SWING);
-            SoundPlayer.getInstance().play(SoundPlayer.SoundEffect.SWORD_SWING);
         }
+    }
+
+    public float getKnockBackForce() {
+        return knockBackForce;
     }
 
     public boolean isAttacking()     { return isAttacking;  }
     public float getAttackTimer()    { return attackTimer;  }
-    public Direction getFacingDirection() { return facingDirection; }
 
+    @Override
     public boolean isMoving() {
         return movingLeft || movingRight || movingUp || movingDown;
     }
 
+    @Override
+    public Direction getFacingDirection() { return facingDirection; }
     public boolean isMovingLeft()  { return movingLeft;  }
     public boolean isMovingRight() { return movingRight; }
     public boolean isMovingUp()    { return movingUp;    }

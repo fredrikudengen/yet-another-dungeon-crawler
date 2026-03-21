@@ -18,11 +18,11 @@ public class FastEnemy extends Enemy {
 
     @Override
     public void onCollision(Entity entity) {
-        entity.health -= damage;
+        entity.takeDamage(damage, x, y);
     }
 
     @Override
     public String getBaseTexturePath() {
-        return "src/main/resources/enemy/fast";
+        return "enemy/fast/enemy_";
     }
 }

@@ -12,11 +12,12 @@ import inf112.dungeoncrawler.model.entities.powerups.AttackPowerup;
 import inf112.dungeoncrawler.model.entities.powerups.HealthPowerup;
 import inf112.dungeoncrawler.model.entities.Player;
 import inf112.dungeoncrawler.model.entities.powerups.SpeedPowerup;
+import inf112.dungeoncrawler.model.factories.EntityFactory;
 import inf112.dungeoncrawler.model.factories.RoomFactory;
 import inf112.dungeoncrawler.model.generation.RoomLoader;
 import inf112.dungeoncrawler.model.generation.SpawnPoint;
-import inf112.dungeoncrawler.model.sound.SoundPlayer;
-import inf112.dungeoncrawler.model.sound.SoundService;
+import inf112.dungeoncrawler.sound.SoundPlayer;
+import inf112.dungeoncrawler.sound.SoundService;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.view.GameView;
@@ -40,33 +41,33 @@ public class GameScreen implements Screen {
     public void show() {
         Room room = createExampleRoom();
         SoundService sound = SoundPlayer.getInstance();
-        gameWorld = new GameWorld(room, sound);
 
         gameView = new GameView();
         gameView.create(1280, 768);
 
-        SoundPlayer.getInstance().playMusic();
+        sound.playMusic();
 
         for (SpawnPoint sp : room.getSpawnPoints()) {
             if (sp.type == SpawnPoint.Type.PLAYER) {
                 player = new Player(sp.x, sp.y, sound);
-                gameWorld.addEntity(player);
                 break;
             }
         }
+
+        gameWorld = new GameWorld(room, player);
+        gameWorld.addEntity(player);
+
+        EntityFactory factory = new EntityFactory();
+        factory.register(SpawnPoint.Type.FASTENEMY,    (x, y) -> new FastEnemy(x, y, player));
+        factory.register(SpawnPoint.Type.NORMALENEMY,  (x, y) -> new NormalEnemy(x, y, player));
+        factory.register(SpawnPoint.Type.SLOWENEMY,    (x, y) -> new SlowEnemy(x, y, player));
+        factory.register(SpawnPoint.Type.HEALTHPOWERUP,(x, y) -> new HealthPowerup(x, y, sound));
+        factory.register(SpawnPoint.Type.SPEEDPOWERUP, (x, y) -> new SpeedPowerup(x, y, sound));
+        factory.register(SpawnPoint.Type.ATTACKPOWERUP,(x, y) -> new AttackPowerup(x, y, sound));
+
         for (SpawnPoint sp : room.getSpawnPoints()) {
-            if (sp.type == SpawnPoint.Type.FASTENEMY) {
-                gameWorld.addEntity(new FastEnemy(sp.x, sp.y, player));
-            } else if (sp.type == SpawnPoint.Type.NORMALENEMY) {
-                gameWorld.addEntity(new NormalEnemy(sp.x, sp.y, player));
-            } else if (sp.type == SpawnPoint.Type.SLOWENEMY) {
-                gameWorld.addEntity(new SlowEnemy(sp.x, sp.y, player));
-            } else if (sp.type == SpawnPoint.Type.SPEEDPOWERUP) {
-                gameWorld.addPowerup(new SpeedPowerup(sp.x, sp.y));
-            } else if (sp.type == SpawnPoint.Type.ATTACKPOWERUP) {
-                gameWorld.addPowerup(new AttackPowerup(sp.x, sp.y));
-            } else if (sp.type == SpawnPoint.Type.HEALTHPOWERUP) {
-                gameWorld.addPowerup(new HealthPowerup(sp.x, sp.y));
+            if (sp.type != SpawnPoint.Type.PLAYER) {
+                gameWorld.addEntity(factory.spawn(sp));
             }
         }
 
@@ -94,9 +95,9 @@ public class GameScreen implements Screen {
         }
 
         if (!isPaused) {
-            gameWorld.step(delta, player);
+            gameWorld.step(delta);
             gameView.updateCamera(player.getX(), player.getY());
-            gameView.render(delta, gameWorld.getRoom(), gameWorld.getEntities(), gameWorld.getPowerups(), player.getHealth());        }
+            gameView.render(delta, gameWorld);        }
 
         if (player.getHealth() <= 0) {
             game.setScreen(new GameOverScreen(game, gameWorld));

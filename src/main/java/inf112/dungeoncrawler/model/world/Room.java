@@ -65,10 +65,6 @@ public class Room {
         return spawnPoints;
     }
 
-    public void addEntity(Entity entity) {
-        entities.add(entity);
-    }
-
     public List<Entity> getEntities() {
         return entities;
     }

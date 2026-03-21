@@ -1,10 +1,10 @@
-package inf112.dungeoncrawler.model.sound;
+package inf112.dungeoncrawler.sound;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
-public class SoundPlayer implements SoundService{
+public class SoundPlayer implements SoundService {
 
     public enum SoundEffect {
         DAMAGE_TAKEN,

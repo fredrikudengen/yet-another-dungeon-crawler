@@ -4,17 +4,17 @@ import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 
 public abstract class Entity implements Collidable {
-    protected float x, y, width, height, velocityX, velocityY;
-    public int health;
-    public int speed;
-    public int damage;
+    protected float x, y;
+    protected int health, speed, damage;
 
+    protected int width, height;
+    protected float velocityX, velocityY;
+
+    protected float knockBackForce;
+    private static final float KNOCKBACK_FRICTION = 800f;
     protected float knockbackX = 0f;
     protected float knockbackY = 0f;
-
-    public float knockBackForce;
-
-    private static final float KNOCKBACK_FRICTION = 800f;
+    protected boolean isAlive = true;
 
     public Entity(float x, float y) {
         this.x = x;
@@ -32,6 +32,20 @@ public abstract class Entity implements Collidable {
 
     @Override
     public float getHeight() { return height; }
+
+    public boolean isAlive() { return this.isAlive; }
+
+    public int getHealth() {
+        return this.health;
+    }
+
+    public int getSpeed() {
+        return this.speed;
+    }
+
+    public float getDamage() {
+        return this.damage;
+    }
 
     public void setPosition(float x, float y) {
         this.x = x;
@@ -73,8 +87,12 @@ public abstract class Entity implements Collidable {
         }
     }
 
-    protected void takeDamage(int damage, float sourceX, float sourceY) {
+    public void takeDamage(int damage, float sourceX, float sourceY) {
         health -= damage;
+        if (health <= 0) {
+            isAlive = false;
+            return;
+        }
         float dx   = x - sourceX;
         float dy   = y - sourceY;
         float dist = (float) Math.sqrt(dx * dx + dy * dy);
@@ -86,7 +104,17 @@ public abstract class Entity implements Collidable {
 
     public abstract void step(GameWorld world, double deltaTime);
 
-    public int getHealth() {
-        return health;
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public abstract String getBaseTexturePath();
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 }

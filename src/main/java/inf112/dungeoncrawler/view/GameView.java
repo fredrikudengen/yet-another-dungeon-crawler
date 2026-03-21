@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
+import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.view.render.EntityRenderer;
 import inf112.dungeoncrawler.view.render.UIRenderer;
@@ -40,18 +41,15 @@ public class GameView {
         Gdx.graphics.setForegroundFPS(60);
     }
 
-    /**
-     * @param deltaTime seconds since the last frame – pass {@code Gdx.graphics.getDeltaTime()}
-     */
-    public void render(float deltaTime, Room room, List<Entity> entities, List<Powerup> powerups, int playerHealth) {
+    public void render(float deltaTime, GameWorld world) {
         ScreenUtils.clear(Color.BLACK);
 
         batch.begin();
         batch.setProjectionMatrix(viewport.getCamera().combined);
         try {
-            worldRenderer.render(room);
-            entityRenderer.render(deltaTime, entities, powerups);
-            uiRenderer.renderPlayerHealth(playerHealth);
+            worldRenderer.render(world.getRoom());
+            entityRenderer.render(deltaTime, world.getEntities());
+            uiRenderer.renderPlayerHealth(world.getPlayer().getHealth());
         } finally {
             batch.end();
         }

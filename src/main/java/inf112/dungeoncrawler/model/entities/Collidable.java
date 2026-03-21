@@ -1,6 +1,7 @@
 package inf112.dungeoncrawler.model.entities;
 
 public interface Collidable {
+
     float getX();
     float getY();
     float getWidth();
