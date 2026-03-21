@@ -2,7 +2,7 @@ package inf112.dungeoncrawler.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import inf112.dungeoncrawler.model.sound.SoundService;
+import inf112.dungeoncrawler.sound.SoundService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import inf112.dungeoncrawler.model.entities.Player;

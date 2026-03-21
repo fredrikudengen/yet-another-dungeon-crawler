@@ -13,7 +13,7 @@ public class Attack {
     }
 
     public static Attack attack() {
-        return new Attack(1f, 100f, 5f);
+        return new Attack(1f, 125, 5f);
     }
 
     public void update(float deltaTime) {

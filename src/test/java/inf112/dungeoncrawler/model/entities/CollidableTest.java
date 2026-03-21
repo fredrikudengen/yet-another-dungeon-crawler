@@ -3,7 +3,7 @@ package inf112.dungeoncrawler.model.entities;
 import static org.junit.jupiter.api.Assertions.*;
 
 import inf112.dungeoncrawler.model.entities.enemies.NormalEnemy;
-import inf112.dungeoncrawler.model.sound.SoundService;
+import inf112.dungeoncrawler.sound.SoundService;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,7 @@ class CollidableTest {
     @BeforeEach
     void setUp() {
         room = new Room(20, 20);
-        world = new GameWorld(room, NO_SOUND);
+        world = new GameWorld(room, player);
         player = new Player(300, 300, NO_SOUND);
         normalEnemy = new NormalEnemy(300,300, player);
     }

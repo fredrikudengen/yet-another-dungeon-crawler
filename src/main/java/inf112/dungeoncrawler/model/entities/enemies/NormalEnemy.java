@@ -18,12 +18,12 @@ public class NormalEnemy extends Enemy {
 
     @Override
     public void onCollision(Entity entity) {
-        entity.health -= damage;
+        entity.takeDamage(this.damage, this.x, this.y);
     }
 
     @Override
     public String getBaseTexturePath() {
-        return "src/main/resources/enemy/normal";
+        return "enemy/normal/enemy_";
     }
 
 }

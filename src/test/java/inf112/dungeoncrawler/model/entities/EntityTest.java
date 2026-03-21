@@ -15,6 +15,11 @@ class EntityTest {
 
             @Override
             public void step(GameWorld world, double dt) {}
+
+            @Override
+            public String getBaseTexturePath() {
+                return "test";
+            }
         };
     }
 

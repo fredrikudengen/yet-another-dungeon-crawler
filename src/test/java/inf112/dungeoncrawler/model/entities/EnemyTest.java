@@ -2,7 +2,8 @@ package inf112.dungeoncrawler.model.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import inf112.dungeoncrawler.model.sound.SoundService;
+import inf112.dungeoncrawler.model.Direction;
+import inf112.dungeoncrawler.sound.SoundService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import inf112.dungeoncrawler.model.world.GameWorld;
@@ -21,13 +22,23 @@ class EnemyTest {
     @BeforeEach
     void setUp() {
         room = new Room(20, 20);
-        world = new GameWorld(room, NO_SOUND);
+        world = new GameWorld(room, player);
         player = new Player(400, 300, NO_SOUND);
     }
 
     @Test
     void testEnemyGetTextureNameReturnsEmptyString() {
         Enemy enemy = new Enemy(100, 100, player) {
+            @Override
+            public boolean isMoving() {
+                return false;
+            }
+
+            @Override
+            public Direction getFacingDirection() {
+                return null;
+            }
+
             @Override
             public void onCollision(Entity entity) {
             }
@@ -55,6 +66,16 @@ class EnemyTest {
 
         Enemy enemy = new Enemy(100, 100, player) {
             @Override
+            public boolean isMoving() {
+                return false;
+            }
+
+            @Override
+            public Direction getFacingDirection() {
+                return null;
+            }
+
+            @Override
             public void onCollision(Entity entity) {
             }
 
@@ -76,6 +97,16 @@ class EnemyTest {
         player.setPosition(500, 300);
 
         Enemy enemy = new Enemy(100, 300, player) {
+            @Override
+            public boolean isMoving() {
+                return false;
+            }
+
+            @Override
+            public Direction getFacingDirection() {
+                return null;
+            }
+
             @Override
             public void onCollision(Entity entity) {
             }

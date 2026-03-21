@@ -2,6 +2,7 @@ package inf112.dungeoncrawler.model.entities.enemies;
 
 import inf112.dungeoncrawler.model.Direction;
 import inf112.dungeoncrawler.model.entities.Entity;
+import inf112.dungeoncrawler.model.entities.Movable;
 import inf112.dungeoncrawler.model.entities.Player;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
@@ -16,7 +17,7 @@ import java.util.Queue;
 
 import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
-public abstract class Enemy extends Entity {
+public abstract class Enemy extends Entity implements Movable {
 
     protected Player player;
 
@@ -26,7 +27,7 @@ public abstract class Enemy extends Entity {
 
     private List<int[]> path  = new ArrayList<>();
     private float pathTimer   = PATH_REFRESH_RATE;
-    private boolean isChasing = false;
+    private boolean isMoving = false;
     private float stunTimer   = 0f;
 
     public Enemy(float x, float y, Player player) {
@@ -35,9 +36,22 @@ public abstract class Enemy extends Entity {
     }
 
     @Override
-    protected void takeDamage(int damage, float sourceX, float sourceY) {
+    public void takeDamage(int damage, float sourceX, float sourceY) {
         super.takeDamage(damage, sourceX, sourceY);
         stunTimer = Player.INVINCIBILITY_DURATION;
+    }
+
+    @Override
+    public boolean isMoving() {
+        return isMoving;
+    }
+
+    @Override
+    public Direction getFacingDirection() {
+        if (Math.abs(velocityX) >= Math.abs(velocityY)) {
+            return (velocityX >= 0) ? Direction.RIGHT : Direction.LEFT;
+        }
+        return (velocityY >= 0) ? Direction.UP : Direction.DOWN;
     }
 
     @Override
@@ -65,14 +79,14 @@ public abstract class Enemy extends Entity {
         float pdy          = player.getY() - y;
         float distToPlayer = (float) Math.sqrt(pdx * pdx + pdy * pdy);
 
-        if (!isChasing && distToPlayer <= DETECTION_RADIUS) {
-            isChasing = true;
-        } else if (isChasing && distToPlayer > DETECTION_RADIUS) {
-            isChasing = false;
+        if (!isMoving && distToPlayer <= DETECTION_RADIUS) {
+            isMoving = true;
+        } else if (isMoving && distToPlayer > DETECTION_RADIUS) {
+            isMoving = false;
             path.clear();
         }
 
-        if (!isChasing) {
+        if (!isMoving) {
             velocityX = 0;
             velocityY = 0;
             return;
@@ -128,8 +142,8 @@ public abstract class Enemy extends Entity {
         float dist = (float) Math.sqrt(dx * dx + dy * dy);
         if (dist > 0) {
             player.applyKnockback(
-                    (dx / dist) * player.knockBackForce,
-                    (dy / dist) * player.knockBackForce);
+                    (dx / dist) * player.getKnockBackForce(),
+                    (dy / dist) * player.getKnockBackForce());
         }
     }
 
@@ -195,16 +209,8 @@ public abstract class Enemy extends Entity {
 
     @Override
     public abstract void onCollision(Entity entity);
-
+    
+    @Override
     public abstract String getBaseTexturePath();
 
-    public Direction getFacingDirection() {
-        if (Math.abs(velocityX) >= Math.abs(velocityY)) {
-            return (velocityX >= 0) ? Direction.RIGHT : Direction.LEFT;
-        }
-        return (velocityY >= 0) ? Direction.UP : Direction.DOWN;
-    }
-
-    public boolean isMoving()   { return velocityX != 0 || velocityY != 0; }
-    public boolean isChasing()  { return isChasing; }
 }

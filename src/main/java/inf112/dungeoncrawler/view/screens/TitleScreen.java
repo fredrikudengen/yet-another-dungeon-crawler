@@ -34,7 +34,7 @@ public class TitleScreen implements Screen {
         START, HELP, EXIT
     }
 
-    private MenuOption[] options = MenuOption.values();
+    private final MenuOption[] options = MenuOption.values();
     private int currentIndex = 0;
 
     public TitleScreen(Game game) {

@@ -2,8 +2,10 @@ package inf112.dungeoncrawler.model.world;
 
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.Player;
+import inf112.dungeoncrawler.model.entities.enemies.FastEnemy;
+import inf112.dungeoncrawler.model.entities.powerups.HealthPowerup;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
-import inf112.dungeoncrawler.model.sound.SoundService;
+import inf112.dungeoncrawler.sound.SoundService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,9 +23,9 @@ class GameWorldTest {
 
     @BeforeEach
     void setUp() {
-        room = new Room(20, 20);
-        world = new GameWorld(room, NO_SOUND);
+        room   = new Room(20, 20);
         player = new Player(300, 300, NO_SOUND);
+        world  = new GameWorld(room, player);
     }
 
     @Test
@@ -38,55 +40,53 @@ class GameWorldTest {
 
     @Test
     void testNewWorldHasNoPowerups() {
-        assertTrue(world.getPowerups().isEmpty());
+        assertTrue(world.getEntities().isEmpty());
     }
 
     @Test
     void testAddEntityAppearsInList() {
-        Entity entity = makeEntity(100, 100);
+        Entity entity = makeFastEnemy(100, 100);
         world.addEntity(entity);
         assertTrue(world.getEntities().contains(entity));
     }
 
     @Test
     void testAddMultipleEntitiesAllStored() {
-        world.addEntity(makeEntity(100, 100));
-        world.addEntity(makeEntity(200, 200));
+        world.addEntity(makeFastEnemy(100, 100));
+        world.addEntity(makeFastEnemy(200, 200));
         assertEquals(2, world.getEntities().size());
     }
 
     @Test
     void testAddPowerupAppearsInList() {
         Powerup powerup = makePowerup(100, 100);
-        world.addPowerup(powerup);
-        assertTrue(world.getPowerups().contains(powerup));
+        world.addEntity(powerup);
+        assertTrue(world.getEntities().contains(powerup));
     }
 
     @Test
     void testStepRemovesDeadEntity() {
-        Entity dead = makeEntity(100, 100);
+        Entity dead = makeDeadEnemy(100, 100);
         world.addEntity(dead);
-        dead.health = 0;
-        world.step(0.016, player);
+        world.step(0.016);
         assertFalse(world.getEntities().contains(dead));
     }
 
     @Test
     void testStepKeepsAliveEntity() {
-        Entity alive = makeEntity(100, 100);
+        Entity alive = makeFastEnemy(100, 100);
         world.addEntity(alive);
-        world.step(0.016, player);
+        world.step(0.016);
         assertTrue(world.getEntities().contains(alive));
     }
 
     @Test
     void testStepOnlyRemovesDeadEntities() {
-        Entity alive = makeEntity(100, 100);
-        Entity dead  = makeEntity(200, 200);
-        dead.health = 0;
+        Entity alive = makeFastEnemy(100, 100);
+        Entity dead  = makeDeadEnemy(200, 200);
         world.addEntity(alive);
         world.addEntity(dead);
-        world.step(0.016, player);
+        world.step(0.016);
 
         List<Entity> remaining = world.getEntities();
         assertTrue(remaining.contains(alive));
@@ -96,29 +96,29 @@ class GameWorldTest {
 
     @Test
     void testStepRemovesPowerupCollidingWithPlayer() {
-        Powerup powerup = makePowerup(player.getX(), player.getY());
-        world.addPowerup(powerup);
-        world.step(0.016, player);
-        assertFalse(world.getPowerups().contains(powerup));
+        HealthPowerup powerup = makePowerup(player.getX(), player.getY());
+        world.addEntity(powerup);
+        world.step(1);
+        assertFalse(world.getEntities().contains(powerup));
     }
 
     @Test
     void testStepKeepsPowerupNotCollidingWithPlayer() {
         Powerup powerup = makePowerup(0, 0);
-        world.addPowerup(powerup);
-        world.step(0.016, player);
-        assertTrue(world.getPowerups().contains(powerup));
+        world.addEntity(powerup);
+        world.step(0.016);
+        assertTrue(world.getEntities().contains(powerup));
     }
 
     @Test
     void testStepOnlyRemovesCollidingPowerup() {
-        Powerup colliding    = makePowerup(player.getX(), player.getY());
-        Powerup notColliding = makePowerup(0, 0);
-        world.addPowerup(colliding);
-        world.addPowerup(notColliding);
-        world.step(0.016, player);
+        HealthPowerup colliding    = makePowerup(player.getX(), player.getY());
+        HealthPowerup notColliding = makePowerup(0, 0);
+        world.addEntity(colliding);
+        world.addEntity(notColliding);
+        world.step(1);
 
-        List<Powerup> remaining = world.getPowerups();
+        List<Entity> remaining = world.getEntities();
         assertFalse(remaining.contains(colliding));
         assertTrue(remaining.contains(notColliding));
         assertEquals(1, remaining.size());
@@ -126,8 +126,8 @@ class GameWorldTest {
 
     @Test
     void testIteratorReturnsAllEntities() {
-        Entity e1 = makeEntity(100, 100);
-        Entity e2 = makeEntity(200, 200);
+        Entity e1 = makeFastEnemy(100, 100);
+        Entity e2 = makeFastEnemy(200, 200);
         world.addEntity(e1);
         world.addEntity(e2);
 
@@ -142,8 +142,8 @@ class GameWorldTest {
         assertFalse(world.iterator().hasNext());
     }
 
-    private Entity makeEntity(float x, float y) {
-        return new Entity(x, y) {
+    private FastEnemy makeFastEnemy(float x, float y) {
+        return new FastEnemy(x, y, player) {
             {
                 this.width = 32;
                 this.height = 32;
@@ -154,41 +154,37 @@ class GameWorldTest {
 
             @Override
             public void step(GameWorld world, double dt) {}
+
+            @Override
+            public String getBaseTexturePath() {
+                return "";
+            }
         };
     }
 
-    private Powerup makePowerup(float x, float y) {
-        return new Powerup(x, y) {
-            @Override
-            public float getX() {
-                return this.x;
-            }
-
-            @Override
-            public float getY() {
-                return this.y;
-            }
-
-            @Override
-            public float getWidth() {
-                return this.width;
-            }
-
-            @Override
-            public float getHeight() {
-                return this.height;
-            }
-
+    private FastEnemy makeDeadEnemy(float x, float y) {
+        return new FastEnemy(x, y, player) {
             {
-                this.width = 16;
-                this.height = 16;
+                this.isAlive = false;
             }
 
             @Override
-            public void step(Player player, double dt) {}
+            public void step(GameWorld world, double dt) {}
 
             @Override
-            public String getTextureName() { return "test_powerup"; }
+            public String getBaseTexturePath() {
+                return "";
+            }
+        };
+    }
+
+    private HealthPowerup makePowerup(float x, float y) {
+        return new HealthPowerup(x, y, NO_SOUND) {
+
+            @Override
+            public String getBaseTexturePath() {
+                return "test";
+            }
         };
     }
 }

@@ -7,9 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import inf112.dungeoncrawler.model.entities.Entity;
-import inf112.dungeoncrawler.model.entities.Player;
-import inf112.dungeoncrawler.model.entities.enemies.Enemy;
-import inf112.dungeoncrawler.model.entities.powerups.Powerup;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,44 +19,21 @@ public class EntityRenderer {
 
     private final Map<String, Texture> textureCache = new HashMap<>();
 
-    private final PlayerAnimationController playerAnimator = new PlayerAnimationController();
-
-    private final EnemyAnimationController enemyAnimator = new EnemyAnimationController();
+    private final AnimationController animator = new AnimationController();
 
     public EntityRenderer(SpriteBatch batch, Camera camera) {
         this.batch  = batch;
         this.camera = camera;
     }
 
-    public void render(float deltaTime, List<Entity> entities, List<Powerup> powerups) {
+    public void render(float deltaTime, List<Entity> entities) {
         batch.setProjectionMatrix(camera.combined);
-
         for (Entity entity : entities) {
-            String textureName = resolveTextureName(deltaTime, entity);
-            Texture texture = getOrLoadTexture(textureName);
+            Texture texture = getOrLoadTexture(animator.getTextureName(deltaTime, entity));
             if (texture != null) {
                 batch.draw(texture, entity.getX(), entity.getY(),
                         entity.getWidth(), entity.getHeight());
             }
-        }
-
-        for (Powerup powerup : powerups) {
-            Texture texture = getOrLoadTexture(powerup.getTextureName());
-            if (texture != null) {
-                batch.draw(texture, powerup.getX(), powerup.getY(),
-                        powerup.getWidth(), powerup.getHeight());
-            }
-        }
-    }
-
-    private String resolveTextureName(float deltaTime, Entity entity) {
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
-            playerAnimator.update(deltaTime, player);
-            return playerAnimator.getTextureName(player);
-        }
-        else {
-            return enemyAnimator.getTextureName(deltaTime, (Enemy) entity);
         }
     }
 

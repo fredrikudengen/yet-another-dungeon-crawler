@@ -18,11 +18,11 @@ public class SlowEnemy extends Enemy {
 
     @Override
     public void onCollision(Entity entity) {
-        entity.health -= damage;
+        entity.takeDamage(this.damage, this.x, this.y);
     }
 
     @Override
     public String getBaseTexturePath() {
-        return "src/main/resources/enemy/slow";
+        return "enemy/slow/enemy_";
     }
 }

@@ -205,6 +205,11 @@
 					<execution>
 						<id>default-report</id>
 						<phase>test</phase>
+						<configuration>
+							<excludes>
+								<exclude>**/view/**</exclude>
+							</excludes>
+						</configuration>
 						<goals>
 							<goal>report</goal>
 						</goals>
