@@ -16,27 +16,26 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class HelpScreen implements Screen {
 
-    private static final Color GOLD     = Color.valueOf("F4BB44");
-    private static final Color DIVIDER  = new Color(0.45f, 0.28f, 0.10f, 1f); // warm brown
-    private static final Color KEY_BG   = new Color(0.30f, 0.18f, 0.08f, 1f);
+    private static final Color GOLD = Color.valueOf("F4BB44");
+    private static final Color DIVIDER = new Color(0.45f, 0.28f, 0.10f, 1f); // warm brown
+    private static final Color KEY_BG = new Color(0.30f, 0.18f, 0.08f, 1f);
     private static final Color KEY_BORDER = new Color(0.65f, 0.40f, 0.10f, 1f);
     private static final Color TEXT_DIM = new Color(0.70f, 0.60f, 0.50f, 1f);
 
     private static final String[][] BINDS = {
-            { "W", "Move North" },
-            { "S", "Move South" },
-            { "A", "Move West"  },
-            { "D", "Move East"  },
-            { "E", "Pause / Back" },
-            { "SPACE", "Attack" }
+            { "W/Up Arrow", "Move/Attack Up" },
+            { "S/Down Arrow", "Move/Attack Down" },
+            { "A/Left Arrow", "Move/Attack Left" },
+            { "D/Right Arrow", "Move/Attack Right" },
+            { "ESC", "Pause / Back" },
     };
 
     private static final float PANEL_PAD_X = 80f;
     private static final float PANEL_PAD_Y = 60f;
-    private static final float ROW_HEIGHT  = 60f;
-    private static final float KEY_COL_W   = 220f;
-    private static final float HEADER_H    = 90f;
-    private static final float FOOTER_H    = 50f;
+    private static final float ROW_HEIGHT = 60f;
+    private static final float KEY_COL_W = 220f;
+    private static final float HEADER_H = 90f;
+    private static final float FOOTER_H = 50f;
 
     private final Game game;
     private final SpriteBatch batch;
@@ -52,7 +51,7 @@ public class HelpScreen implements Screen {
     public HelpScreen(Game game) {
         this.game = game;
 
-        batch  = new SpriteBatch();
+        batch = new SpriteBatch();
         shapes = new ShapeRenderer();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -75,9 +74,9 @@ public class HelpScreen implements Screen {
         generator.dispose();
     }
 
-
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
     public void render(float delta) {
@@ -133,14 +132,14 @@ public class HelpScreen implements Screen {
     }
 
     private void drawBinds(float W, float H) {
-        float listTop  = H - PANEL_PAD_Y - HEADER_H - 10f;
+        float listTop = H - PANEL_PAD_Y - HEADER_H - 10f;
         float listLeft = PANEL_PAD_X + 30f;
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         for (int i = 0; i < BINDS.length; i++) {
-            String key    = BINDS[i][0];
+            String key = BINDS[i][0];
             String action = BINDS[i][1];
             float rowY = listTop - i * ROW_HEIGHT;
 
@@ -196,9 +195,17 @@ public class HelpScreen implements Screen {
         camera.setToOrtho(false, width, height);
     }
 
-    @Override public void pause() {}
-    @Override public void resume() {}
-    @Override public void hide() {}
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
 
     @Override
     public void dispose() {
