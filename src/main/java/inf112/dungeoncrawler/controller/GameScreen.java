@@ -77,8 +77,7 @@ public class GameScreen implements Screen {
 
         pauseOverlay = new PauseOverlay(
                 game,
-                () -> isPaused = false,
-                () -> this.dispose()
+                () -> isPaused = false
         );
         pauseOverlay.init();
     }

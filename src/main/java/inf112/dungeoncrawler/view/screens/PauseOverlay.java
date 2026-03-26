@@ -19,7 +19,6 @@ public class PauseOverlay {
 
     private final Game game;
     private final Runnable onResume;
-    private final Runnable onDispose;
 
     private SpriteBatch batch;
     private ShapeRenderer shapes;
@@ -30,10 +29,9 @@ public class PauseOverlay {
     private final MenuOption[] options = MenuOption.values();
     private int currentIndex = 0;
 
-    public PauseOverlay(Game game, Runnable onResume, Runnable onDispose) {
+    public PauseOverlay(Game game, Runnable onResume) {
         this.game      = game;
         this.onResume  = onResume;
-        this.onDispose = onDispose;
     }
 
     public void init() {
@@ -98,7 +96,6 @@ public class PauseOverlay {
                     onResume.run();
                     break;
                 case MAIN_MENU:
-                    onDispose.run();
                     game.setScreen(new TitleScreen(game));
                     break;
                 case EXIT:
