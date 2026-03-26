@@ -17,10 +17,10 @@ import inf112.dungeoncrawler.model.world.GameWorld;
 
 public class GameOverScreen implements Screen {
 
-    private static final Color GOLD       = Color.valueOf("F4BB44");
-    private static final Color DIVIDER    = new Color(0.55f, 0.34f, 0.12f, 1f);
-    private static final Color PANEL_BG   = new Color(0.12f, 0.07f, 0.03f, 0.75f);
-    private static final Color TEXT_DIM   = new Color(0.70f, 0.60f, 0.50f, 1f);
+    private static final Color GOLD = Color.valueOf("F4BB44");
+    private static final Color DIVIDER = new Color(0.55f, 0.34f, 0.12f, 1f);
+    private static final Color PANEL_BG = new Color(0.12f, 0.07f, 0.03f, 0.75f);
+    private static final Color TEXT_DIM = new Color(0.70f, 0.60f, 0.50f, 1f);
 
     private final GameWorld world;
     private final Game game;
@@ -36,9 +36,9 @@ public class GameOverScreen implements Screen {
     private final GlyphLayout layout = new GlyphLayout();
 
     public GameOverScreen(Game game, GameWorld world) {
-        this.game  = game;
+        this.game = game;
         this.world = world;
-        batch  = new SpriteBatch();
+        batch = new SpriteBatch();
         shapes = new ShapeRenderer();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -66,7 +66,8 @@ public class GameOverScreen implements Screen {
     }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
     public void render(float delta) {
@@ -119,9 +120,9 @@ public class GameOverScreen implements Screen {
     }
 
     private void drawStats(float W, float H) {
-        float panelTop    = H * 0.70f - 10f;
+        float panelTop = H * 0.70f - 10f;
         float panelBottom = H * 0.44f + 10f;
-        float panelH      = panelTop - panelBottom;
+        float panelH = panelTop - panelBottom;
 
         String label = "ENEMIES SLAIN";
         layout.setText(bodyFont, label);
@@ -156,9 +157,17 @@ public class GameOverScreen implements Screen {
         camera.setToOrtho(false, width, height);
     }
 
-    @Override public void pause()  {}
-    @Override public void resume() {}
-    @Override public void hide()   {}
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
 
     @Override
     public void dispose() {
