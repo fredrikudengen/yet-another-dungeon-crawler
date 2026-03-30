@@ -48,10 +48,10 @@ Når temaet er ferdig i den aktuelle branchen, sender de merge request til git m
 Google Docs brukes til referat. 
 
 ## Progresjon
-Implementert rom, attack, interaksjon med enemy og gjøre/ta skade, grafikk (sprite). startmeny
+Implementert rom, attack, interaksjon med enemy og gjøre/ta skade, grafikk (sprite), startmeny, lydeffekter, hjerte, 
 
 ## Mål
-Implementere musikk
+
 
 
 ## Spesifikasjon
