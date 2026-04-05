@@ -31,8 +31,15 @@ public class GameWorld implements Iterable<Entity> {
 
         // TODO: fix enemiesKilled (powerups are in entities as well)
         int before = entities.size();
-        entities.removeIf(entity -> !entity.isAlive());
-        enemiesKilled += before - entities.size();
+        entities.removeIf(entity -> {
+            if (!entity.isAlive()) {
+                if (!(entity instanceof Powerup) && !(entity instanceof Player)) {
+                    enemiesKilled++;
+                }
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
