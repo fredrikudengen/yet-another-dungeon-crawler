@@ -2,6 +2,7 @@ package inf112.dungeoncrawler.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.badlogic.gdx.Input;
 import inf112.dungeoncrawler.sound.SoundService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,6 +69,30 @@ public class PlayerInputHandlerTest {
         playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.D);
         playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.D);
         assertFalse(player.isMovingRight());
+    }
+
+    @Test
+    void keyDown_rightArrow_setsAttackingRight() {
+        playerInputHandler.keyDown(Input.Keys.RIGHT);
+        assertTrue(player.isAttackingRight());
+    }
+
+    @Test
+    void keyDown_leftArrow_setsAttackingLeft() {
+        playerInputHandler.keyDown(Input.Keys.LEFT);
+        assertTrue(player.isAttackingLeft());
+    }
+
+    @Test
+    void keyDown_upArrow_setsAttackingUp() {
+        playerInputHandler.keyDown(Input.Keys.UP);
+        assertTrue(player.isAttackingUp());
+    }
+
+    @Test
+    void keyDown_downArrow_setsAttackingDown() {
+        playerInputHandler.keyDown(Input.Keys.DOWN);
+        assertTrue(player.isAttackingDown());
     }
 
     @Test

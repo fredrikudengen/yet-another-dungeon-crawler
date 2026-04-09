@@ -160,10 +160,16 @@ public class Player extends Entity implements Movable{
 
     @Override
     public Direction getFacingDirection() { return facingDirection; }
+
     public boolean isMovingLeft()  { return movingLeft;  }
     public boolean isMovingRight() { return movingRight; }
     public boolean isMovingUp()    { return movingUp;    }
     public boolean isMovingDown()  { return movingDown;  }
+
+    public boolean isAttackingLeft()  { return facingDirection == Direction.LEFT && isAttacking;  }
+    public boolean isAttackingRight() { return facingDirection == Direction.RIGHT && isAttacking; }
+    public boolean isAttackingUp()    { return facingDirection == Direction.UP && isAttacking;    }
+    public boolean isAttackingDown()  { return facingDirection == Direction.DOWN && isAttacking;  }
 
     public void setMovingLeft(boolean moving)  { movingLeft  = moving; }
     public void setMovingRight(boolean moving) { movingRight = moving; }
