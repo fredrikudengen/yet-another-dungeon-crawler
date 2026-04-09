@@ -12,18 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityRenderer {
-
-    private final SpriteBatch batch;
-    private final Camera camera;
+public class EntityRenderer extends Renderer {
 
     private final Map<String, Texture> textureCache = new HashMap<>();
-
     private final AnimationController animator = new AnimationController();
 
     public EntityRenderer(SpriteBatch batch, Camera camera) {
-        this.batch  = batch;
-        this.camera = camera;
+        super(batch, camera);
     }
 
     public void render(float deltaTime, List<Entity> entities) {
@@ -47,6 +42,7 @@ public class EntityRenderer {
         return textureCache.get(textureName);
     }
 
+    @Override
     public void dispose() {
         for (Texture texture : textureCache.values()) {
             if (texture != null) texture.dispose();

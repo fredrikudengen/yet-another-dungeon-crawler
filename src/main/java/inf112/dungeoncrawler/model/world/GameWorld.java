@@ -3,18 +3,16 @@ package inf112.dungeoncrawler.model.world;
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.Player;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
-import inf112.dungeoncrawler.sound.SoundPlayer;
-import inf112.dungeoncrawler.sound.SoundService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class GameWorld implements Iterable<Entity> {
-    private Room room;
-    private List<Entity> entities;
+    private final Room room;
+    private final List<Entity> entities;
     private int enemiesKilled;
-    private Player player;
+    private final Player player;
 
     public GameWorld(Room room, Player player) {
         this.room = room;
@@ -29,8 +27,6 @@ public class GameWorld implements Iterable<Entity> {
             entity.step(this, deltaTime);
         }
 
-        // TODO: fix enemiesKilled (powerups are in entities as well)
-        int before = entities.size();
         entities.removeIf(entity -> {
             if (!entity.isAlive()) {
                 if (!(entity instanceof Powerup) && !(entity instanceof Player)) {

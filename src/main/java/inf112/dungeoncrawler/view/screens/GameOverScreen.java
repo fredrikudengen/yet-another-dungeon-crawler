@@ -19,7 +19,6 @@ public class GameOverScreen implements Screen {
 
     private static final Color GOLD = Color.valueOf("F4BB44");
     private static final Color DIVIDER = new Color(0.55f, 0.34f, 0.12f, 1f);
-    private static final Color PANEL_BG = new Color(0.12f, 0.07f, 0.03f, 0.75f);
     private static final Color TEXT_DIM = new Color(0.70f, 0.60f, 0.50f, 1f);
 
     private final GameWorld world;
@@ -28,10 +27,10 @@ public class GameOverScreen implements Screen {
     private final ShapeRenderer shapes;
     private final OrthographicCamera camera;
 
-    private BitmapFont titleFont;
-    private BitmapFont statsFont;
-    private BitmapFont bodyFont;
-    private BitmapFont hintFont;
+    private final BitmapFont titleFont;
+    private final BitmapFont statsFont;
+    private final BitmapFont bodyFont;
+    private final BitmapFont hintFont;
 
     private final GlyphLayout layout = new GlyphLayout();
 
@@ -86,7 +85,7 @@ public class GameOverScreen implements Screen {
         drawDivider(W, H * 0.70f);
         drawStats(W, H);
         drawDivider(W, H * 0.44f);
-        drawFooter(W, H);
+        drawFooter(W);
     }
 
     private void handleInput() {
@@ -140,7 +139,7 @@ public class GameOverScreen implements Screen {
         batch.end();
     }
 
-    private void drawFooter(float W, float H) {
+    private void drawFooter(float W) {
         hintFont.setColor(TEXT_DIM);
         String hint = "Press  ESC  to return to title";
         layout.setText(hintFont, hint);

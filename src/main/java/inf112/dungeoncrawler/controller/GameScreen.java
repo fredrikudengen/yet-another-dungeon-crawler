@@ -25,11 +25,10 @@ import inf112.dungeoncrawler.view.screens.GameOverScreen;
 import inf112.dungeoncrawler.view.screens.PauseOverlay;
 
 public class GameScreen implements Screen {
-    private Game game;
+    private final Game game;
     private GameView gameView;
     private GameWorld gameWorld;
     private Player player;
-    private PlayerInputHandler playerInputHandler;
     private PauseOverlay pauseOverlay;
     private boolean isPaused = false;
 
@@ -41,12 +40,21 @@ public class GameScreen implements Screen {
     public void show() {
         Room room = createExampleRoom();
         SoundService sound = SoundPlayer.getInstance();
-
         gameView = new GameView();
         gameView.create(1280, 768);
-
         sound.playMusic();
 
+        gameWorld = buildGameWorld(room, sound);
+
+        PlayerInputHandler playerInputHandler = new PlayerInputHandler(player);
+        Gdx.input.setInputProcessor(playerInputHandler);
+        gameView.updateCamera(player.getX(), player.getY());
+        pauseOverlay = new PauseOverlay(game, () -> isPaused = false);
+        pauseOverlay.init();
+    }
+
+    GameWorld buildGameWorld(Room room, SoundService sound) {
+        Player player = null;
         for (SpawnPoint sp : room.getSpawnPoints()) {
             if (sp.type == SpawnPoint.Type.PLAYER) {
                 player = new Player(sp.x, sp.y, sound);
@@ -54,32 +62,27 @@ public class GameScreen implements Screen {
             }
         }
 
-        gameWorld = new GameWorld(room, player);
-        gameWorld.addEntity(player);
+        final Player spawnedPlayer = player;
+
+        GameWorld world = new GameWorld(room, spawnedPlayer);
+        world.addEntity(spawnedPlayer);
 
         EntityFactory factory = new EntityFactory();
-        factory.register(SpawnPoint.Type.FASTENEMY,    (x, y) -> new FastEnemy(x, y, player));
-        factory.register(SpawnPoint.Type.NORMALENEMY,  (x, y) -> new NormalEnemy(x, y, player));
-        factory.register(SpawnPoint.Type.SLOWENEMY,    (x, y) -> new SlowEnemy(x, y, player));
+        factory.register(SpawnPoint.Type.FASTENEMY,    (x, y) -> new FastEnemy(x, y, spawnedPlayer));
+        factory.register(SpawnPoint.Type.NORMALENEMY,  (x, y) -> new NormalEnemy(x, y, spawnedPlayer));
+        factory.register(SpawnPoint.Type.SLOWENEMY,    (x, y) -> new SlowEnemy(x, y, spawnedPlayer));
         factory.register(SpawnPoint.Type.HEALTHPOWERUP,(x, y) -> new HealthPowerup(x, y, sound));
         factory.register(SpawnPoint.Type.SPEEDPOWERUP, (x, y) -> new SpeedPowerup(x, y, sound));
         factory.register(SpawnPoint.Type.ATTACKPOWERUP,(x, y) -> new AttackPowerup(x, y, sound));
 
         for (SpawnPoint sp : room.getSpawnPoints()) {
             if (sp.type != SpawnPoint.Type.PLAYER) {
-                gameWorld.addEntity(factory.spawn(sp));
+                world.addEntity(factory.spawn(sp));
             }
         }
 
-        playerInputHandler = new PlayerInputHandler(player);
-        Gdx.input.setInputProcessor(playerInputHandler);
-        gameView.updateCamera(player.getX(), player.getY());
-
-        pauseOverlay = new PauseOverlay(
-                game,
-                () -> isPaused = false
-        );
-        pauseOverlay.init();
+        this.player = spawnedPlayer;
+        return world;
     }
 
     private Room createExampleRoom() {
@@ -129,5 +132,9 @@ public class GameScreen implements Screen {
         gameView.dispose();
         pauseOverlay.dispose();
         SoundPlayer.getInstance().dispose();
+    }
+
+    public boolean isPaused() {
+        return isPaused;
     }
 }

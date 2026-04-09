@@ -13,16 +13,11 @@ import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorldRenderer {
-    private final SpriteBatch batch;
-    private final Camera camera;
-    private final Map<TileType, Texture> tileTextures;
+public class WorldRenderer extends Renderer {
+    private final Map<TileType, Texture> tileTextures = new HashMap<>();
 
     public WorldRenderer(SpriteBatch batch, Camera camera) {
-        this.batch = batch;
-        this.camera = camera;
-        this.tileTextures = new HashMap<>();
-
+        super(batch, camera);
         loadTextures();
     }
 
@@ -59,7 +54,7 @@ public class WorldRenderer {
             }
         }
     }
-
+    @Override
     public void dispose() {
         for (Texture texture : tileTextures.values()) {
             if (texture != null) {

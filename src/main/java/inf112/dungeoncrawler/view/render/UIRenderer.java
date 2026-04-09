@@ -5,9 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 
-public class UIRenderer {
-	private final SpriteBatch batch;
-	private final Camera camera;
+public class UIRenderer extends Renderer {
+
 	private final Texture heartTexture;
 
 	private static final float HUD_MARGIN = 50f;
@@ -15,8 +14,7 @@ public class UIRenderer {
 	private static final float HEART_SPACING = 16f;
 
 	public UIRenderer(SpriteBatch batch, Camera camera) {
-		this.batch = batch;
-		this.camera = camera;
+        super(batch, camera);
 		this.heartTexture = new Texture("powerups/Life.png");
 	}
 
@@ -35,6 +33,7 @@ public class UIRenderer {
 		batch.setProjectionMatrix(previousProjection);
 	}
 
+	@Override
 	public void dispose() {
 		heartTexture.dispose();
 	}

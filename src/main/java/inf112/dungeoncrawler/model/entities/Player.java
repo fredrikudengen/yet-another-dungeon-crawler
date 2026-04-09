@@ -15,7 +15,7 @@ public class Player extends Entity implements Movable{
     public static final float INVINCIBILITY_DURATION = 1.0f;
 
     private boolean movingLeft, movingRight, movingUp, movingDown;
-    private Attack attack;
+    private final Attack attack;
     private Direction facingDirection = Direction.RIGHT;
     private float attackTimer    = 0;
     private boolean isAttacking  = false;
@@ -24,7 +24,7 @@ public class Player extends Entity implements Movable{
     private float invincibilityTimer = 0;
     private boolean isInvincible     = false;
 
-    private SoundService sound;
+    private final SoundService sound;
 
     public Player(float x, float y, SoundService sound) {
         super(x, y);
@@ -109,32 +109,30 @@ public class Player extends Entity implements Movable{
     }
 
     private void checkAttackHits(GameWorld world) {
-        float range = attack.getRange();
         for (Entity entity : world.getEntities()) {
-            if (entity instanceof Enemy && entity != this) {
-                if (isEnemyInAttackRange(entity, range)) {
+            if (entity instanceof Enemy) {
+                if (isEnemyInAttackRange(entity)) {
                     entity.takeDamage(damage, x, y);
                 }
             }
         }
     }
 
-    private boolean isEnemyInAttackRange(Entity entity, float range) {
-        float dx       = entity.getX() - x;
-        float dy       = entity.getY() - y;
-        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+    private boolean isEnemyInAttackRange(Entity entity) {
+        int playerTileX = (int)(x / TILE_SIZE);
+        int playerTileY = (int)(y / TILE_SIZE);
+        int entityTileX = (int)(entity.getX() / TILE_SIZE);
+        int entityTileY = (int)(entity.getY() / TILE_SIZE);
 
-        if (distance > range) return false;
+        int dx = entityTileX - playerTileX;
+        int dy = entityTileY - playerTileY;
 
-        // TODO: find better/more natural attack area
-        // Cone-shaped attack area
-        switch (facingDirection) {
-            case UP:    return dy > 0 && Math.abs(dx) < range / 2;
-            case DOWN:  return dy < 0 && Math.abs(dx) < range / 2;
-            case LEFT:  return dx < 0 && Math.abs(dy) < range / 2;
-            case RIGHT: return dx > 0 && Math.abs(dy) < range / 2;
-            default:    return false;
-        }
+        return switch (facingDirection) {
+            case LEFT -> dx == -1 && Math.abs(dy) <= 1;
+            case RIGHT -> dx == 1 && Math.abs(dy) <= 1;
+            case UP -> dy == 1 && Math.abs(dx) <= 1;
+            case DOWN -> dy == -1 && Math.abs(dx) <= 1;
+        };
     }
 
     public void performAttack(Direction direction) {
