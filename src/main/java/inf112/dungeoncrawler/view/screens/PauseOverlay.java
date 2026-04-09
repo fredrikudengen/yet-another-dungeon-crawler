@@ -62,7 +62,7 @@ public class PauseOverlay {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(0f, 0f, 0f, 0.55f);
+        shapes.setColor(0.2f, 0.13f, 0.07f, 1);
         shapes.rect(0, 0, W, H);
         shapes.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);

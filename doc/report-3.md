@@ -46,11 +46,13 @@ Ukentlige møter hvor vi setter mål for uken, bruker trello for oversikt om vei
 Delegerer oppgaver ukentlig. deler teamet opp, og 1-2 utviklere jobber på hver sin branch hvor de implementerer/løser et bestemt problem. 
 Når temaet er ferdig i den aktuelle branchen, sender de merge request til git masteren (Leila) som ordner opp i eventuelle git-konflikter. 
 Google Docs brukes til referat. 
+Gruppen har vært flinke til å skrive tester underveis, og kommunisere gjennom messenger. 
 
 ## Progresjon
-Implementert rom, attack, interaksjon med enemy og gjøre/ta skade, grafikk (sprite), startmeny, lydeffekter, musikk, hjerte, powerups (sverd, fart) 
+Implementert rom, attack, interaksjon med enemy og gjøre/ta skade, grafikk (sprite), startmeny, lydeffekter, musikk, hjerte, powerups (sverd, fart), skrevet flere tester
 
 ## Mål
+Implementere flere rom, dør, fikse README (blant annet opphavsrett og brukerveiledning), tester for de nye implementasjonene. 
 
 
 
@@ -108,8 +110,7 @@ Som utvikler vil jeg at koden skal være modulær og lett å utvide, slik at vi 
 #### 11.
 Som spiller vil jeg ha en angrepsanimasjon, slik at jeg tydelig ser når angrepet mitt treffer.
 
-#### 12.
-Som spiller vil jeg at spillet skal bli gradvis vanskeligere, slik at det opprettholder utfordringen over tid.
+
 
 
 
