@@ -108,8 +108,7 @@ Som utvikler vil jeg at koden skal være modulær og lett å utvide, slik at vi 
 #### 11.
 Som spiller vil jeg ha en angrepsanimasjon, slik at jeg tydelig ser når angrepet mitt treffer.
 
-#### 12.
-Som spiller vil jeg at spillet skal bli gradvis vanskeligere, slik at det opprettholder utfordringen over tid.
+
 
 
 

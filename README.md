@@ -8,10 +8,14 @@ Sprite Zero er et spill.
 ## Team
 Fredrik Udengen, Njål Nordal, Guangwei Zhang, Kim Huynh, Leila Lu
 
+## Brukerveiledning
+
 ## Teknologier
 - Java
 - LibGDX
 - Maven
+
+## Kilde / Opphavsrett
 
 ## Hvordan kjøre
 ```bash
