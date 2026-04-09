@@ -1,4 +1,4 @@
-package inf112.dungeoncrawler.model.entities;
+package inf112.dungeoncrawler.model.entities.enemies;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.model.world.TileType;
-import inf112.dungeoncrawler.model.entities.enemies.Enemy;
-import inf112.dungeoncrawler.model.entities.enemies.NormalEnemy;
+import inf112.dungeoncrawler.model.entities.Entity;
+import inf112.dungeoncrawler.model.entities.Player;
 
 class EnemyTest {
 
