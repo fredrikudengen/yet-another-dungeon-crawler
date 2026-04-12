@@ -30,7 +30,7 @@ class AttackTest {
     @Test
     void canUse_afterPartialUpdate_remainsFalse() {
         attack.use();
-        attack.update(COOLDOWN - 0.1f);
+        attack.update(0.1f);
         assertFalse(attack.canUse());
     }
 
