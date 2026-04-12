@@ -21,6 +21,9 @@ public class EntityFactory {
 
     public Entity spawn(SpawnPoint spawnPoint) {
         EntitySpawner spawner = registry.get(spawnPoint.type);
+        if (spawner == null) {
+            throw new IllegalArgumentException("No spawner registered for type: " + spawnPoint.type);
+        }
         return spawner.spawn(spawnPoint.x, spawnPoint.y);
     }
 }

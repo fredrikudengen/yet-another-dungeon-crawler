@@ -1,11 +1,9 @@
 package inf112.dungeoncrawler.view.render;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import inf112.dungeoncrawler.model.entities.Entity;
 
 import java.util.HashMap;
@@ -34,19 +32,13 @@ public class EntityRenderer extends Renderer {
 
     private Texture getOrLoadTexture(String textureName) {
         if (textureName == null || textureName.isEmpty()) return null;
-
-        if (!textureCache.containsKey(textureName)) {
-            FileHandle file = Gdx.files.internal(textureName);
-            textureCache.put(textureName, new Texture(file));
-        }
-        return textureCache.get(textureName);
+        return textureCache.computeIfAbsent(textureName,
+                name -> new Texture(Gdx.files.internal(name)));
     }
 
     @Override
     public void dispose() {
-        for (Texture texture : textureCache.values()) {
-            if (texture != null) texture.dispose();
-        }
+        textureCache.values().forEach(Texture::dispose);
         textureCache.clear();
     }
 }

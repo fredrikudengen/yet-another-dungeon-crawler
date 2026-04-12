@@ -7,12 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import inf112.dungeoncrawler.model.entities.Player;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
+import inf112.dungeoncrawler.sound.SoundEffect;
 import inf112.dungeoncrawler.sound.SoundService;
 import org.junit.jupiter.api.Test;
 
 public class AttackPowerupTest {
 
-	private static final SoundService NO_SOUND = effect -> {};
+	private static final SoundService NO_SOUND = new SoundService() {
+		@Override
+		public void play(SoundEffect effect) { /* ingenting */ }
+
+		@Override
+		public void dispose() { /* ingenting */ }
+	};
 
 	@Test
 	void getBaseTexturePathReturnsAttackPowerupPath() {

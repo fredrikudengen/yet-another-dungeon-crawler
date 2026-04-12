@@ -3,12 +3,19 @@ package inf112.dungeoncrawler.model.entities.enemies;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import inf112.dungeoncrawler.model.entities.Player;
+import inf112.dungeoncrawler.sound.SoundEffect;
 import inf112.dungeoncrawler.sound.SoundService;
 import org.junit.jupiter.api.Test;
 
 public class FastEnemyTest {
 
-	private static final SoundService NO_SOUND = effect -> {};
+	private static final SoundService NO_SOUND = new SoundService() {
+		@Override
+		public void play(SoundEffect effect) { /* ingenting */ }
+
+		@Override
+		public void dispose() { /* ingenting */ }
+	};
 
 	@Test
 	void constructorSetsExpectedStats() {

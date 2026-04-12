@@ -5,21 +5,28 @@ import inf112.dungeoncrawler.model.entities.Player;
 import inf112.dungeoncrawler.model.entities.enemies.FastEnemy;
 import inf112.dungeoncrawler.model.entities.powerups.HealthPowerup;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
+import inf112.dungeoncrawler.sound.SoundEffect;
 import inf112.dungeoncrawler.sound.SoundService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameWorldTest {
 
+    private static final SoundService NO_SOUND = new SoundService() {
+        @Override
+        public void play(SoundEffect effect) { /* ingenting */ }
+
+        @Override
+        public void dispose() { /* ingenting */ }
+    };
+
     private Room room;
     private GameWorld world;
     private Player player;
-    private static final SoundService NO_SOUND = effect -> {};
 
     @BeforeEach
     void setUp() {
@@ -29,43 +36,36 @@ class GameWorldTest {
     }
 
     @Test
-    void testGetRoomReturnsConstructorRoom() {
+    void getRoom_returnsConstructorRoom() {
         assertSame(room, world.getRoom());
     }
 
     @Test
-    void testNewWorldHasNoEntities() {
+    void getPlayer_returnsConstructorPlayer() {
+        assertSame(player, world.getPlayer());
+    }
+
+    @Test
+    void newWorld_hasNoEntities() {
         assertTrue(world.getEntities().isEmpty());
     }
 
     @Test
-    void testNewWorldHasNoPowerups() {
-        assertTrue(world.getEntities().isEmpty());
+    void addEntity_appearsInList() {
+        Entity enemy = makeFastEnemy(100, 100);
+        world.addEntity(enemy);
+        assertTrue(world.getEntities().contains(enemy));
     }
 
     @Test
-    void testAddEntityAppearsInList() {
-        Entity entity = makeFastEnemy(100, 100);
-        world.addEntity(entity);
-        assertTrue(world.getEntities().contains(entity));
-    }
-
-    @Test
-    void testAddMultipleEntitiesAllStored() {
+    void addMultipleEntities_allStored() {
         world.addEntity(makeFastEnemy(100, 100));
         world.addEntity(makeFastEnemy(200, 200));
         assertEquals(2, world.getEntities().size());
     }
 
     @Test
-    void testAddPowerupAppearsInList() {
-        Powerup powerup = makePowerup(100, 100);
-        world.addEntity(powerup);
-        assertTrue(world.getEntities().contains(powerup));
-    }
-
-    @Test
-    void testStepRemovesDeadEntity() {
+    void step_removesDeadEntity() {
         Entity dead = makeDeadEnemy(100, 100);
         world.addEntity(dead);
         world.step(0.016);
@@ -73,7 +73,7 @@ class GameWorldTest {
     }
 
     @Test
-    void testStepKeepsAliveEntity() {
+    void step_keepsAliveEntity() {
         Entity alive = makeFastEnemy(100, 100);
         world.addEntity(alive);
         world.step(0.016);
@@ -81,7 +81,7 @@ class GameWorldTest {
     }
 
     @Test
-    void testStepOnlyRemovesDeadEntities() {
+    void step_onlyRemovesDeadEntities() {
         Entity alive = makeFastEnemy(100, 100);
         Entity dead  = makeDeadEnemy(200, 200);
         world.addEntity(alive);
@@ -95,7 +95,7 @@ class GameWorldTest {
     }
 
     @Test
-    void testStepRemovesPowerupCollidingWithPlayer() {
+    void step_removesPowerupCollidingWithPlayer() {
         HealthPowerup powerup = makePowerup(player.getX(), player.getY());
         world.addEntity(powerup);
         world.step(1);
@@ -103,7 +103,7 @@ class GameWorldTest {
     }
 
     @Test
-    void testStepKeepsPowerupNotCollidingWithPlayer() {
+    void step_keepsPowerupNotCollidingWithPlayer() {
         Powerup powerup = makePowerup(0, 0);
         world.addEntity(powerup);
         world.step(0.016);
@@ -111,80 +111,82 @@ class GameWorldTest {
     }
 
     @Test
-    void testStepOnlyRemovesCollidingPowerup() {
-        HealthPowerup colliding    = makePowerup(player.getX(), player.getY());
-        HealthPowerup notColliding = makePowerup(0, 0);
-        world.addEntity(colliding);
-        world.addEntity(notColliding);
-        world.step(1);
-
-        List<Entity> remaining = world.getEntities();
-        assertFalse(remaining.contains(colliding));
-        assertTrue(remaining.contains(notColliding));
-        assertEquals(1, remaining.size());
+    void hasEnemiesRemaining_noEnemies_returnsFalse() {
+        assertFalse(world.hasEnemiesRemaining());
     }
 
     @Test
-    void testIteratorReturnsAllEntities() {
+    void hasEnemiesRemaining_withAliveEnemy_returnsTrue() {
+        world.addEntity(makeFastEnemy(100, 100));
+        assertTrue(world.hasEnemiesRemaining());
+    }
+
+    @Test
+    void hasEnemiesRemaining_afterEnemyDies_returnsFalse() {
+        world.addEntity(makeDeadEnemy(100, 100));
+        world.step(0.016);
+        assertFalse(world.hasEnemiesRemaining());
+    }
+
+    @Test
+    void getKilledEnemies_initiallyZero() {
+        assertEquals(0, world.getKilledEnemies());
+    }
+
+    @Test
+    void getKilledEnemies_incrementsWhenEnemyRemoved() {
+        world.addEntity(makeDeadEnemy(100, 100));
+        world.step(0.016);
+        assertEquals(1, world.getKilledEnemies());
+    }
+
+    @Test
+    void getKilledEnemies_doesNotCountPowerups() {
+        HealthPowerup powerup = makePowerup(player.getX(), player.getY());
+        world.addEntity(powerup);
+        world.step(1);
+        assertEquals(0, world.getKilledEnemies());
+    }
+
+    @Test
+    void iterator_containsAllEntities() {
         Entity e1 = makeFastEnemy(100, 100);
         Entity e2 = makeFastEnemy(200, 200);
         world.addEntity(e1);
         world.addEntity(e2);
 
-        Iterator<Entity> it = world.iterator();
-        assertSame(e1, it.next());
-        assertSame(e2, it.next());
-        assertFalse(it.hasNext());
+        List<Entity> iterated = new java.util.ArrayList<>();
+        world.iterator().forEachRemaining(iterated::add);
+
+        assertTrue(iterated.contains(e1));
+        assertTrue(iterated.contains(e2));
+        assertEquals(2, iterated.size());
     }
 
     @Test
-    void testIteratorEmptyWorldHasNoElements() {
+    void iterator_emptyWorld_hasNoElements() {
         assertFalse(world.iterator().hasNext());
     }
 
     private FastEnemy makeFastEnemy(float x, float y) {
         return new FastEnemy(x, y, player) {
-            {
-                this.width = 32;
-                this.height = 32;
-                this.health = 10;
-                this.speed = 100;
-                this.damage = 5;
-            }
-
-            @Override
-            public void step(GameWorld world, double dt) {}
-
-            @Override
-            public String getBaseTexturePath() {
-                return "";
-            }
+            { width = 32; height = 32; health = 10; speed = 100; damage = 5; }
+            @Override public void step(GameWorld world, double dt) {}
+            @Override public String getBaseTexturePath() { return ""; }
         };
     }
 
     private FastEnemy makeDeadEnemy(float x, float y) {
         return new FastEnemy(x, y, player) {
-            {
-                this.isAlive = false;
-            }
-
-            @Override
-            public void step(GameWorld world, double dt) {}
-
-            @Override
-            public String getBaseTexturePath() {
-                return "";
-            }
+            { isAlive = false; }
+            @Override public void step(GameWorld world, double dt) {}
+            @Override public String getBaseTexturePath() { return ""; }
         };
     }
 
     private HealthPowerup makePowerup(float x, float y) {
         return new HealthPowerup(x, y, NO_SOUND) {
-
-            @Override
-            public String getBaseTexturePath() {
-                return "test";
-            }
+            @Override public String getBaseTexturePath() { return "test"; }
         };
     }
 }

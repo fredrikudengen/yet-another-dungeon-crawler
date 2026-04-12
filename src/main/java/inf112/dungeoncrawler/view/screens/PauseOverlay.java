@@ -10,15 +10,22 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import inf112.dungeoncrawler.sound.SoundService;
+
+import java.util.Objects;
 
 public class PauseOverlay {
+
+    private static final Color GOLD = Color.valueOf("F4BB44");
 
     public enum MenuOption {
         RESUME, MAIN_MENU, EXIT
     }
 
     private final Game game;
+    private final SoundService sound;
     private final Runnable onResume;
+    private final MenuOption[] options = MenuOption.values();
 
     private SpriteBatch batch;
     private ShapeRenderer shapes;
@@ -26,12 +33,12 @@ public class PauseOverlay {
     private BitmapFont menuFont;
     private GlyphLayout layout;
 
-    private final MenuOption[] options = MenuOption.values();
     private int currentIndex = 0;
 
-    public PauseOverlay(Game game, Runnable onResume) {
-        this.game      = game;
-        this.onResume  = onResume;
+    public PauseOverlay(Game game, SoundService sound, Runnable onResume) {
+        this.game     = Objects.requireNonNull(game,     "game must not be null");
+        this.sound    = Objects.requireNonNull(sound,    "sound must not be null");
+        this.onResume = Objects.requireNonNull(onResume, "onResume must not be null");
     }
 
     public void init() {
@@ -44,7 +51,7 @@ public class PauseOverlay {
 
         parameter.size = 75;
         titleFont = generator.generateFont(parameter);
-        titleFont.setColor(Color.valueOf("F4BB44"));
+        titleFont.setColor(GOLD);
 
         parameter.size = 30;
         menuFont = generator.generateFont(parameter);
@@ -68,18 +75,16 @@ public class PauseOverlay {
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
         batch.begin();
-
         layout.setText(titleFont, "PAUSED");
         titleFont.draw(batch, layout, (W - layout.width) / 2f, H * 0.80f);
 
         float startY = H * 0.55f;
         for (int i = 0; i < options.length; i++) {
             String text = (i == currentIndex ? "> " : "  ") + options[i].name().replace("_", " ");
-            menuFont.setColor(i == currentIndex ? Color.valueOf("F4BB44") : Color.WHITE);
+            menuFont.setColor(i == currentIndex ? GOLD : Color.WHITE);
             layout.setText(menuFont, text);
             menuFont.draw(batch, layout, (W - layout.width) / 2f, startY - i * 90);
         }
-
         batch.end();
     }
 
@@ -92,15 +97,9 @@ public class PauseOverlay {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             switch (options[currentIndex]) {
-                case RESUME:
-                    onResume.run();
-                    break;
-                case MAIN_MENU:
-                    game.setScreen(new TitleScreen(game));
-                    break;
-                case EXIT:
-                    Gdx.app.exit();
-                    break;
+                case RESUME    -> { currentIndex = 0; onResume.run(); }
+                case MAIN_MENU -> game.setScreen(new TitleScreen(game, sound));
+                case EXIT      -> Gdx.app.exit();
             }
         }
     }

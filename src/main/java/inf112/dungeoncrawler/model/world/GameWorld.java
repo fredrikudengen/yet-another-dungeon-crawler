@@ -2,6 +2,7 @@ package inf112.dungeoncrawler.model.world;
 
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.Player;
+import inf112.dungeoncrawler.model.entities.enemies.Enemy;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
 
 import java.util.ArrayList;
@@ -9,17 +10,16 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GameWorld implements Iterable<Entity> {
+
     private final Room room;
     private final List<Entity> entities;
-    private int enemiesKilled;
     private final Player player;
+    private int enemiesKilled = 0;
 
     public GameWorld(Room room, Player player) {
-        this.room = room;
-        this.player = player;
+        this.room     = room;
+        this.player   = player;
         this.entities = new ArrayList<>();
-        this.enemiesKilled = 0;
-
     }
 
     public void step(double deltaTime) {
@@ -38,26 +38,21 @@ public class GameWorld implements Iterable<Entity> {
         });
     }
 
+    public boolean hasEnemiesRemaining() {
+        return entities.stream().anyMatch(e -> e instanceof Enemy);
+    }
+
+    public void openDoors() {
+        room.openDoors();
+    }
+
     @Override
-    public Iterator<Entity> iterator() {
-        return entities.iterator();
-    }
+    public Iterator<Entity> iterator() { return entities.iterator(); }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public List<Entity> getEntities() {
-        return entities;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public int getKilledEnemies() {
-        return enemiesKilled;
-    }
+    public Room getRoom()              { return room;          }
+    public List<Entity> getEntities()  { return entities;      }
+    public Player getPlayer()          { return player;        }
+    public int getKilledEnemies()      { return enemiesKilled; }
 
     public void addEntity(Entity entity) {
         entities.add(entity);

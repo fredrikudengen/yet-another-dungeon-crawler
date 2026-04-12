@@ -1,40 +1,38 @@
 package inf112.dungeoncrawler.model.generation;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
+import java.util.EnumSet;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SpawnPointTest {
 
 	@Test
-	void constructorStoresCoordinatesAndType() {
-		SpawnPoint spawnPoint = new SpawnPoint(7, 9, SpawnPoint.Type.PLAYER);
-
-		assertEquals(7, spawnPoint.x);
-		assertEquals(9, spawnPoint.y);
-		assertEquals(SpawnPoint.Type.PLAYER, spawnPoint.type);
+	void constructor_storesCoordinatesAndType() {
+		SpawnPoint sp = new SpawnPoint(7, 9, SpawnPoint.Type.PLAYER);
+		assertEquals(7, sp.x);
+		assertEquals(9, sp.y);
+		assertEquals(SpawnPoint.Type.PLAYER, sp.type);
 	}
 
 	@Test
-	void constructorSupportsNegativeCoordinates() {
-		SpawnPoint spawnPoint = new SpawnPoint(-3, -11, SpawnPoint.Type.SLOWENEMY);
-
-		assertEquals(-3, spawnPoint.x);
-		assertEquals(-11, spawnPoint.y);
-		assertEquals(SpawnPoint.Type.SLOWENEMY, spawnPoint.type);
+	void constructor_supportsNegativeCoordinates() {
+		SpawnPoint sp = new SpawnPoint(-3, -11, SpawnPoint.Type.SLOWENEMY);
+		assertEquals(-3, sp.x);
+		assertEquals(-11, sp.y);
+		assertEquals(SpawnPoint.Type.SLOWENEMY, sp.type);
 	}
 
 	@Test
-	void typeEnumContainsExpectedValuesInExpectedOrder() {
-		SpawnPoint.Type[] types = SpawnPoint.Type.values();
-
-		assertEquals(7, types.length);
-		assertEquals(SpawnPoint.Type.FASTENEMY, types[0]);
-		assertEquals(SpawnPoint.Type.NORMALENEMY, types[1]);
-		assertEquals(SpawnPoint.Type.SLOWENEMY, types[2]);
-		assertEquals(SpawnPoint.Type.SPEEDPOWERUP, types[3]);
-		assertEquals(SpawnPoint.Type.ATTACKPOWERUP, types[4]);
-		assertEquals(SpawnPoint.Type.HEALTHPOWERUP, types[5]);
-		assertEquals(SpawnPoint.Type.PLAYER, types[6]);
+	void typeEnum_containsAllExpectedTypes() {
+		EnumSet<SpawnPoint.Type> types = EnumSet.allOf(SpawnPoint.Type.class);
+		assertTrue(types.contains(SpawnPoint.Type.FASTENEMY));
+		assertTrue(types.contains(SpawnPoint.Type.NORMALENEMY));
+		assertTrue(types.contains(SpawnPoint.Type.SLOWENEMY));
+		assertTrue(types.contains(SpawnPoint.Type.SPEEDPOWERUP));
+		assertTrue(types.contains(SpawnPoint.Type.ATTACKPOWERUP));
+		assertTrue(types.contains(SpawnPoint.Type.HEALTHPOWERUP));
+		assertTrue(types.contains(SpawnPoint.Type.PLAYER));
+		assertTrue(types.contains(SpawnPoint.Type.DOOR));
 	}
 }

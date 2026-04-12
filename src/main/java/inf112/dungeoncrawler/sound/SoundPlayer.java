@@ -6,14 +6,6 @@ import com.badlogic.gdx.audio.Sound;
 
 public class SoundPlayer implements SoundService {
 
-    public enum SoundEffect {
-        DAMAGE_TAKEN,
-        POWERUP_PICKUP,
-        SWORD_SWING
-    }
-
-    private static SoundPlayer instance;
-
     private final Sound damageTaken;
     private final Sound powerupPickup;
     private final Sound swordSwing;
@@ -21,9 +13,9 @@ public class SoundPlayer implements SoundService {
 
     private float masterVolume = 1.0f;
     private float musicVolume  = 0.5f;
-    private boolean muted = false;
+    private boolean muted      = false;
 
-    private SoundPlayer() {
+    public SoundPlayer() {
         damageTaken   = Gdx.audio.newSound(Gdx.files.internal("sound/damageTaken.ogg"));
         powerupPickup = Gdx.audio.newSound(Gdx.files.internal("sound/powerupPickUp.ogg"));
         swordSwing    = Gdx.audio.newSound(Gdx.files.internal("sound/swordSwing.ogg"));
@@ -33,13 +25,7 @@ public class SoundPlayer implements SoundService {
         soundtrack.setVolume(musicVolume);
     }
 
-    public static SoundPlayer getInstance() {
-        if (instance == null) {
-            instance = new SoundPlayer();
-        }
-        return instance;
-    }
-
+    @Override
     public void play(SoundEffect effect) {
         if (muted) return;
         switch (effect) {
@@ -49,14 +35,17 @@ public class SoundPlayer implements SoundService {
         }
     }
 
+    @Override
     public void playMusic() {
         if (!muted) soundtrack.play();
     }
 
+    @Override
     public void pauseMusic() {
         soundtrack.pause();
     }
 
+    @Override
     public void stopMusic() {
         soundtrack.stop();
     }
@@ -75,13 +64,15 @@ public class SoundPlayer implements SoundService {
         soundtrack.setVolume(muted ? 0f : musicVolume);
     }
 
-    public boolean isMuted() { return muted; }
+    public boolean isMuted() {
+        return muted;
+    }
 
+    @Override
     public void dispose() {
         damageTaken.dispose();
         powerupPickup.dispose();
         swordSwing.dispose();
         soundtrack.dispose();
-        instance = null;
     }
 }

@@ -2,12 +2,12 @@ package inf112.dungeoncrawler.model.entities.powerups;
 
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.world.GameWorld;
-import inf112.dungeoncrawler.sound.SoundPlayer;
 import inf112.dungeoncrawler.sound.SoundService;
 
 public class AttackPowerup extends Powerup {
 
-    protected double attackTimer, currentTime;
+    private double attackTimer;
+    private double currentTime;
 
     public AttackPowerup(float x, float y, SoundService sound) {
         super(x, y, sound);
@@ -19,7 +19,7 @@ public class AttackPowerup extends Powerup {
             super.step(world, deltaTime);
             if (this.collidesWith(world.getPlayer())) {
                 onCollision(world.getPlayer());
-                pickedUp = true;
+                pickedUp    = true;
                 attackTimer = currentTime + 10;
             }
         }
@@ -44,7 +44,5 @@ public class AttackPowerup extends Powerup {
 
     private void endPowerup(Entity entity) {
         entity.setDamage((int) (entity.getDamage() - 3));
-        this.isAlive = false;
     }
-
 }
