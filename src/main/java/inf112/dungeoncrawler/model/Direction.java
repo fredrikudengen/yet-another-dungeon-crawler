@@ -1,13 +1,9 @@
 package inf112.dungeoncrawler.model;
 
+/**
+ * Enum containing each direction (up, down, left, right).
+ * Used to store facingDirection, attackDirection etc.
+ */
 public enum Direction {
     UP, DOWN, LEFT, RIGHT;
-
-    public boolean isVertical() {
-        return this == UP || this == DOWN;
-    }
-
-    public boolean isHorizontal() {
-        return this == LEFT || this == RIGHT;
-    }
 }

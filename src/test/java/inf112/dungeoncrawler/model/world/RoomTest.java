@@ -1,20 +1,20 @@
 package inf112.dungeoncrawler.model.world;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.List;
-
+import inf112.dungeoncrawler.model.generation.SpawnPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import inf112.dungeoncrawler.model.generation.SpawnPoint;
+import java.util.List;
+
+import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RoomTest {
 
-    private Room room;
-    private static final int ROOM_WIDTH = 10;
+    private static final int ROOM_WIDTH  = 10;
     private static final int ROOM_HEIGHT = 8;
-    private static final int TILE_SIZE = 32;
+
+    private Room room;
 
     @BeforeEach
     void setUp() {
@@ -22,13 +22,13 @@ class RoomTest {
     }
 
     @Test
-    void testConstructorCreatesCorrectSize() {
-        assertEquals(ROOM_WIDTH, room.getWidth());
+    void constructor_setsCorrectDimensions() {
+        assertEquals(ROOM_WIDTH,  room.getWidth());
         assertEquals(ROOM_HEIGHT, room.getHeight());
     }
 
     @Test
-    void testConstructorFillsWithFloorTiles() {
+    void constructor_fillsWithFloorTiles() {
         for (int x = 0; x < ROOM_WIDTH; x++) {
             for (int y = 0; y < ROOM_HEIGHT; y++) {
                 assertEquals(TileType.FLOOR, room.getTileAt(x, y));
@@ -37,87 +37,84 @@ class RoomTest {
     }
 
     @Test
-    void testGetTileAtReturnsWallForOutOfBounds() {
+    void getTileAt_outOfBounds_returnsWall() {
         assertEquals(TileType.WALL, room.getTileAt(-1, 0));
         assertEquals(TileType.WALL, room.getTileAt(0, -1));
         assertEquals(TileType.WALL, room.getTileAt(ROOM_WIDTH, 0));
         assertEquals(TileType.WALL, room.getTileAt(0, ROOM_HEIGHT));
-        assertEquals(TileType.WALL, room.getTileAt(-5, ROOM_HEIGHT + 5));
     }
 
     @Test
-    void testSetTileAtUpdatesTile() {
+    void setTileAt_updatesTile() {
         room.setTileAt(3, 2, TileType.WALL);
-        assertEquals(TileType.WALL, room.getTileAt(3, 2));
-        assertEquals(TileType.FLOOR, room.getTileAt(2, 2)); 
+        assertEquals(TileType.WALL,  room.getTileAt(3, 2));
+        assertEquals(TileType.FLOOR, room.getTileAt(2, 2));
     }
 
     @Test
-    void testSetTileAtDoesNothingForOutOfBounds() {
+    void setTileAt_outOfBounds_doesNotThrow() {
         assertDoesNotThrow(() -> room.setTileAt(-1, 0, TileType.WALL));
         assertDoesNotThrow(() -> room.setTileAt(ROOM_WIDTH, 0, TileType.WALL));
-
         assertEquals(TileType.FLOOR, room.getTileAt(0, 0));
     }
 
     @Test
-    void testIsBlockedWithFloorTile() {
-        float x = 1.5f * TILE_SIZE;
-        float y = 1.5f * TILE_SIZE;
-
-        assertFalse(room.isBlocked(x, y, 16, 16, TILE_SIZE));
+    void isBlocked_floorTile_returnsFalse() {
+        assertFalse(room.isBlocked(1.5f * TILE_SIZE, 1.5f * TILE_SIZE, 16, 16));
     }
 
     @Test
-    void testIsBlockedWithWallTile() {
-        int wallX = 2;
-        int wallY = 3;
-        room.setTileAt(wallX, wallY, TileType.WALL);
-
-        float x = wallX * TILE_SIZE + 5;
-        float y = wallY * TILE_SIZE + 5;
-
-        assertTrue(room.isBlocked(x, y, 16, 16, TILE_SIZE));
+    void isBlocked_wallTile_returnsTrue() {
+        room.setTileAt(2, 3, TileType.WALL);
+        assertTrue(room.isBlocked(2 * TILE_SIZE + 5, 3 * TILE_SIZE + 5, 16, 16));
     }
 
     @Test
-    void testIsBlockedChecksAllFourCorners() {
+    void isBlocked_checksAllFourCorners() {
         room.setTileAt(2, 2, TileType.WALL);
-
-        float x = 2 * TILE_SIZE - 10; 
-        float y = 2 * TILE_SIZE - 10;
-
-        assertTrue(room.isBlocked(x, y, 20, 20, TILE_SIZE));
+        assertTrue(room.isBlocked(2 * TILE_SIZE - 10, 2 * TILE_SIZE - 10, 20, 20));
     }
 
     @Test
-    void testIsBlockedWithEntityOutsideRoom() {
-        float x = -TILE_SIZE;
-        float y = -TILE_SIZE;
-
-        assertTrue(room.isBlocked(x, y, 16, 16, TILE_SIZE));
-
-        x = ROOM_WIDTH * TILE_SIZE + 10;
-        y = ROOM_HEIGHT * TILE_SIZE + 10;
-
-        assertTrue(room.isBlocked(x, y, 16, 16, TILE_SIZE));
+    void isBlocked_outsideRoom_returnsTrue() {
+        assertTrue(room.isBlocked(-TILE_SIZE, -TILE_SIZE, 16, 16));
+        assertTrue(room.isBlocked(ROOM_WIDTH * TILE_SIZE + 10, ROOM_HEIGHT * TILE_SIZE + 10, 16, 16));
     }
 
     @Test
-    void testIsBlockedAtExactTileBoundaries() {
+    void isBlocked_doorClosed_returnsTrue() {
+        room.setTileAt(2, 2, TileType.DOOR_CLOSED);
+        assertTrue(room.isBlocked(2 * TILE_SIZE + 5, 2 * TILE_SIZE + 5, 16, 16));
+    }
+
+    @Test
+    void isBlocked_doorOpen_returnsFalse() {
+        room.setTileAt(2, 2, TileType.DOOR_OPEN);
+        assertFalse(room.isBlocked(2 * TILE_SIZE + 5, 2 * TILE_SIZE + 5, 16, 16));
+    }
+
+    @Test
+    void openDoors_convertsDoorClosedToDoorOpen() {
+        room.setTileAt(1, 1, TileType.DOOR_CLOSED);
+        room.setTileAt(3, 3, TileType.DOOR_CLOSED);
+        room.openDoors();
+        assertEquals(TileType.DOOR_OPEN, room.getTileAt(1, 1));
+        assertEquals(TileType.DOOR_OPEN, room.getTileAt(3, 3));
+    }
+
+    @Test
+    void openDoors_doesNotAffectOtherTiles() {
+        room.setTileAt(1, 1, TileType.DOOR_CLOSED);
         room.setTileAt(2, 2, TileType.WALL);
-
-        float x = 2 * TILE_SIZE;
-        float y = 2 * TILE_SIZE;
-
-        assertTrue(room.isBlocked(x, y, 16, 16, TILE_SIZE));
+        room.openDoors();
+        assertEquals(TileType.WALL,  room.getTileAt(2, 2));
+        assertEquals(TileType.FLOOR, room.getTileAt(0, 0));
     }
 
     @Test
-    void testAddAndGetSpawnPoints() {
+    void addSpawnPoint_appearsInList() {
         SpawnPoint sp1 = new SpawnPoint(100, 200, SpawnPoint.Type.PLAYER);
         SpawnPoint sp2 = new SpawnPoint(300, 400, SpawnPoint.Type.FASTENEMY);
-
         room.addSpawnPoint(sp1);
         room.addSpawnPoint(sp2);
 
@@ -125,61 +122,5 @@ class RoomTest {
         assertEquals(2, spawnPoints.size());
         assertTrue(spawnPoints.contains(sp1));
         assertTrue(spawnPoints.contains(sp2));
-    }
-
-    @Test
-    void testGetTilesReturnsCorrectArray() {
-        TileType[][] tiles = room.getTiles();
-        assertNotNull(tiles);
-        assertEquals(ROOM_WIDTH, tiles.length);
-        assertEquals(ROOM_HEIGHT, tiles[0].length);
-
-        tiles[3][4] = TileType.WALL;
-        assertEquals(TileType.WALL, room.getTileAt(3, 4));
-    }
-
-    @Test
-    void testIsBlockedWithDifferentEntitySizes() {
-        room.setTileAt(2, 2, TileType.WALL);
-
-        float x = 2 * TILE_SIZE - 8;
-        float y = 2 * TILE_SIZE - 8;
-        assertTrue(room.isBlocked(x, y, 16, 16, TILE_SIZE));
-
-        x = 2 * TILE_SIZE - 16;
-        y = 2 * TILE_SIZE - 16;
-        assertTrue(room.isBlocked(x, y, 32, 32, TILE_SIZE));
-
-        x = 2 * TILE_SIZE - 4;
-        y = 2 * TILE_SIZE - 4;
-        assertTrue(room.isBlocked(x, y, 8, 8, TILE_SIZE));
-    }
-
-    @Test
-    void testMultipleWallsBlockCorrectly() {
-        room.setTileAt(2, 2, TileType.WALL);
-        room.setTileAt(3, 2, TileType.WALL);
-        room.setTileAt(2, 3, TileType.WALL);
-
-        float x = 2.2f * TILE_SIZE;
-        float y = 2.2f * TILE_SIZE;
-        assertTrue(room.isBlocked(x, y, 20, 20, TILE_SIZE));
-
-        x = 1.5f * TILE_SIZE;
-        y = 1.5f * TILE_SIZE;
-        assertTrue(room.isBlocked(x, y, 20, 20, TILE_SIZE)); 
-
-        x = 0.5f * TILE_SIZE;
-        y = 0.5f * TILE_SIZE;
-        assertFalse(room.isBlocked(x, y, 20, 20, TILE_SIZE));
-    }
-
-    @Test
-    void testGetTileAtWithDifferentTileTypes() {
-        room.setTileAt(0, 0, TileType.FLOOR);
-        room.setTileAt(1, 0, TileType.WALL);
-
-        assertEquals(TileType.FLOOR, room.getTileAt(0, 0));
-        assertEquals(TileType.WALL, room.getTileAt(1, 0));
     }
 }

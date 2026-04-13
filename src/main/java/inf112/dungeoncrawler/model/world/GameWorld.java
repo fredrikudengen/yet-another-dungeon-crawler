@@ -2,6 +2,7 @@ package inf112.dungeoncrawler.model.world;
 
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.Player;
+import inf112.dungeoncrawler.model.entities.enemies.Enemy;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
 
 import java.util.ArrayList;
@@ -9,53 +10,51 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GameWorld implements Iterable<Entity> {
-    private Room room;
-    private List<Entity> entities;
-    private List<Powerup> powerups;
 
-    public GameWorld(Room room) {
-        this.room = room;
+    private final Room room;
+    private final List<Entity> entities;
+    private final Player player;
+    private int enemiesKilled = 0;
+
+    public GameWorld(Room room, Player player) {
+        this.room     = room;
+        this.player   = player;
         this.entities = new ArrayList<>();
-        this.powerups = new ArrayList<>();
     }
 
-    public void step(double deltaTime, Player player) {
-
+    public void step(double deltaTime) {
         for (Entity entity : entities) {
             entity.step(this, deltaTime);
         }
 
-        for (Powerup powerup : powerups) {
-            powerup.step(player, deltaTime);
-        }
-
-        entities.removeIf(entity -> entity.getHealth() <= 0);
-
-        powerups.removeIf(powerup -> powerup.collidesWith(player));
+        entities.removeIf(entity -> {
+            if (!entity.isAlive()) {
+                if (!(entity instanceof Powerup) && !(entity instanceof Player)) {
+                    enemiesKilled++;
+                }
+                return true;
+            }
+            return false;
+        });
     }
 
-    public void addEntity(Entity entity) {
-        entities.add(entity);
+    public boolean hasEnemiesRemaining() {
+        return entities.stream().anyMatch(e -> e instanceof Enemy);
     }
 
-    public void addPowerup(Powerup powerup) {
-        powerups.add(powerup);
-    }
-
-    public List<Entity> getEntities() {
-        return entities;
-    }
-
-    public Room getRoom() {
-        return room;
+    public void openDoors() {
+        room.openDoors();
     }
 
     @Override
-    public Iterator<Entity> iterator() {
-        return entities.iterator();
-    }
+    public Iterator<Entity> iterator() { return entities.iterator(); }
 
-    public List<Powerup> getPowerups() {
-        return powerups;
+    public Room getRoom()              { return room;          }
+    public List<Entity> getEntities()  { return entities;      }
+    public Player getPlayer()          { return player;        }
+    public int getKilledEnemies()      { return enemiesKilled; }
+
+    public void addEntity(Entity entity) {
+        entities.add(entity);
     }
 }

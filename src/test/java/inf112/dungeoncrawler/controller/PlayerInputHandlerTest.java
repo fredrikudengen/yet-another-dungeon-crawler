@@ -1,78 +1,133 @@
 package inf112.dungeoncrawler.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.badlogic.gdx.Input;
+import inf112.dungeoncrawler.model.Direction;
+import inf112.dungeoncrawler.model.entities.Controllable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import inf112.dungeoncrawler.model.entities.Player;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerInputHandlerTest {
 
-    private PlayerInputHandler playerInputHandler;
-    private Player player;
+    private static class ControllableStub implements Controllable {
+        boolean movingLeft, movingRight, movingUp, movingDown;
+        Direction lastAttackDirection = null;
+
+        @Override public void setMovingLeft(boolean v)  { movingLeft  = v; }
+        @Override public void setMovingRight(boolean v) { movingRight = v; }
+        @Override public void setMovingUp(boolean v)    { movingUp    = v; }
+        @Override public void setMovingDown(boolean v)  { movingDown  = v; }
+        @Override public void performAttack(Direction d){ lastAttackDirection = d; }
+    }
+
+    private PlayerInputHandler handler;
+    private ControllableStub stub;
 
     @BeforeEach
     void setUp() {
-        player = new Player(100, 100);
-        playerInputHandler = new PlayerInputHandler(player);
+        stub    = new ControllableStub();
+        handler = new PlayerInputHandler(stub);
     }
+
     @Test
     void keyDown_W_setsMovingUp() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.W);
-        assertTrue(player.isMovingUp());
+        handler.keyDown(Input.Keys.W);
+        assertTrue(stub.movingUp);
     }
 
     @Test
     void keyDown_S_setsMovingDown() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.S);
-        assertTrue(player.isMovingDown());
+        handler.keyDown(Input.Keys.S);
+        assertTrue(stub.movingDown);
     }
 
     @Test
     void keyDown_A_setsMovingLeft() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.A);
-        assertTrue(player.isMovingLeft());
+        handler.keyDown(Input.Keys.A);
+        assertTrue(stub.movingLeft);
     }
 
     @Test
     void keyDown_D_setsMovingRight() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.D);
-        assertTrue(player.isMovingRight());
+        handler.keyDown(Input.Keys.D);
+        assertTrue(stub.movingRight);
     }
 
     @Test
     void keyUp_W_clearsMovingUp() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.W);
-        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.W);
-        assertFalse(player.isMovingUp());
+        handler.keyDown(Input.Keys.W);
+        handler.keyUp(Input.Keys.W);
+        assertFalse(stub.movingUp);
     }
 
     @Test
     void keyUp_S_clearsMovingDown() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.S);
-        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.S);
-        assertFalse(player.isMovingDown());
+        handler.keyDown(Input.Keys.S);
+        handler.keyUp(Input.Keys.S);
+        assertFalse(stub.movingDown);
     }
 
     @Test
     void keyUp_A_clearsMovingLeft() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.A);
-        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.A);
-        assertFalse(player.isMovingLeft());
+        handler.keyDown(Input.Keys.A);
+        handler.keyUp(Input.Keys.A);
+        assertFalse(stub.movingLeft);
     }
 
     @Test
     void keyUp_D_clearsMovingRight() {
-        playerInputHandler.keyDown(com.badlogic.gdx.Input.Keys.D);
-        playerInputHandler.keyUp(com.badlogic.gdx.Input.Keys.D);
-        assertFalse(player.isMovingRight());
+        handler.keyDown(Input.Keys.D);
+        handler.keyUp(Input.Keys.D);
+        assertFalse(stub.movingRight);
     }
 
     @Test
-    void noButtonNoMovement() {
-        assertFalse(player.isMovingUp());
-        assertFalse(player.isMovingDown());
-        assertFalse(player.isMovingLeft());
-        assertFalse(player.isMovingRight());
+    void keyDown_rightArrow_performsAttackRight() {
+        handler.keyDown(Input.Keys.RIGHT);
+        assertEquals(Direction.RIGHT, stub.lastAttackDirection);
+    }
+
+    @Test
+    void keyDown_leftArrow_performsAttackLeft() {
+        handler.keyDown(Input.Keys.LEFT);
+        assertEquals(Direction.LEFT, stub.lastAttackDirection);
+    }
+
+    @Test
+    void keyDown_upArrow_performsAttackUp() {
+        handler.keyDown(Input.Keys.UP);
+        assertEquals(Direction.UP, stub.lastAttackDirection);
+    }
+
+    @Test
+    void keyDown_downArrow_performsAttackDown() {
+        handler.keyDown(Input.Keys.DOWN);
+        assertEquals(Direction.DOWN, stub.lastAttackDirection);
+    }
+
+    @Test
+    void keyDown_handledKey_returnsTrue() {
+        assertTrue(handler.keyDown(Input.Keys.W));
+    }
+
+    @Test
+    void keyDown_unhandledKey_returnsFalse() {
+        assertFalse(handler.keyDown(Input.Keys.SPACE));
+    }
+
+    @Test
+    void keyUp_handledKey_returnsTrue() {
+        assertTrue(handler.keyUp(Input.Keys.W));
+    }
+
+    @Test
+    void keyUp_unhandledKey_returnsFalse() {
+        assertFalse(handler.keyUp(Input.Keys.SPACE));
+    }
+
+    @Test
+    void constructor_nullPlayer_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> new PlayerInputHandler(null));
     }
 }

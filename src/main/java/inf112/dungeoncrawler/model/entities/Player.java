@@ -3,37 +3,57 @@ package inf112.dungeoncrawler.model.entities;
 import inf112.dungeoncrawler.model.Direction;
 import inf112.dungeoncrawler.model.combat.Attack;
 import inf112.dungeoncrawler.model.entities.enemies.Enemy;
+import inf112.dungeoncrawler.sound.SoundEffect;
+import inf112.dungeoncrawler.sound.SoundService;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 
-public class Player extends Entity {
+import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
-    public static final float ATTACK_DURATION = 0.2f;
+public class Player extends Entity implements Movable, Controllable {
 
+    public static final float ATTACK_DURATION        = 0.2f;
     public static final float INVINCIBILITY_DURATION = 1.0f;
 
-    private static final float KNOCKBACK_FRICTION = 800f;
-
     private boolean movingLeft, movingRight, movingUp, movingDown;
-    private Attack attack;
+    private final Attack attack;
     private Direction facingDirection = Direction.RIGHT;
-    private float attackTimer = 0;
-    private boolean isAttacking = false;
+    private float attackTimer      = 0;
+    private boolean isAttacking    = false;
     private boolean hasCheckedHits = false;
 
-    private float knockbackX = 0;
-    private float knockbackY = 0;
     private float invincibilityTimer = 0;
-    private boolean isInvincible = false;
+    private boolean isInvincible     = false;
 
-    public Player(float x, float y) {
+    private final SoundService sound;
+
+    /**
+     * Player object which the user controls.
+     *
+     * @param x pixel value
+     * @param y pixel value
+     * @param sound injection used to play sound
+     */
+    public Player(float x, float y, SoundService sound) {
         super(x, y);
-        this.height = 32;
-        this.width = 32;
-        this.speed = 200;
-        this.health = 5;
-        this.damage = 1;
-        this.attack = Attack.attack();
+        this.height         = TILE_SIZE;
+        this.width          = TILE_SIZE;
+        this.speed          = 300;
+        this.health         = 5;
+        this.damage         = 1;
+        this.attack         = new Attack();
+        this.sound          = sound;
+        this.knockBackForce = 400;
+    }
+
+    @Override
+    public void takeDamage(int damage, float sourceX, float sourceY) {
+        if (!isInvincible) {
+            super.takeDamage(damage, sourceX, sourceY);
+            isInvincible       = true;
+            invincibilityTimer = INVINCIBILITY_DURATION;
+            sound.play(SoundEffect.DAMAGE_TAKEN);
+        }
     }
 
     @Override
@@ -46,18 +66,7 @@ public class Player extends Entity {
             }
         }
 
-        if (knockbackX != 0 || knockbackY != 0) {
-            float kbSpeed   = (float) Math.sqrt(knockbackX * knockbackX + knockbackY * knockbackY);
-            float reduction = KNOCKBACK_FRICTION * (float) deltaTime;
-            if (reduction >= kbSpeed) {
-                knockbackX = 0;
-                knockbackY = 0;
-            } else {
-                float factor = (kbSpeed - reduction) / kbSpeed;
-                knockbackX *= factor;
-                knockbackY *= factor;
-            }
-        }
+        updateKnockback((float) deltaTime);
 
         velocityX = 0;
         velocityY = 0;
@@ -68,32 +77,17 @@ public class Player extends Entity {
 
         if (!isAttacking) updateFacingDirection();
 
-        float newX = x + (velocityX + knockbackX) * (float) deltaTime;
-        float newY = y + (velocityY + knockbackY) * (float) deltaTime;
-
         Room room = world.getRoom();
-        int tileSize = 32;
+        moveWithCollision(room,
+                (velocityX + knockbackX) * (float) deltaTime,
+                (velocityY + knockbackY) * (float) deltaTime);
 
-        if (!room.isBlocked(newX, newY, width, height, tileSize)) {
-            setPosition(newX, newY);
-        } else {
-            if (!room.isBlocked(newX, y, width, height, tileSize)) {
-                setPosition(newX, y);
-            }
-            if (!room.isBlocked(x, newY, width, height, tileSize)) {
-                setPosition(x, newY);
-            }
-        }
-
-        // --- Attack logic ---
         if (isAttacking) {
             attackTimer += (float) deltaTime;
-
             if (!hasCheckedHits) {
                 checkAttackHits(world);
                 hasCheckedHits = true;
             }
-
             if (attackTimer >= ATTACK_DURATION) {
                 isAttacking    = false;
                 attackTimer    = 0;
@@ -103,23 +97,12 @@ public class Player extends Entity {
         attack.update((float) deltaTime);
     }
 
-    public void applyKnockback(float vx, float vy) {
-        this.knockbackX = vx;
-        this.knockbackY = vy;
-    }
-
     @Override
-    public void takeDamage(int damage) {
-        if (!isInvincible) {
-            super.takeDamage(damage);
-            isInvincible       = true;
-            invincibilityTimer = INVINCIBILITY_DURATION;
-        }
+    public String getBaseTexturePath() {
+        return "player/weapon/Player_walk_weapon_";
     }
 
-    public boolean isInvincible() {
-        return isInvincible;
-    }
+    public boolean isInvincible() { return isInvincible; }
 
     private void updateFacingDirection() {
         if      (movingLeft)  facingDirection = Direction.LEFT;
@@ -129,74 +112,67 @@ public class Player extends Entity {
     }
 
     private void checkAttackHits(GameWorld world) {
-        float range = attack.getRange();
         for (Entity entity : world.getEntities()) {
-            if (entity instanceof Enemy && entity != this) {
-                if (isEnemyInAttackRange(entity, range)) {
-                    entity.takeDamage(damage);
-                }
+            if (entity instanceof Enemy && isEnemyInAttackRange(entity)) {
+                entity.takeDamage(damage, x, y);
             }
         }
     }
 
-    private boolean isEnemyInAttackRange(Entity entity, float range) {
-        float dx = entity.getX() - x;
-        float dy = entity.getY() - y;
-        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+    private boolean isEnemyInAttackRange(Entity entity) {
+        int playerTileX = (int) (x / TILE_SIZE);
+        int playerTileY = (int) (y / TILE_SIZE);
+        int entityTileX = (int) (entity.getX() / TILE_SIZE);
+        int entityTileY = (int) (entity.getY() / TILE_SIZE);
 
-        if (distance > range) return false;
+        int dx = entityTileX - playerTileX;
+        int dy = entityTileY - playerTileY;
 
-        // TODO: find better/more natural attack area
-        // Cone-shaped attack area
-        switch (facingDirection) {
-            case UP:    return dy > 0 && Math.abs(dx) < range / 2;
-            case DOWN:  return dy < 0 && Math.abs(dx) < range / 2;
-            case LEFT:  return dx < 0 && Math.abs(dy) < range / 2;
-            case RIGHT: return dx > 0 && Math.abs(dy) < range / 2;
-            default:    return false;
-        }
+        return switch (facingDirection) {
+            case LEFT  -> dx == -1 && Math.abs(dy) <= 1;
+            case RIGHT -> dx == 1  && Math.abs(dy) <= 1;
+            case UP    -> dy == 1  && Math.abs(dx) <= 1;
+            case DOWN  -> dy == -1 && Math.abs(dx) <= 1;
+        };
     }
 
+    @Override
     public void performAttack(Direction direction) {
-        if (attack != null && attack.canUse() && !isAttacking) {
+        if (attack.canUse() && !isAttacking) {
             attack.use();
             isAttacking     = true;
             attackTimer     = 0;
             facingDirection = direction;
             hasCheckedHits  = false;
+            sound.play(SoundEffect.SWORD_SWING);
         }
     }
 
-    public boolean isAttacking() {
-        return isAttacking;
+    @Override
+    public boolean isAttacking() { return isAttacking; }
+
+    @Override
+    public int getAttackFrame() {
+        return (attackTimer < ATTACK_DURATION / 2f) ? 1 : 2;
     }
 
-    public float getAttackTimer() {
-        return attackTimer;
-    }
-    
+    public float getKnockBackForce() { return knockBackForce; }
 
-    public Direction getFacingDirection() {
-        return facingDirection;
-    }
-
+    @Override
     public boolean isMoving() {
         return movingLeft || movingRight || movingUp || movingDown;
     }
 
-    public boolean isMovingLeft()  { return movingLeft;  }
-    public boolean isMovingRight() { return movingRight; }
-    public boolean isMovingUp()    { return movingUp;    }
-    public boolean isMovingDown()  { return movingDown;  }
+    @Override
+    public Direction getFacingDirection() { return facingDirection; }
 
-    public void setMovingLeft(boolean moving)  { movingLeft  = moving; }
-    public void setMovingRight(boolean moving) { movingRight = moving; }
-    public void setMovingUp(boolean moving)    { movingUp    = moving; }
-    public void setMovingDown(boolean moving)  { movingDown  = moving; }
+    @Override public void setMovingLeft(boolean moving)  { movingLeft  = moving; }
+    @Override public void setMovingRight(boolean moving) { movingRight = moving; }
+    @Override public void setMovingUp(boolean moving)    { movingUp    = moving; }
+    @Override public void setMovingDown(boolean moving)  { movingDown  = moving; }
 
     @Override
     public boolean collidesWith(Collidable other) {
         return super.collidesWith(other);
     }
-
 }

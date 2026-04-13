@@ -1,67 +1,48 @@
 package inf112.dungeoncrawler.model.entities.powerups;
 
 import inf112.dungeoncrawler.model.entities.Entity;
-import inf112.dungeoncrawler.model.entities.Player;
+import inf112.dungeoncrawler.model.world.GameWorld;
+import inf112.dungeoncrawler.sound.SoundService;
 
 public class AttackPowerup extends Powerup {
-    private boolean hasDamage;
-    protected double attackTimer, currentTime;
 
-    public AttackPowerup(float x, float y) {
-        super(x, y);
+    private double attackTimer;
+    private double currentTime;
+
+    public AttackPowerup(float x, float y, SoundService sound) {
+        super(x, y, sound);
     }
 
     @Override
-    public String getTextureName() {
-        return "src/main/resources/Life/Life.png";
+    public void step(GameWorld world, double deltaTime) {
+        if (!pickedUp) {
+            super.step(world, deltaTime);
+            if (this.collidesWith(world.getPlayer())) {
+                onCollision(world.getPlayer());
+                pickedUp    = true;
+                attackTimer = currentTime + 10;
+            }
+        }
+
+        currentTime += deltaTime;
+
+        if (pickedUp && currentTime >= attackTimer) {
+            endPowerup(world.getPlayer());
+            isAlive = false;
+        }
     }
 
     @Override
-    public float getX() {
-        return x;
-    }
-
-    @Override
-    public float getY() {
-        return y;
-    }
-
-    @Override
-    public float getWidth() {
-        return width;
-    }
-
-    @Override
-    public float getHeight() {
-        return height;
+    public String getBaseTexturePath() {
+        return "powerups/weapon1.png";
     }
 
     @Override
     public void onCollision(Entity entity) {
-        entity.damage += 3;
-        this.hasDamage = true;
-        System.out.println("Player picked up powerup and got attack++!");
+        entity.setDamage((int) (entity.getDamage() + 3));
     }
 
     private void endPowerup(Entity entity) {
-        System.out.println("Player got normal attack back!");
-        entity.damage -= 3;
-    }
-
-    @Override
-    public void step(Player player, double deltaTime) {
-        currentTime += deltaTime;
-
-        if (this.collidesWith(player)) {
-            this.onCollision(player);
-            attackTimer = currentTime + 100;
-        }
-
-        if (hasDamage) {
-            if (currentTime >= attackTimer) {
-                this.endPowerup(player);
-                hasDamage = false;
-            }
-        }
+        entity.setDamage((int) (entity.getDamage() - 3));
     }
 }

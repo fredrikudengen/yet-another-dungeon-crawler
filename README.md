@@ -1,18 +1,22 @@
-# Sprite Zero
+# Yet Another Dungeon-Crawler
 
-Et prosjekt i INF112 ved Universitetet i Bergen.
-
-## Om prosjektet
-Sprite Zero er et spill.
-
-## Team
+## Team - Sprite Zero
 Fredrik Udengen, Njål Nordal, Guangwei Zhang, Kim Huynh, Leila Lu
 
+## Konsept
+Spilleren kjemper gjennom ulike rom med fiender og powerups. Målet er å komme så langt som mulig uten å dø.
+
+## Brukerveiledning
+- WASD beveger spilleren.
+- Piltastene bestemmer hvilken retning spilleren slår.
+
 ## Teknologier
-- Java
+- Java 25 eller nyere
 - LibGDX
 - Maven
 
+## Kilde / Opphavsrett
+Se resources/sourceList.txt
+
 ## Hvordan kjøre
-```bash
-mvn clean compile exec:java
+*oppdateres når ferdig*

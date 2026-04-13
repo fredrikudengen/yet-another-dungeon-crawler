@@ -8,22 +8,16 @@ import com.badlogic.gdx.graphics.Camera;
 
 import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.model.world.TileType;
+import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorldRenderer {
-    private final SpriteBatch batch;
-    private final Camera camera;
-    private final Map<TileType, Texture> tileTextures;
-    private final int tileSize;
+public class WorldRenderer extends Renderer {
+    private final Map<TileType, Texture> tileTextures = new HashMap<>();
 
-    public WorldRenderer(SpriteBatch batch, Camera camera, int tileSize) {
-        this.batch = batch;
-        this.camera = camera;
-        this.tileSize = tileSize;
-        this.tileTextures = new HashMap<>();
-
+    public WorldRenderer(SpriteBatch batch, Camera camera) {
+        super(batch, camera);
         loadTextures();
     }
 
@@ -52,15 +46,15 @@ public class WorldRenderer {
                 Texture texture = tileTextures.get(tileType);
 
                 if (texture != null) {
-                    float worldX = x * tileSize;
-                    float worldY = y * tileSize;
+                    float worldX = x * TILE_SIZE;
+                    float worldY = y * TILE_SIZE;
 
-                    batch.draw(texture, worldX, worldY, tileSize, tileSize);
+                    batch.draw(texture, worldX, worldY, TILE_SIZE, TILE_SIZE);
                 }
             }
         }
     }
-
+    @Override
     public void dispose() {
         for (Texture texture : tileTextures.values()) {
             if (texture != null) {

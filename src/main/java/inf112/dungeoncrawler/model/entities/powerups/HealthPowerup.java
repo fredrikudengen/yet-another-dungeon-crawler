@@ -1,49 +1,32 @@
 package inf112.dungeoncrawler.model.entities.powerups;
 
 import inf112.dungeoncrawler.model.entities.Entity;
-import inf112.dungeoncrawler.model.entities.Player;
+import inf112.dungeoncrawler.model.world.GameWorld;
+import inf112.dungeoncrawler.sound.SoundService;
 
 public class HealthPowerup extends Powerup {
 
-    public HealthPowerup(float x, float y) {
-            super(x, y);
+    public HealthPowerup(float x, float y, SoundService sound) {
+            super(x, y, sound);
         }
 
     @Override
-    public String getTextureName() {
-            return "src/main/resources/Life/Life.png";
-        }
+    public void step(GameWorld world, double deltaTime) {
+        super.step(world, deltaTime);
 
-    @Override
-    public void step(Player player, double deltaTime) {
-        if (this.collidesWith(player)) {
-            this.onCollision(player);
+        if (this.collidesWith(world.getPlayer())) {
+            this.onCollision(world.getPlayer());
         }
     }
 
     @Override
-        public float getX() {
-            return x;
-        }
-
-        @Override
-        public float getY() {
-            return y;
-        }
-
-        @Override
-        public float getWidth() {
-            return width;
-        }
-
-        @Override
-        public float getHeight() {
-            return height;
-        }
+    public String getBaseTexturePath() {
+        return "powerups/Life.png";
+    }
 
     @Override
     public void onCollision(Entity entity) {
-        entity.health += 1;
-        System.out.print("Player picked up powerup and got health!");
+        entity.setHealth(entity.getHealth() + 1);
+        this.isAlive = false;
     }
 }
