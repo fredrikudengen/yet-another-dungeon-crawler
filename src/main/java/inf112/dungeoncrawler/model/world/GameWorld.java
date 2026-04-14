@@ -29,7 +29,6 @@ public class GameWorld implements Iterable<Entity> {
             entity.step(this, deltaTime);
         }
 
-        // TODO: fix enemiesKilled (powerups are in entities as well)
         int before = entities.size();
         entities.removeIf(entity -> {
             if (!entity.isAlive()) {
