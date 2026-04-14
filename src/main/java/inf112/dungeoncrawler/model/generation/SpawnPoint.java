@@ -9,15 +9,17 @@ public class SpawnPoint {
         SPEEDPOWERUP,
         ATTACKPOWERUP,
         HEALTHPOWERUP,
-        PLAYER }
+        PLAYER,
+        DOOR
+    }
 
     public final int x;
     public final int y;
     public final Type type;
 
     public SpawnPoint(int x, int y, Type type) {
-        this.x = x;
-        this.y = y;
+        this.x    = x;
+        this.y    = y;
         this.type = type;
     }
 }

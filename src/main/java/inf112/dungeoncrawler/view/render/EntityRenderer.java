@@ -1,29 +1,22 @@
 package inf112.dungeoncrawler.view.render;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import inf112.dungeoncrawler.model.entities.Entity;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityRenderer {
-
-    private final SpriteBatch batch;
-    private final Camera camera;
+public class EntityRenderer extends Renderer {
 
     private final Map<String, Texture> textureCache = new HashMap<>();
-
     private final AnimationController animator = new AnimationController();
 
     public EntityRenderer(SpriteBatch batch, Camera camera) {
-        this.batch  = batch;
-        this.camera = camera;
+        super(batch, camera);
     }
 
     public void render(float deltaTime, List<Entity> entities) {
@@ -39,18 +32,13 @@ public class EntityRenderer {
 
     private Texture getOrLoadTexture(String textureName) {
         if (textureName == null || textureName.isEmpty()) return null;
-
-        if (!textureCache.containsKey(textureName)) {
-            FileHandle file = Gdx.files.internal(textureName);
-            textureCache.put(textureName, new Texture(file));
-        }
-        return textureCache.get(textureName);
+        return textureCache.computeIfAbsent(textureName,
+                name -> new Texture(Gdx.files.internal(name)));
     }
 
+    @Override
     public void dispose() {
-        for (Texture texture : textureCache.values()) {
-            if (texture != null) texture.dispose();
-        }
+        textureCache.values().forEach(Texture::dispose);
         textureCache.clear();
     }
 }

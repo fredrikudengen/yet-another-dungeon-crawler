@@ -1,39 +1,37 @@
 package inf112.dungeoncrawler.model.combat;
 
 public class Attack {
+
     private final float cooldown;
-    private final float range;
-    private final float knockback;
-    private float currentCooldown;
+    private float currentCooldown = 0f;
 
-    public Attack(float cooldown, float range, float knockback) {
-        this.cooldown = cooldown;
-        this.range = range;
-        this.knockback = knockback;
+    /**
+     * Attack used by Player.
+     */
+    public Attack() {
+        this.cooldown = 1f;
     }
 
-    public static Attack attack() {
-        return new Attack(1f, 125, 5f);
-    }
-
+    /**
+     * Updates the cooldown for attack.
+     *
+     * @param deltaTime time elapsed since last update.
+     */
     public void update(float deltaTime) {
-        if (currentCooldown > 0) {
-            currentCooldown = Math.max(0, currentCooldown - deltaTime);
-        }
+        currentCooldown = Math.max(0, currentCooldown - deltaTime);
     }
 
+    /**
+     * Returns true if cooldown is 0.
+     */
     public boolean canUse() {
         return currentCooldown <= 0;
     }
 
+    /**
+     * Sets cooldown to new timer.
+     */
     public void use() {
-        if (canUse()) {
-            currentCooldown = cooldown;
-        }
+        currentCooldown = cooldown;
     }
-
-    public float getRange() { return range; }
-    public float getKnockback() { return knockback; }
-    public float getCooldownProgress() { return currentCooldown / cooldown; }
-
 }

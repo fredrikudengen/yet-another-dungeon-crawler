@@ -2,26 +2,24 @@ package inf112.dungeoncrawler.model.world;
 
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.Player;
+import inf112.dungeoncrawler.model.entities.enemies.Enemy;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
-import inf112.dungeoncrawler.sound.SoundPlayer;
-import inf112.dungeoncrawler.sound.SoundService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class GameWorld implements Iterable<Entity> {
-    private Room room;
-    private List<Entity> entities;
-    private int enemiesKilled;
-    private Player player;
+
+    private final Room room;
+    private final List<Entity> entities;
+    private final Player player;
+    private int enemiesKilled = 0;
 
     public GameWorld(Room room, Player player) {
         this.room = room;
         this.player = player;
         this.entities = new ArrayList<>();
-        this.enemiesKilled = 0;
-
     }
 
     public void step(double deltaTime) {
@@ -29,7 +27,6 @@ public class GameWorld implements Iterable<Entity> {
             entity.step(this, deltaTime);
         }
 
-        int before = entities.size();
         entities.removeIf(entity -> {
             if (!entity.isAlive()) {
                 if (!(entity instanceof Powerup) && !(entity instanceof Player)) {
@@ -39,6 +36,14 @@ public class GameWorld implements Iterable<Entity> {
             }
             return false;
         });
+    }
+
+    public boolean hasEnemiesRemaining() {
+        return entities.stream().anyMatch(e -> e instanceof Enemy);
+    }
+
+    public void openDoors() {
+        room.openDoors();
     }
 
     @Override

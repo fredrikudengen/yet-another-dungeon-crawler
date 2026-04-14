@@ -19,31 +19,36 @@ import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
 public abstract class Enemy extends Entity implements Movable {
 
-    protected Player player;
+    private static final float STUN_DURATION     = Player.INVINCIBILITY_DURATION;
+    private static final float PATH_REFRESH_RATE = 0.5f;
+    private static final float WAYPOINT_RADIUS   = TILE_SIZE * 0.6f;
+    private static final float DETECTION_RADIUS  = TILE_SIZE * 12f;
 
-    private static final float PATH_REFRESH_RATE  = 0.5f;
-    private static final float WAYPOINT_RADIUS    = TILE_SIZE * 0.6f;
-    private static final float DETECTION_RADIUS   = TILE_SIZE * 12f;
+    private static final int[][] DIRECTIONS = { {1,0}, {-1,0}, {0,1}, {0,-1} };
 
-    private List<int[]> path  = new ArrayList<>();
-    private float pathTimer   = PATH_REFRESH_RATE;
-    private boolean isMoving = false;
-    private float stunTimer   = 0f;
+    private final Player player;
+
+    private List<int[]> path = new ArrayList<>();
+    private float pathTimer  = PATH_REFRESH_RATE;
+    private float stunTimer  = 0f;
+    private boolean moving   = false;
 
     public Enemy(float x, float y, Player player) {
         super(x, y);
         this.player = player;
+        this.width  = TILE_SIZE;
+        this.height = TILE_SIZE;
     }
 
     @Override
     public void takeDamage(int damage, float sourceX, float sourceY) {
         super.takeDamage(damage, sourceX, sourceY);
-        stunTimer = Player.INVINCIBILITY_DURATION;
+        stunTimer = STUN_DURATION;
     }
 
     @Override
     public boolean isMoving() {
-        return isMoving;
+        return moving;
     }
 
     @Override
@@ -59,7 +64,6 @@ public abstract class Enemy extends Entity implements Movable {
         Room room = world.getRoom();
 
         updateKnockback((float) deltaTime);
-
         moveWithCollision(room, knockbackX * (float) deltaTime, knockbackY * (float) deltaTime);
 
         if (stunTimer > 0) {
@@ -71,7 +75,7 @@ public abstract class Enemy extends Entity implements Movable {
 
         if (this.collidesWith(player) && !player.isInvincible()) {
             applyKnockbackToPlayer();
-            stunTimer = Player.INVINCIBILITY_DURATION;
+            stunTimer = STUN_DURATION;
             this.onCollision(player);
         }
 
@@ -79,14 +83,14 @@ public abstract class Enemy extends Entity implements Movable {
         float pdy          = player.getY() - y;
         float distToPlayer = (float) Math.sqrt(pdx * pdx + pdy * pdy);
 
-        if (!isMoving && distToPlayer <= DETECTION_RADIUS) {
-            isMoving = true;
-        } else if (isMoving && distToPlayer > DETECTION_RADIUS) {
-            isMoving = false;
+        if (!moving && distToPlayer <= DETECTION_RADIUS) {
+            moving = true;
+        } else if (moving && distToPlayer > DETECTION_RADIUS) {
+            moving = false;
             path.clear();
         }
 
-        if (!isMoving) {
+        if (!moving) {
             velocityX = 0;
             velocityY = 0;
             return;
@@ -99,11 +103,11 @@ public abstract class Enemy extends Entity implements Movable {
         }
 
         while (!path.isEmpty()) {
-            int[] next  = path.getFirst();
-            float wpX   = tileCenterX(next);
-            float wpY   = tileCenterY(next);
-            float ddx   = wpX - x;
-            float ddy   = wpY - y;
+            int[] next = path.getFirst();
+            float wpX  = tileCenterX(next);
+            float wpY  = tileCenterY(next);
+            float ddx  = wpX - x;
+            float ddy  = wpY - y;
             if (ddx * ddx + ddy * ddy < WAYPOINT_RADIUS * WAYPOINT_RADIUS) {
                 path.removeFirst();
             } else {
@@ -111,15 +115,8 @@ public abstract class Enemy extends Entity implements Movable {
             }
         }
 
-        float targetX, targetY;
-        if (!path.isEmpty()) {
-            int[] next = path.getFirst();
-            targetX = tileCenterX(next);
-            targetY = tileCenterY(next);
-        } else {
-            targetX = player.getX();
-            targetY = player.getY();
-        }
+        float targetX = path.isEmpty() ? player.getX() : tileCenterX(path.getFirst());
+        float targetY = path.isEmpty() ? player.getY() : tileCenterY(path.getFirst());
 
         float dx       = targetX - x;
         float dy       = targetY - y;
@@ -136,6 +133,11 @@ public abstract class Enemy extends Entity implements Movable {
         moveWithCollision(room, velocityX * (float) deltaTime, velocityY * (float) deltaTime);
     }
 
+    @Override
+    public void onCollision(Entity entity) {
+        entity.takeDamage(this.damage, this.x, this.y);
+    }
+
     private void applyKnockbackToPlayer() {
         float dx   = player.getX() - x;
         float dy   = player.getY() - y;
@@ -145,6 +147,10 @@ public abstract class Enemy extends Entity implements Movable {
                     (dx / dist) * player.getKnockBackForce(),
                     (dy / dist) * player.getKnockBackForce());
         }
+    }
+
+    private static long tileKey(int x, int y) {
+        return ((long) x << 32) | (y & 0xFFFFFFFFL);
     }
 
     private static float tileCenterX(int[] tile) { return tile[0] * TILE_SIZE + TILE_SIZE / 2f; }
@@ -158,28 +164,26 @@ public abstract class Enemy extends Entity implements Movable {
 
         if (startX == goalX && startY == goalY) return new ArrayList<>();
 
-        Queue<int[]>         open      = new LinkedList<>();
-        Map<String, String>  cameFrom  = new HashMap<>();
-        String startKey = startX + "," + startY;
-        String goalKey  = goalX  + "," + goalY;
+        Queue<int[]>         open     = new LinkedList<>();
+        Map<Long, Long>      cameFrom = new HashMap<>();
+        long startKey = tileKey(startX, startY);
+        long goalKey  = tileKey(goalX, goalY);
 
         open.add(new int[]{ startX, startY });
         cameFrom.put(startKey, null);
 
-        int[][] neighbours = { {1,0}, {-1,0}, {0,1}, {0,-1} };
-
         while (!open.isEmpty()) {
             int[] current    = open.poll();
-            String currentKey = current[0] + "," + current[1];
+            long  currentKey = tileKey(current[0], current[1]);
 
-            if (currentKey.equals(goalKey)) {
+            if (currentKey == goalKey) {
                 return reconstructPath(cameFrom, startKey, goalKey);
             }
 
-            for (int[] dir : neighbours) {
-                int nx   = current[0] + dir[0];
-                int ny   = current[1] + dir[1];
-                String nKey = nx + "," + ny;
+            for (int[] dir : DIRECTIONS) {
+                int  nx   = current[0] + dir[0];
+                int  ny   = current[1] + dir[1];
+                long nKey = tileKey(nx, ny);
 
                 if (cameFrom.containsKey(nKey)) continue;
 
@@ -194,13 +198,12 @@ public abstract class Enemy extends Entity implements Movable {
         return new ArrayList<>();
     }
 
-    private List<int[]> reconstructPath(Map<String, String> cameFrom,
-                                        String startKey, String goalKey) {
+    private List<int[]> reconstructPath(Map<Long, Long> cameFrom,
+                                        long startKey, long goalKey) {
         List<int[]> result = new ArrayList<>();
-        String current = goalKey;
-        while (current != null && !current.equals(startKey)) {
-            String[] parts = current.split(",");
-            result.add(new int[]{ Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) });
+        Long current = goalKey;
+        while (current != null && current != startKey) {
+            result.add(new int[]{ (int) (current >> 32), (int) (current.longValue()) });
             current = cameFrom.get(current);
         }
         Collections.reverse(result);
@@ -208,9 +211,5 @@ public abstract class Enemy extends Entity implements Movable {
     }
 
     @Override
-    public abstract void onCollision(Entity entity);
-    
-    @Override
     public abstract String getBaseTexturePath();
-
 }

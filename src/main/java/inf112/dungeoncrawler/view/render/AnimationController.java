@@ -3,10 +3,9 @@ package inf112.dungeoncrawler.view.render;
 import inf112.dungeoncrawler.model.Direction;
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.Movable;
-import inf112.dungeoncrawler.model.entities.Player;
 import inf112.dungeoncrawler.model.entities.powerups.Powerup;
 
-import java.util.HashMap;
+import java.util.WeakHashMap;
 
 public class AnimationController {
 
@@ -18,26 +17,31 @@ public class AnimationController {
         int   frame = 1;
     }
 
-    private final HashMap<Entity, WalkState> states = new HashMap<>();
+    private final WeakHashMap<Entity, WalkState> states = new WeakHashMap<>();
 
     public String getTextureName(float deltaTime, Entity entity) {
-        // Stops drawing, but keeps the powerup alive for its effects
-        if (entity instanceof Powerup powerup && powerup.isPickedUp()) return null;
+        if (entity instanceof Powerup powerup) {
+            return powerup.isPickedUp() ? null : entity.getBaseTexturePath();
+        }
 
-        if (entity instanceof Powerup) {
+        if (!(entity instanceof Movable movable)) {
             return entity.getBaseTexturePath();
         }
 
-        if (entity instanceof Player player && player.isAttacking()) {
-            int attackFrame = (player.getAttackTimer() < Player.ATTACK_DURATION / 2f) ? 1 : 2;
-            return "player/weapon/attack/Player_attack_weapon_"
-                    + directionToString(player.getFacingDirection()) + attackFrame + ".png";
+        if (movable.isAttacking()) {
+            String dir = directionToString(movable.getFacingDirection());
+            return "player/weapon/attack/Player_attack_weapon_" + dir + movable.getAttackFrame() + ".png";
         }
 
-        WalkState state = states.computeIfAbsent(entity, e -> new WalkState());
-        float frameDuration = (entity instanceof Player) ? PLAYER_FRAME_DURATION : ENEMY_FRAME_DURATION;
+        return getWalkTexture(deltaTime, entity, movable);
+    }
 
-        Movable movable = (Movable) entity;
+    private String getWalkTexture(float deltaTime, Entity entity, Movable movable) {
+        WalkState state = states.computeIfAbsent(entity, e -> new WalkState());
+        float frameDuration = (entity.getClass().getSimpleName().equals("Player"))
+                ? PLAYER_FRAME_DURATION
+                : ENEMY_FRAME_DURATION;
+
         if (movable.isMoving()) {
             state.timer += deltaTime;
             if (state.timer >= frameDuration) {
@@ -58,7 +62,7 @@ public class AnimationController {
             case UP    -> "up";
             case LEFT  -> "left";
             case RIGHT -> "right";
-            default    -> "down";
+            case DOWN  -> "down";
         };
     }
 }

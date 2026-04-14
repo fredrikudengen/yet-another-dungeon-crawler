@@ -1,56 +1,66 @@
 package inf112.dungeoncrawler.model.world;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class TileTypeTest {
 
     @Test
-    void testEmptyTextureNameIsCorrect() {
+    void empty_hasCorrectTextureName() {
         assertEquals("tiles/empty.png", TileType.EMPTY.getTextureName());
     }
 
     @Test
-    void testFloorTextureNameIsCorrect() {
+    void floor_hasCorrectTextureName() {
         assertEquals("tiles/wall2.png", TileType.FLOOR.getTextureName());
     }
 
     @Test
-    void testWallTextureNameIsCorrect() {
+    void wall_hasCorrectTextureName() {
         assertEquals("tiles/wall3.png", TileType.WALL.getTextureName());
     }
 
+    // TODO: add tests when door textures are added
+//    @Test
+//    void doorClosed_hasCorrectTextureName() {
+//        assertEquals("tiles/door_closed.png", TileType.DOOR_CLOSED.getTextureName());
+//    }
+//
+//    @Test
+//    void doorOpen_hasCorrectTextureName() {
+//        assertEquals("tiles/door_open.png", TileType.DOOR_OPEN.getTextureName());
+//    }
+
     @Test
-    void testEmptyBlocksMovement() {
-        assertTrue(TileType.EMPTY.blocksMovement(), "EMPTY should block movement");
+    void empty_blocksMovement() {
+        assertTrue(TileType.EMPTY.blocksMovement());
     }
 
     @Test
-    void testFloorDoesNotBlockMovement() {
-        assertFalse(TileType.FLOOR.blocksMovement(), "FLOOR should not block movement");
+    void floor_doesNotBlockMovement() {
+        assertFalse(TileType.FLOOR.blocksMovement());
     }
 
     @Test
-    void testWallBlocksMovement() {
-        assertTrue(TileType.WALL.blocksMovement(), "WALL should block movement");
+    void wall_blocksMovement() {
+        assertTrue(TileType.WALL.blocksMovement());
     }
 
     @Test
-    void testEnumContainsAllTileTypes() {
-        TileType[] expected = {TileType.EMPTY, TileType.FLOOR, TileType.WALL};
-        assertArrayEquals(expected, TileType.values());
+    void doorClosed_blocksMovement() {
+        assertTrue(TileType.DOOR_CLOSED.blocksMovement());
     }
 
     @Test
-    void testTileTypeCount() {
-        assertEquals(3, TileType.values().length);
+    void doorOpen_doesNotBlockMovement() {
+        assertFalse(TileType.DOOR_OPEN.blocksMovement());
     }
 
     @Test
-    void testTextureNamesAreNotNull() {
-        assertNotNull(TileType.EMPTY.getTextureName());
-        assertNotNull(TileType.FLOOR.getTextureName());
-        assertNotNull(TileType.WALL.getTextureName());
+    void allTileTypes_haveNonNullTextureName() {
+        for (TileType type : TileType.values()) {
+            assertNotNull(type.getTextureName(), type + " has null texture name");
+        }
     }
 }
