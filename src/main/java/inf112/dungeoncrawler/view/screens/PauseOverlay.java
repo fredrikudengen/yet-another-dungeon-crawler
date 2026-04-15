@@ -36,13 +36,13 @@ public class PauseOverlay {
     private int currentIndex = 0;
 
     public PauseOverlay(Game game, SoundService sound, Runnable onResume) {
-        this.game     = Objects.requireNonNull(game,     "game must not be null");
-        this.sound    = Objects.requireNonNull(sound,    "sound must not be null");
+        this.game = Objects.requireNonNull(game, "game must not be null");
+        this.sound = Objects.requireNonNull(sound, "sound must not be null");
         this.onResume = Objects.requireNonNull(onResume, "onResume must not be null");
     }
 
     public void init() {
-        batch  = new SpriteBatch();
+        batch = new SpriteBatch();
         shapes = new ShapeRenderer();
         layout = new GlyphLayout();
 
@@ -79,11 +79,16 @@ public class PauseOverlay {
         titleFont.draw(batch, layout, (W - layout.width) / 2f, H * 0.80f);
 
         float startY = H * 0.55f;
+        float totalHeight = (options.length - 1) * 90; // height of all menu items
+        float menuStartY = startY + (totalHeight / 2f); // center the block
+
         for (int i = 0; i < options.length; i++) {
-            String text = (i == currentIndex ? "> " : "  ") + options[i].name().replace("_", " ");
+            String text = options[i].name().replace("_", " ");
+            String prefix = (i == currentIndex ? "> " : "  ");
             menuFont.setColor(i == currentIndex ? GOLD : Color.WHITE);
-            layout.setText(menuFont, text);
-            menuFont.draw(batch, layout, (W - layout.width) / 2f, startY - i * 90);
+            layout.setText(menuFont, prefix + text);
+            float prefixWidth = menuFont.getSpaceXadvance() * prefix.length(); // Get prefix width
+            menuFont.draw(batch, layout, (W - layout.width) / 2f - prefixWidth + 20, menuStartY - i * 90);
         }
         batch.end();
     }
@@ -97,9 +102,12 @@ public class PauseOverlay {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             switch (options[currentIndex]) {
-                case RESUME    -> { currentIndex = 0; onResume.run(); }
+                case RESUME -> {
+                    currentIndex = 0;
+                    onResume.run();
+                }
                 case MAIN_MENU -> game.setScreen(new TitleScreen(game, sound));
-                case EXIT      -> Gdx.app.exit();
+                case EXIT -> Gdx.app.exit();
             }
         }
     }
