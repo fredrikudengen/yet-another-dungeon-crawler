@@ -42,7 +42,7 @@ class MovableTest {
     }
 
     @Test
-    void testIsAttackingDefault() {
+    void testIsAttacking() {
         Movable movable = new Movable() {
             @Override
             public boolean isMoving() {
@@ -59,7 +59,7 @@ class MovableTest {
     }
 
     @Test
-    void testGetAttackFrameDefault() {
+    void testGetAttackFrame() {
         Movable movable = new Movable() {
             @Override
             public boolean isMoving() {
