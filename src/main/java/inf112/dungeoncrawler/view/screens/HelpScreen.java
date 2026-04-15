@@ -37,7 +37,7 @@ public class HelpScreen implements Screen {
     private static final float PANEL_PAD_Y = 60f;
     private static final float ROW_HEIGHT = 60f;
     private static final float KEY_COL_W = 500f;
-    private static final float HEADER_H = 90f;
+    private static final float HEADER_H = 120f;
     private static final float FOOTER_H = 50f;
 
     private final Game game;
