@@ -2,8 +2,6 @@ package inf112.dungeoncrawler.model.entities.enemies;
 
 import inf112.dungeoncrawler.model.entities.Player;
 
-import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
-
 public class SlowEnemy extends Enemy {
 
     public SlowEnemy(float x, float y, Player player) {
@@ -16,6 +14,6 @@ public class SlowEnemy extends Enemy {
 
     @Override
     public String getBaseTexturePath() {
-        return "enemy/slow/enemy_";
+        return "enemy/slow/enemy_slow_";
     }
 }

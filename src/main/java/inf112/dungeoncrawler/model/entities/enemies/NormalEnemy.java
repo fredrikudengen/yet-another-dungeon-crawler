@@ -14,6 +14,6 @@ public class NormalEnemy extends Enemy {
 
     @Override
     public String getBaseTexturePath() {
-        return "enemy/normal/enemy_";
+        return "enemy/normal/enemy_normal_";
     }
 }

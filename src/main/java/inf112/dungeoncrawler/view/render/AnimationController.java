@@ -54,6 +54,7 @@ public class AnimationController {
         }
 
         String dir = directionToString(movable.getFacingDirection());
+
         return entity.getBaseTexturePath() + dir + state.frame + ".png";
     }
 
