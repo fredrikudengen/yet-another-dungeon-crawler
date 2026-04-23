@@ -199,10 +199,10 @@
 
 - Ukentlige møter har gitt struktur og fremdrift
 - Arbeid mellom møtene har vært selvstendig og fleksibelt
-- Kommunikasjon via Messenger har fungert effektivt, derfor har vi ikke hatt stor behov for fysiske møter. 
+- Kommunikasjon via Messenger har fungert effektivt
 
 ### Forbedringspunkter
 - Tydeligere oppfølging av oppgaver mellom møter
 - Hyppigere oppdatering av Trello
 - Bedre synkronisering i perioder med høy aktivitet
-- Kan argumentere for at vi skulle hatt flere fysiske møter
+- Bedre rutiner for commit-navn. Vi burde ha vært flinkere til å holde navnene konsistente i språk (f.eks. konsekvent bruk av norsk eller engelsk, og samme verbbøyning)
