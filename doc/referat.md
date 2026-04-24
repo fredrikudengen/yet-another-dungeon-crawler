@@ -197,7 +197,7 @@
 
 ## Generell refleksjon rundt møter
 
-- Ukentlige møter har gitt struktur og fremdrift
+- Konsistente møter har gitt struktur og fremdrift
 - Arbeid mellom møtene har vært selvstendig og fleksibelt
 - Kommunikasjon via Messenger har fungert effektivt
 
@@ -205,4 +205,4 @@
 - Tydeligere oppfølging av oppgaver mellom møter
 - Hyppigere oppdatering av Trello
 - Bedre synkronisering i perioder med høy aktivitet
-- Bedre rutiner for commit-navn. Vi burde ha vært flinkere til å holde navnene konsistente i språk (f.eks. konsekvent bruk av norsk eller engelsk, og samme verbbøyning)
+- Bedre rutiner for commit-navn. Vi burde ha vært flinkere til å holde navnene presise og konsistente i språk (f.eks. konsekvent bruk av norsk eller engelsk, og samme verbbøyning)
