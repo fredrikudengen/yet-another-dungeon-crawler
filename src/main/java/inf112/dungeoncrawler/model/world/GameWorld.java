@@ -42,6 +42,10 @@ public class GameWorld implements Iterable<Entity> {
         return entities.stream().anyMatch(e -> e instanceof Enemy);
     }
 
+    public int getEnemiesRemainingCount() {
+        return (int) entities.stream().filter(e -> e instanceof Enemy).count();
+    }
+
     public void openDoors() {
         room.openDoors();
     }

@@ -48,15 +48,17 @@ public class Room {
     }
 
     public boolean isBlocked(float worldX, float worldY, float width, float height) {
+        float right = worldX + width - 1f;
+        float top = worldY + height - 1f;
         return isTileBlocked(worldX, worldY)
-                || isTileBlocked(worldX + width, worldY)
-                || isTileBlocked(worldX, worldY + height)
-                || isTileBlocked(worldX + width, worldY + height);
+                || isTileBlocked(right, worldY)
+                || isTileBlocked(worldX, top)
+                || isTileBlocked(right, top);
     }
 
     private boolean isTileBlocked(float worldX, float worldY) {
-        int gridX = (int) (worldX / TILE_SIZE);
-        int gridY = (int) (worldY / TILE_SIZE);
+        int gridX = (int) Math.floor(worldX / TILE_SIZE);
+        int gridY = (int) Math.floor(worldY / TILE_SIZE);
         if (gridX < 0 || gridY < 0 || gridX >= width || gridY >= height) return true;
         return getTileAt(gridX, gridY).blocksMovement();
     }

@@ -38,6 +38,7 @@ public class GameView {
             worldRenderer.render(world.getRoom());
             entityRenderer.render(deltaTime, world.getEntities());
             uiRenderer.renderPlayerHealth(world.getPlayer().getHealth());
+            uiRenderer.renderEnemiesRemaining(world.getEnemiesRemainingCount());
         } finally {
             batch.end();
         }

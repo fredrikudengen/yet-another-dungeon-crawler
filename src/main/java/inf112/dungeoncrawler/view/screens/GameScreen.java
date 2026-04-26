@@ -52,6 +52,7 @@ public class GameScreen implements Screen {
     private PauseOverlay pauseOverlay;
     private boolean isPaused = false;
     private float doorTransitionCooldown = 0f;
+    private int totalEnemiesKilled = 0;
 
     public GameScreen(Game game, GameWorld gameWorld, SoundService sound) {
         this(game, gameWorld, sound, ROOM_3_PATH);
@@ -138,27 +139,49 @@ public class GameScreen implements Screen {
     }
 
     private DoorSide findTouchedOpenDoorSide(Room room, Player player) {
-        int minTileX = (int) (player.getX() / TILE_SIZE);
-        int maxTileX = (int) ((player.getX() + player.getWidth()) / TILE_SIZE);
-        int minTileY = (int) (player.getY() / TILE_SIZE);
-        int maxTileY = (int) ((player.getY() + player.getHeight()) / TILE_SIZE);
+        float tolerance = TILE_SIZE * 0.2f;
 
-        for (int tileX = minTileX; tileX <= maxTileX; tileX++) {
-            for (int tileY = minTileY; tileY <= maxTileY; tileY++) {
-                if (room.getTileAt(tileX, tileY) != TileType.DOOR_OPEN) {
-                    continue;
-                }
+        for (SpawnPoint spawnPoint : room.getSpawnPoints()) {
+            if (spawnPoint.type != SpawnPoint.Type.DOOR) {
+                continue;
+            }
 
-                DoorSide side = getDoorSide(room, tileX, tileY);
-                if (side != null) {
-                    return side;
-                }
+            int tileX = spawnPoint.x / TILE_SIZE;
+            int tileY = spawnPoint.y / TILE_SIZE;
+
+            if (room.getTileAt(tileX, tileY) != TileType.DOOR_OPEN) {
+                continue;
+            }
+
+            DoorSide side = getDoorSide(room, tileX, tileY);
+            if (side == null) {
+                continue;
+            }
+
+            float doorX = tileX * TILE_SIZE;
+            float doorY = tileY * TILE_SIZE;
+            if (rectanglesIntersect(
+                    player.getX(), player.getY(), player.getWidth(), player.getHeight(),
+                    doorX - tolerance, doorY - tolerance,
+                    TILE_SIZE + tolerance * 2f, TILE_SIZE + tolerance * 2f)) {
+                return side;
             }
         }
+
         return null;
     }
 
+    private boolean rectanglesIntersect(float ax, float ay, float aw, float ah,
+                                        float bx, float by, float bw, float bh) {
+        return ax < bx + bw
+                && ax + aw > bx
+                && ay < by + bh
+                && ay + ah > by;
+    }
+
     private void transitionToRoom(TransitionSpec transition) {
+        totalEnemiesKilled += gameWorld.getKilledEnemies();
+
         Room targetRoom = new RoomLoader(transition.targetRoomPath).createRoom();
         float[] entryPosition = findEntryPosition(targetRoom, transition.targetEntrySide);
 
@@ -241,11 +264,20 @@ public class GameScreen implements Screen {
         if (ROOM_3_PATH.equals(roomPath) && exitDoorSide == DoorSide.LEFT) {
             return new TransitionSpec(ROOM_2_PATH, DoorSide.RIGHT);
         }
+        if (ROOM_2_PATH.equals(roomPath) && exitDoorSide == DoorSide.RIGHT) {
+            return new TransitionSpec(ROOM_3_PATH, DoorSide.LEFT);
+        }
         if (ROOM_2_PATH.equals(roomPath) && exitDoorSide == DoorSide.TOP) {
             return new TransitionSpec(ROOM_1_PATH, DoorSide.BOTTOM);
         }
+        if (ROOM_1_PATH.equals(roomPath) && exitDoorSide == DoorSide.BOTTOM) {
+            return new TransitionSpec(ROOM_2_PATH, DoorSide.TOP);
+        }
         if (ROOM_1_PATH.equals(roomPath) && exitDoorSide == DoorSide.TOP) {
             return new TransitionSpec(ROOM_3_PATH, DoorSide.BOTTOM);
+        }
+        if (ROOM_3_PATH.equals(roomPath) && exitDoorSide == DoorSide.BOTTOM) {
+            return new TransitionSpec(ROOM_1_PATH, DoorSide.TOP);
         }
         return null;
     }
@@ -259,7 +291,8 @@ public class GameScreen implements Screen {
 
     private void checkGameOver() {
         if (gameWorld.getPlayer().getHealth() <= 0) {
-            game.setScreen(new GameOverScreen(game, sound, gameWorld.getKilledEnemies()));
+            int totalKilledEnemies = totalEnemiesKilled + gameWorld.getKilledEnemies();
+            game.setScreen(new GameOverScreen(game, sound, totalKilledEnemies));
         }
     }
 

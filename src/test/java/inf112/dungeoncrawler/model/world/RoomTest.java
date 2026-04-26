@@ -94,6 +94,24 @@ class RoomTest {
     }
 
     @Test
+    void isBlocked_fullTileOnRightEdgeOpenDoor_returnsFalse() {
+        room.setTileAt(ROOM_WIDTH - 1, 3, TileType.DOOR_OPEN);
+        assertFalse(room.isBlocked((ROOM_WIDTH - 1) * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+    }
+
+    @Test
+    void isBlocked_fullTileOnTopEdgeOpenDoor_returnsFalse() {
+        room.setTileAt(4, ROOM_HEIGHT - 1, TileType.DOOR_OPEN);
+        assertFalse(room.isBlocked(4 * TILE_SIZE, (ROOM_HEIGHT - 1) * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+    }
+
+    @Test
+    void isBlocked_partialNegativePosition_returnsTrue() {
+        assertTrue(room.isBlocked(-1, TILE_SIZE, 16, 16));
+        assertTrue(room.isBlocked(TILE_SIZE, -1, 16, 16));
+    }
+
+    @Test
     void openDoors_convertsDoorClosedToDoorOpen() {
         room.setTileAt(1, 1, TileType.DOOR_CLOSED);
         room.setTileAt(3, 3, TileType.DOOR_CLOSED);
