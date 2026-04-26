@@ -7,7 +7,7 @@ public class NormalEnemy extends Enemy {
     public NormalEnemy(float x, float y, Player player) {
         super(x, y, player);
         this.damage         = 2;
-        this.health         = 1;
+        this.health         = 2;
         this.speed          = 150;
         this.knockBackForce = 350;
     }
