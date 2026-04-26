@@ -41,7 +41,7 @@ public class UIRenderer extends Renderer {
 		batch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0,
 				camera.viewportWidth, camera.viewportHeight));
 
-		float textY = camera.viewportHeight - HUD_MARGIN - 6f;
+		float textY = camera.viewportHeight - HUD_MARGIN - HEART_SIZE - 18f;
 		hudFont.draw(batch, "Enemies left: " + Math.max(0, enemiesRemaining), HUD_MARGIN, textY);
 
 		batch.setProjectionMatrix(previousProjection);

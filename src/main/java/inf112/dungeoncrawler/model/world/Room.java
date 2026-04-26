@@ -40,8 +40,8 @@ public class Room {
     public void openDoors() {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if (tiles[x][y] == TileType.DOOR_CLOSED) {
-                    tiles[x][y] = TileType.DOOR_OPEN;
+                if (tiles[x][y].isDoorClosed()) {
+                    tiles[x][y] = tiles[x][y].toOpenVariant();
                 }
             }
         }

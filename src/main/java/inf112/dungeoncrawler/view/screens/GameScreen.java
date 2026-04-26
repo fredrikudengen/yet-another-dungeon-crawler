@@ -11,7 +11,6 @@ import inf112.dungeoncrawler.model.generation.SpawnPoint;
 import inf112.dungeoncrawler.model.entities.Player;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
-import inf112.dungeoncrawler.model.world.TileType;
 import inf112.dungeoncrawler.sound.SoundService;
 import inf112.dungeoncrawler.view.GameView;
 
@@ -149,7 +148,7 @@ public class GameScreen implements Screen {
             int tileX = spawnPoint.x / TILE_SIZE;
             int tileY = spawnPoint.y / TILE_SIZE;
 
-            if (room.getTileAt(tileX, tileY) != TileType.DOOR_OPEN) {
+            if (!room.getTileAt(tileX, tileY).isDoorOpen()) {
                 continue;
             }
 

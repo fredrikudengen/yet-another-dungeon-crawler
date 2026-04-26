@@ -40,7 +40,7 @@ public class RoomTemplate implements RoomFactory {
             String row = pattern[height - 1 - y];
             for (int x = 0; x < Math.min(width, row.length()); x++) {
                 char c = row.charAt(x);
-                room.setTileAt(x, y, charToTileType(c));
+                room.setTileAt(x, y, charToTileType(c, x, y));
 
                 SpawnPoint.Type spawnType = SPAWN_CHARS.get(c);
                 if (spawnType != null) {
@@ -51,12 +51,33 @@ public class RoomTemplate implements RoomFactory {
         return room;
     }
 
-    private TileType charToTileType(char c) {
+    private TileType charToTileType(char c, int x, int y) {
         return switch (c) {
             case '#' -> TileType.WALL;
             case ' ' -> TileType.EMPTY;
-            case 'D' -> TileType.DOOR_CLOSED;
+            case 'D' -> doorTileForWall(x, y);
             default  -> TileType.FLOOR;
         };
+    }
+
+    private TileType doorTileForWall(int x, int y) {
+        boolean onLeftWall = x == 0 && y > 0 && y < height - 1;
+        boolean onRightWall = x == width - 1 && y > 0 && y < height - 1;
+        boolean onTopWall = y == height - 1 && x > 0 && x < width - 1;
+        boolean onBottomWall = y == 0 && x > 0 && x < width - 1;
+
+        if (onLeftWall) {
+            return TileType.DOOR_LEFT_WALL_CLOSED;
+        }
+        if (onRightWall) {
+            return TileType.DOOR_RIGHT_WALL_CLOSED;
+        }
+        if (onTopWall) {
+            return TileType.DOOR_TOP_CLOSED;
+        }
+        if (onBottomWall) {
+            return TileType.DOOR_BOTTOM_CLOSED;
+        }
+        return TileType.DOOR_CLOSED;
     }
 }

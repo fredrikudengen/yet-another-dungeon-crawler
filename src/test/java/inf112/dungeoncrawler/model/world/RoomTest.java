@@ -121,6 +121,21 @@ class RoomTest {
     }
 
     @Test
+    void openDoors_convertsDirectionalDoorsToMatchingOpenVariant() {
+        room.setTileAt(1, 1, TileType.DOOR_LEFT_WALL_CLOSED);
+        room.setTileAt(2, 1, TileType.DOOR_RIGHT_WALL_CLOSED);
+        room.setTileAt(3, 1, TileType.DOOR_TOP_CLOSED);
+        room.setTileAt(4, 1, TileType.DOOR_BOTTOM_CLOSED);
+
+        room.openDoors();
+
+        assertEquals(TileType.DOOR_LEFT_WALL_OPEN, room.getTileAt(1, 1));
+        assertEquals(TileType.DOOR_RIGHT_WALL_OPEN, room.getTileAt(2, 1));
+        assertEquals(TileType.DOOR_TOP_OPEN, room.getTileAt(3, 1));
+        assertEquals(TileType.DOOR_BOTTOM_OPEN, room.getTileAt(4, 1));
+    }
+
+    @Test
     void openDoors_doesNotAffectOtherTiles() {
         room.setTileAt(1, 1, TileType.DOOR_CLOSED);
         room.setTileAt(2, 2, TileType.WALL);
