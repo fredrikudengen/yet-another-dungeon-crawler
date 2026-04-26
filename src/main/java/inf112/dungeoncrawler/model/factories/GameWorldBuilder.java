@@ -32,6 +32,16 @@ public class GameWorldBuilder {
         return world;
     }
 
+    public GameWorld buildWithPlayer(Player player, float x, float y) {
+        Player reusedPlayer = Objects.requireNonNull(player, "player must not be null");
+        reusedPlayer.setPosition(x, y);
+
+        GameWorld world = new GameWorld(room, reusedPlayer);
+        world.addEntity(reusedPlayer);
+        spawnEntities(world, reusedPlayer);
+        return world;
+    }
+
     private Player createPlayer() {
         for (SpawnPoint sp : room.getSpawnPoints()) {
             if (sp.type == SpawnPoint.Type.PLAYER) {
@@ -51,7 +61,7 @@ public class GameWorldBuilder {
         factory.register(SpawnPoint.Type.ATTACKPOWERUP, (x, y) -> new AttackPowerup(x, y, sound));
 
         for (SpawnPoint sp : room.getSpawnPoints()) {
-            if (sp.type != SpawnPoint.Type.PLAYER) {
+            if (sp.type != SpawnPoint.Type.PLAYER && sp.type != SpawnPoint.Type.DOOR) {
                 world.addEntity(factory.spawn(sp));
             }
         }
