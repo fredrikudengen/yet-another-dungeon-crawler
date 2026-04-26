@@ -123,14 +123,7 @@ public class GameScreen implements Screen {
         Player player = gameWorld.getPlayer();
         Room room = gameWorld.getRoom();
 
-        int tileX = (int) ((player.getX() + player.getWidth() / 2f) / TILE_SIZE);
-        int tileY = (int) ((player.getY() + player.getHeight() / 2f) / TILE_SIZE);
-
-        if (room.getTileAt(tileX, tileY) != TileType.DOOR_OPEN) {
-            return;
-        }
-
-        DoorSide currentDoorSide = getDoorSide(room, tileX, tileY);
+        DoorSide currentDoorSide = findTouchedOpenDoorSide(room, player);
         if (currentDoorSide == null) {
             return;
         }
@@ -142,6 +135,27 @@ public class GameScreen implements Screen {
 
         transitionToRoom(transition);
         doorTransitionCooldown = DOOR_TRANSITION_COOLDOWN_SECONDS;
+    }
+
+    private DoorSide findTouchedOpenDoorSide(Room room, Player player) {
+        int minTileX = (int) (player.getX() / TILE_SIZE);
+        int maxTileX = (int) ((player.getX() + player.getWidth()) / TILE_SIZE);
+        int minTileY = (int) (player.getY() / TILE_SIZE);
+        int maxTileY = (int) ((player.getY() + player.getHeight()) / TILE_SIZE);
+
+        for (int tileX = minTileX; tileX <= maxTileX; tileX++) {
+            for (int tileY = minTileY; tileY <= maxTileY; tileY++) {
+                if (room.getTileAt(tileX, tileY) != TileType.DOOR_OPEN) {
+                    continue;
+                }
+
+                DoorSide side = getDoorSide(room, tileX, tileY);
+                if (side != null) {
+                    return side;
+                }
+            }
+        }
+        return null;
     }
 
     private void transitionToRoom(TransitionSpec transition) {
