@@ -9,7 +9,7 @@ public class Attack {
      * Attack used by Player.
      */
     public Attack() {
-        this.cooldown = 1f;
+        this.cooldown = 0.45f;
     }
 
     /**
