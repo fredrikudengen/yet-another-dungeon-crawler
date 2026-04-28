@@ -1,9 +1,7 @@
 package inf112.dungeoncrawler.model;
 
 /**
- * Enum containing each direction (up, down, left, right).
- * Used to store facingDirection, attackDirection etc.
+ * The four cardinal directions. Used to represent facing direction
+ * and attack direction for entities.
  */
-public enum Direction {
-    UP, DOWN, LEFT, RIGHT;
-}
+public enum Direction { UP, DOWN, LEFT, RIGHT }

@@ -79,9 +79,9 @@ class RoomTemplateTest {
 		Room room = new RoomTemplate(new String[]{"D"}).createRoom();
 		List<SpawnPoint> spawnPoints = room.getSpawnPoints();
 		assertEquals(1, spawnPoints.size());
-		assertEquals(SpawnPoint.Type.DOOR, spawnPoints.get(0).type);
-		assertEquals(0, spawnPoints.get(0).x);
-		assertEquals(0, spawnPoints.get(0).y);
+		assertEquals(SpawnPoint.Type.DOOR, spawnPoints.getFirst().getType());
+		assertEquals(0, spawnPoints.getFirst().getX());
+		assertEquals(0, spawnPoints.getFirst().getY());
 	}
 
 	@Test

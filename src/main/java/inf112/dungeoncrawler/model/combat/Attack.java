@@ -1,5 +1,8 @@
 package inf112.dungeoncrawler.model.combat;
 
+/**
+ * Manages the cooldown for the player's melee attack.
+ */
 public class Attack {
 
     private final float cooldown;

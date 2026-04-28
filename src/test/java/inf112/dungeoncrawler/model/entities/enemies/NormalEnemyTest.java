@@ -25,7 +25,7 @@ public class NormalEnemyTest {
 		assertEquals(11f, enemy.getX());
 		assertEquals(21f, enemy.getY());
 		assertEquals(2f, enemy.getDamage());
-		assertEquals(2, enemy.getHealth());
+		assertEquals(3, enemy.getHealth());
 		assertEquals(150, enemy.getSpeed());
 		assertEquals(64f, enemy.getWidth());
 		assertEquals(64f, enemy.getHeight());

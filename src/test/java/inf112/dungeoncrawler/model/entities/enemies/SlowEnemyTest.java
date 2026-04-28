@@ -25,7 +25,7 @@ public class SlowEnemyTest {
 		assertEquals(12f, enemy.getX());
 		assertEquals(22f, enemy.getY());
 		assertEquals(3f, enemy.getDamage());
-		assertEquals(3, enemy.getHealth());
+		assertEquals(4, enemy.getHealth());
 		assertEquals(120, enemy.getSpeed());
 		assertEquals(64f, enemy.getWidth());
 		assertEquals(64f, enemy.getHeight());

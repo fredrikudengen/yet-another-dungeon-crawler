@@ -33,6 +33,14 @@ public abstract class Enemy extends Entity implements Movable {
     private float stunTimer  = 0f;
     private boolean moving   = false;
 
+    /**
+     * Abstract base class for all enemy types. Implements BFS pathfinding towards
+     * its target, collision damage, and knockback/stun behaviour.
+     *
+     * @param x      initial x-position in world pixels
+     * @param y      initial y-position in world pixels
+     * @param target the entity this enemy will chase and attack
+     */
     public Enemy(float x, float y, Targetable target) {
         super(x, y);
         this.target = target;

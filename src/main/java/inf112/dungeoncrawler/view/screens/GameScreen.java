@@ -141,12 +141,12 @@ public class GameScreen implements Screen {
         float tolerance = TILE_SIZE * 0.2f;
 
         for (SpawnPoint spawnPoint : room.getSpawnPoints()) {
-            if (spawnPoint.type != SpawnPoint.Type.DOOR) {
+            if (spawnPoint.getType() != SpawnPoint.Type.DOOR) {
                 continue;
             }
 
-            int tileX = spawnPoint.x / TILE_SIZE;
-            int tileY = spawnPoint.y / TILE_SIZE;
+            int tileX = spawnPoint.getX() / TILE_SIZE;
+            int tileY = spawnPoint.getY() / TILE_SIZE;
 
             if (!room.getTileAt(tileX, tileY).isDoorOpen()) {
                 continue;
@@ -193,15 +193,15 @@ public class GameScreen implements Screen {
         SpawnPoint doorSpawnPoint = findDoorSpawnPoint(room, entryDoorSide);
         if (doorSpawnPoint == null) {
             for (SpawnPoint spawnPoint : room.getSpawnPoints()) {
-                if (spawnPoint.type == SpawnPoint.Type.PLAYER) {
-                    return new float[]{spawnPoint.x, spawnPoint.y};
+                if (spawnPoint.getType() == SpawnPoint.Type.PLAYER) {
+                    return new float[]{spawnPoint.getX(), spawnPoint.getY()};
                 }
             }
             return new float[]{TILE_SIZE, TILE_SIZE};
         }
 
-        int doorTileX = doorSpawnPoint.x / TILE_SIZE;
-        int doorTileY = doorSpawnPoint.y / TILE_SIZE;
+        int doorTileX = doorSpawnPoint.getX() / TILE_SIZE;
+        int doorTileY = doorSpawnPoint.getY() / TILE_SIZE;
 
         int spawnTileX = doorTileX;
         int spawnTileY = doorTileY;
@@ -213,19 +213,19 @@ public class GameScreen implements Screen {
             case BOTTOM -> spawnTileY = doorTileY + 1;
         }
 
-        spawnTileX = Math.max(0, Math.min(room.getWidth() - 1, spawnTileX));
-        spawnTileY = Math.max(0, Math.min(room.getHeight() - 1, spawnTileY));
+        spawnTileX = Math.clamp(spawnTileX, 0, room.getWidth() - 1);
+        spawnTileY = Math.clamp(spawnTileY, 0, room.getHeight() - 1);
         return new float[]{spawnTileX * TILE_SIZE, spawnTileY * TILE_SIZE};
     }
 
     private SpawnPoint findDoorSpawnPoint(Room room, DoorSide side) {
         for (SpawnPoint spawnPoint : room.getSpawnPoints()) {
-            if (spawnPoint.type != SpawnPoint.Type.DOOR) {
+            if (spawnPoint.getType() != SpawnPoint.Type.DOOR) {
                 continue;
             }
 
-            int tileX = spawnPoint.x / TILE_SIZE;
-            int tileY = spawnPoint.y / TILE_SIZE;
+            int tileX = spawnPoint.getX() / TILE_SIZE;
+            int tileY = spawnPoint.getY() / TILE_SIZE;
 
             if (isDoorOnSide(room, side, tileX, tileY)) {
                 return spawnPoint;
@@ -315,9 +315,5 @@ public class GameScreen implements Screen {
     public void dispose() {
         gameView.dispose();
         pauseOverlay.dispose();
-    }
-
-    public boolean isPaused() {
-        return isPaused;
     }
 }

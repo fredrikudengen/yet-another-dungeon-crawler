@@ -23,14 +23,21 @@ public enum TileType {
         this.blocksMovement = blocksMovement;
     }
 
+    /**
+     * Returns the path to the texture asset used to render this tile type.
+     */
     public String getTextureName() {
         return textureName;
     }
 
+    /**
+     * Returns true if entities cannot move through this tile type.
+     */
     public boolean blocksMovement() {
         return blocksMovement;
     }
 
+    /** Returns true if this tile type is a closed door variant. */
     public boolean isDoorClosed() {
         return switch (this) {
             case DOOR_CLOSED,
@@ -42,6 +49,7 @@ public enum TileType {
         };
     }
 
+    /** Returns true if this tile type is an open door variant. */
     public boolean isDoorOpen() {
         return switch (this) {
             case DOOR_OPEN,
@@ -53,6 +61,10 @@ public enum TileType {
         };
     }
 
+    /**
+     * Returns the open-door variant corresponding to this closed-door tile.
+     * Returns TileType unchanged if this tile is not a closed door.
+     */
     public TileType toOpenVariant() {
         return switch (this) {
             case DOOR_CLOSED -> DOOR_OPEN;

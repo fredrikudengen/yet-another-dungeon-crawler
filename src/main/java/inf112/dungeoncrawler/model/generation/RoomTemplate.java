@@ -25,6 +25,13 @@ public class RoomTemplate implements RoomFactory {
     private final int width;
     private final int height;
 
+    /**
+     * Builds a Room from a string array representing the room layout.
+     * Each character maps to a tile type or spawn point.
+     * The first row of the pattern is the top of the room.
+     *
+     * @param pattern array of strings, one per row, top row first
+     */
     public RoomTemplate(String[] pattern) {
         this.pattern = pattern;
         this.height  = pattern.length;

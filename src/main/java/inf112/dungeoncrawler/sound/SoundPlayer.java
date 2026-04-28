@@ -11,10 +11,12 @@ public class SoundPlayer implements SoundService {
     private final Sound swordSwing;
     private final Music soundtrack;
 
-    private float masterVolume = 1.0f;
-    private float musicVolume  = 0.5f;
-    private boolean muted      = false;
+    private final boolean muted = false;
 
+    /**
+     * Concrete SoundService that loads and plays audio via libGDX.
+     * Loads all audio assets from the internal asset directory on construction.
+     */
     public SoundPlayer() {
         damageTaken   = Gdx.audio.newSound(Gdx.files.internal("sound/damageTaken.ogg"));
         powerupPickup = Gdx.audio.newSound(Gdx.files.internal("sound/powerupPickUp.ogg"));
@@ -22,12 +24,14 @@ public class SoundPlayer implements SoundService {
 
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("sound/soundtrack.ogg"));
         soundtrack.setLooping(true);
+        float musicVolume = 0.5f;
         soundtrack.setVolume(musicVolume);
     }
 
     @Override
     public void play(SoundEffect effect) {
         if (muted) return;
+        float masterVolume = 1.0f;
         switch (effect) {
             case DAMAGE_TAKEN   -> damageTaken.play(masterVolume);
             case POWERUP_PICKUP -> powerupPickup.play(masterVolume);
@@ -48,24 +52,6 @@ public class SoundPlayer implements SoundService {
     @Override
     public void stopMusic() {
         soundtrack.stop();
-    }
-
-    public void setMasterVolume(float volume) {
-        this.masterVolume = Math.clamp(volume, 0f, 1f);
-    }
-
-    public void setMusicVolume(float volume) {
-        this.musicVolume = Math.clamp(volume, 0f, 1f);
-        soundtrack.setVolume(this.musicVolume);
-    }
-
-    public void setMuted(boolean muted) {
-        this.muted = muted;
-        soundtrack.setVolume(muted ? 0f : musicVolume);
-    }
-
-    public boolean isMuted() {
-        return muted;
     }
 
     @Override
