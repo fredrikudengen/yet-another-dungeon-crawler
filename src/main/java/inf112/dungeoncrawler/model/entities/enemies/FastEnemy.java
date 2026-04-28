@@ -7,7 +7,7 @@ public class FastEnemy extends Enemy {
     public FastEnemy(float x, float y, Player player) {
         super(x, y, player);
         this.damage         = 1;
-        this.health         = 3;
+        this.health         = 2;
         this.speed          = 240;
         this.knockBackForce = 300;
     }

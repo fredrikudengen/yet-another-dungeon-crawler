@@ -1,6 +1,7 @@
 package inf112.dungeoncrawler.model.entities;
 
 import inf112.dungeoncrawler.model.Direction;
+import inf112.dungeoncrawler.model.entities.enemies.Enemy;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.sound.SoundEffect;
@@ -151,6 +152,33 @@ class PlayerTest {
     }
 
     @Test
+    void performAttack_hitsEnemyAtSlightlyLongerRange() {
+        Enemy enemy = makeTestEnemy(player.getX() + 140, player.getY());
+        world.addEntity(enemy);
+
+        int initialHealth = enemy.getHealth();
+        player.performAttack(Direction.RIGHT);
+        player.step(world, 0.016);
+
+        assertTrue(enemy.getHealth() < initialHealth);
+    }
+
+    @Test
+    void performAttack_enemyEnteringRangeDuringSwingGetsHit() {
+        Enemy enemy = makeTestEnemy(player.getX() + 250, player.getY());
+        world.addEntity(enemy);
+
+        int initialHealth = enemy.getHealth();
+        player.performAttack(Direction.RIGHT);
+        player.step(world, 0.05);
+
+        enemy.setPosition(player.getX() + 140, player.getY());
+        player.step(world, 0.05);
+
+        assertTrue(enemy.getHealth() < initialHealth);
+    }
+
+    @Test
     void collidesWith_overlappingPlayer_returnsTrue() {
         Player other = new Player(310, 310, NO_SOUND);
         assertTrue(player.collidesWith(other));
@@ -160,5 +188,26 @@ class PlayerTest {
     void collidesWith_farAwayPlayer_returnsFalse() {
         Player other = new Player(1000, 1000, NO_SOUND);
         assertFalse(player.collidesWith(other));
+    }
+
+    private Enemy makeTestEnemy(float x, float y) {
+        return new Enemy(x, y, player) {
+            {
+                this.health = 3;
+                this.damage = 1;
+                this.speed = 0;
+                this.knockBackForce = 0;
+            }
+
+            @Override
+            public void step(GameWorld world, double deltaTime) {
+                // Keep static enemy in tests.
+            }
+
+            @Override
+            public String getBaseTexturePath() {
+                return "";
+            }
+        };
     }
 }

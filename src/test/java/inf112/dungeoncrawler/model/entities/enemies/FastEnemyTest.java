@@ -25,7 +25,7 @@ public class FastEnemyTest {
 		assertEquals(10f, enemy.getX());
 		assertEquals(20f, enemy.getY());
 		assertEquals(1f, enemy.getDamage());
-		assertEquals(3, enemy.getHealth());
+		assertEquals(2, enemy.getHealth());
 		assertEquals(240, enemy.getSpeed());
 		assertEquals(64f, enemy.getWidth());
 		assertEquals(64f, enemy.getHeight());

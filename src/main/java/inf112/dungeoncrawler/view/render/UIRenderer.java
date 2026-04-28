@@ -2,12 +2,14 @@ package inf112.dungeoncrawler.view.render;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 
 public class UIRenderer extends Renderer {
 
 	private final Texture heartTexture;
+	private final BitmapFont hudFont;
 
 	private static final float HUD_MARGIN = 50f;
 	private static final float HEART_SIZE = 42f;
@@ -16,6 +18,7 @@ public class UIRenderer extends Renderer {
 	public UIRenderer(SpriteBatch batch, Camera camera) {
         super(batch, camera);
 		this.heartTexture = new Texture("powerups/Life.png");
+		this.hudFont = new BitmapFont();
 	}
 
 	public void renderPlayerHealth(int health) {
@@ -33,8 +36,20 @@ public class UIRenderer extends Renderer {
 		batch.setProjectionMatrix(previousProjection);
 	}
 
+	public void renderEnemiesRemaining(int enemiesRemaining) {
+		Matrix4 previousProjection = batch.getProjectionMatrix().cpy();
+		batch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0,
+				camera.viewportWidth, camera.viewportHeight));
+
+		float textY = camera.viewportHeight - HUD_MARGIN - HEART_SIZE - 18f;
+		hudFont.draw(batch, "Enemies left: " + Math.max(0, enemiesRemaining), HUD_MARGIN, textY);
+
+		batch.setProjectionMatrix(previousProjection);
+	}
+
 	@Override
 	public void dispose() {
 		heartTexture.dispose();
+		hudFont.dispose();
 	}
 }

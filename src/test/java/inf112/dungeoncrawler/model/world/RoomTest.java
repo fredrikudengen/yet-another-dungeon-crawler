@@ -94,12 +94,45 @@ class RoomTest {
     }
 
     @Test
+    void isBlocked_fullTileOnRightEdgeOpenDoor_returnsFalse() {
+        room.setTileAt(ROOM_WIDTH - 1, 3, TileType.DOOR_OPEN);
+        assertFalse(room.isBlocked((ROOM_WIDTH - 1) * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+    }
+
+    @Test
+    void isBlocked_fullTileOnTopEdgeOpenDoor_returnsFalse() {
+        room.setTileAt(4, ROOM_HEIGHT - 1, TileType.DOOR_OPEN);
+        assertFalse(room.isBlocked(4 * TILE_SIZE, (ROOM_HEIGHT - 1) * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+    }
+
+    @Test
+    void isBlocked_partialNegativePosition_returnsTrue() {
+        assertTrue(room.isBlocked(-1, TILE_SIZE, 16, 16));
+        assertTrue(room.isBlocked(TILE_SIZE, -1, 16, 16));
+    }
+
+    @Test
     void openDoors_convertsDoorClosedToDoorOpen() {
         room.setTileAt(1, 1, TileType.DOOR_CLOSED);
         room.setTileAt(3, 3, TileType.DOOR_CLOSED);
         room.openDoors();
         assertEquals(TileType.DOOR_OPEN, room.getTileAt(1, 1));
         assertEquals(TileType.DOOR_OPEN, room.getTileAt(3, 3));
+    }
+
+    @Test
+    void openDoors_convertsDirectionalDoorsToMatchingOpenVariant() {
+        room.setTileAt(1, 1, TileType.DOOR_LEFT_WALL_CLOSED);
+        room.setTileAt(2, 1, TileType.DOOR_RIGHT_WALL_CLOSED);
+        room.setTileAt(3, 1, TileType.DOOR_TOP_CLOSED);
+        room.setTileAt(4, 1, TileType.DOOR_BOTTOM_CLOSED);
+
+        room.openDoors();
+
+        assertEquals(TileType.DOOR_LEFT_WALL_OPEN, room.getTileAt(1, 1));
+        assertEquals(TileType.DOOR_RIGHT_WALL_OPEN, room.getTileAt(2, 1));
+        assertEquals(TileType.DOOR_TOP_OPEN, room.getTileAt(3, 1));
+        assertEquals(TileType.DOOR_BOTTOM_OPEN, room.getTileAt(4, 1));
     }
 
     @Test

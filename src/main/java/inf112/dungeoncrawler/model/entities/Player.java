@@ -8,32 +8,31 @@ import inf112.dungeoncrawler.sound.SoundService;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
-public class Player extends Entity implements Movable, Controllable {
+public class Player extends Entity implements Movable, Controllable, Targetable {
 
     public static final float ATTACK_DURATION        = 0.2f;
     public static final float INVINCIBILITY_DURATION = 1.0f;
+    private static final float ATTACK_REACH          = TILE_SIZE * 1.25f;
+    private static final float ATTACK_SWEEP_PADDING  = TILE_SIZE * 0.25f;
+    private static final float FRAME_DURATION        = 0.15f;
 
     private boolean movingLeft, movingRight, movingUp, movingDown;
     private final Attack attack;
     private Direction facingDirection = Direction.RIGHT;
     private float attackTimer      = 0;
     private boolean isAttacking    = false;
-    private boolean hasCheckedHits = false;
+    private final Set<Entity> hitEnemiesThisSwing = new HashSet<>();
 
     private float invincibilityTimer = 0;
     private boolean isInvincible     = false;
 
     private final SoundService sound;
 
-    /**
-     * Player object which the user controls.
-     *
-     * @param x pixel value
-     * @param y pixel value
-     * @param sound injection used to play sound
-     */
     public Player(float x, float y, SoundService sound) {
         super(x, y);
         this.height         = TILE_SIZE;
@@ -84,14 +83,11 @@ public class Player extends Entity implements Movable, Controllable {
 
         if (isAttacking) {
             attackTimer += (float) deltaTime;
-            if (!hasCheckedHits) {
-                checkAttackHits(world);
-                hasCheckedHits = true;
-            }
+            checkAttackHits(world);
             if (attackTimer >= ATTACK_DURATION) {
-                isAttacking    = false;
-                attackTimer    = 0;
-                hasCheckedHits = false;
+                isAttacking = false;
+                attackTimer = 0;
+                hitEnemiesThisSwing.clear();
             }
         }
         attack.update((float) deltaTime);
@@ -102,7 +98,16 @@ public class Player extends Entity implements Movable, Controllable {
         return "player/weapon/Player_walk_weapon_";
     }
 
+    @Override
+    public float getFrameDuration() {
+        return FRAME_DURATION;
+    }
+
+    @Override
     public boolean isInvincible() { return isInvincible; }
+
+    @Override
+    public float getKnockBackForce() { return knockBackForce; }
 
     private void updateFacingDirection() {
         if      (movingLeft)  facingDirection = Direction.LEFT;
@@ -113,27 +118,59 @@ public class Player extends Entity implements Movable, Controllable {
 
     private void checkAttackHits(GameWorld world) {
         for (Entity entity : world.getEntities()) {
-            if (entity instanceof Enemy && isEnemyInAttackRange(entity)) {
+            if (entity instanceof Enemy
+                    && !hitEnemiesThisSwing.contains(entity)
+                    && isEnemyInAttackRange(entity)) {
                 entity.takeDamage(damage, x, y);
+                hitEnemiesThisSwing.add(entity);
             }
         }
     }
 
     private boolean isEnemyInAttackRange(Entity entity) {
-        int playerTileX = (int) (x / TILE_SIZE);
-        int playerTileY = (int) (y / TILE_SIZE);
-        int entityTileX = (int) (entity.getX() / TILE_SIZE);
-        int entityTileY = (int) (entity.getY() / TILE_SIZE);
+        float hitboxX      = x;
+        float hitboxY      = y;
+        float hitboxWidth  = width;
+        float hitboxHeight = height;
 
-        int dx = entityTileX - playerTileX;
-        int dy = entityTileY - playerTileY;
+        switch (facingDirection) {
+            case LEFT -> {
+                hitboxX      = x - ATTACK_REACH;
+                hitboxY      = y - ATTACK_SWEEP_PADDING;
+                hitboxWidth  = ATTACK_REACH;
+                hitboxHeight = height + ATTACK_SWEEP_PADDING * 2f;
+            }
+            case RIGHT -> {
+                hitboxX      = x + width;
+                hitboxY      = y - ATTACK_SWEEP_PADDING;
+                hitboxWidth  = ATTACK_REACH;
+                hitboxHeight = height + ATTACK_SWEEP_PADDING * 2f;
+            }
+            case UP -> {
+                hitboxX      = x - ATTACK_SWEEP_PADDING;
+                hitboxY      = y + height;
+                hitboxWidth  = width + ATTACK_SWEEP_PADDING * 2f;
+                hitboxHeight = ATTACK_REACH;
+            }
+            case DOWN -> {
+                hitboxX      = x - ATTACK_SWEEP_PADDING;
+                hitboxY      = y - ATTACK_REACH;
+                hitboxWidth  = width + ATTACK_SWEEP_PADDING * 2f;
+                hitboxHeight = ATTACK_REACH;
+            }
+        }
 
-        return switch (facingDirection) {
-            case LEFT  -> dx == -1 && Math.abs(dy) <= 1;
-            case RIGHT -> dx == 1  && Math.abs(dy) <= 1;
-            case UP    -> dy == 1  && Math.abs(dx) <= 1;
-            case DOWN  -> dy == -1 && Math.abs(dx) <= 1;
-        };
+        return rectanglesIntersect(
+                hitboxX, hitboxY, hitboxWidth, hitboxHeight,
+                entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
+    }
+
+    private boolean rectanglesIntersect(float ax, float ay, float aw, float ah,
+                                        float bx, float by, float bw, float bh) {
+        return ax < bx + bw
+                && ax + aw > bx
+                && ay < by + bh
+                && ay + ah > by;
     }
 
     @Override
@@ -143,36 +180,26 @@ public class Player extends Entity implements Movable, Controllable {
             isAttacking     = true;
             attackTimer     = 0;
             facingDirection = direction;
-            hasCheckedHits  = false;
+            hitEnemiesThisSwing.clear();
             sound.play(SoundEffect.SWORD_SWING);
         }
     }
 
-    @Override
-    public boolean isAttacking() { return isAttacking; }
+    @Override public boolean isAttacking()   { return isAttacking; }
 
     @Override
     public int getAttackFrame() {
         return (attackTimer < ATTACK_DURATION / 2f) ? 1 : 2;
     }
 
-    public float getKnockBackForce() { return knockBackForce; }
-
-    @Override
-    public boolean isMoving() {
+    @Override public boolean isMoving() {
         return movingLeft || movingRight || movingUp || movingDown;
     }
 
-    @Override
-    public Direction getFacingDirection() { return facingDirection; }
+    @Override public Direction getFacingDirection() { return facingDirection; }
 
     @Override public void setMovingLeft(boolean moving)  { movingLeft  = moving; }
     @Override public void setMovingRight(boolean moving) { movingRight = moving; }
     @Override public void setMovingUp(boolean moving)    { movingUp    = moving; }
     @Override public void setMovingDown(boolean moving)  { movingDown  = moving; }
-
-    @Override
-    public boolean collidesWith(Collidable other) {
-        return super.collidesWith(other);
-    }
 }

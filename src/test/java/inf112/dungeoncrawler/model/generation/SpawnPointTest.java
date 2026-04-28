@@ -10,17 +10,17 @@ public class SpawnPointTest {
 	@Test
 	void constructor_storesCoordinatesAndType() {
 		SpawnPoint sp = new SpawnPoint(7, 9, SpawnPoint.Type.PLAYER);
-		assertEquals(7, sp.x);
-		assertEquals(9, sp.y);
-		assertEquals(SpawnPoint.Type.PLAYER, sp.type);
+		assertEquals(7, sp.getX());
+		assertEquals(9, sp.getY());
+		assertEquals(SpawnPoint.Type.PLAYER, sp.getType());
 	}
 
 	@Test
 	void constructor_supportsNegativeCoordinates() {
 		SpawnPoint sp = new SpawnPoint(-3, -11, SpawnPoint.Type.SLOWENEMY);
-		assertEquals(-3, sp.x);
-		assertEquals(-11, sp.y);
-		assertEquals(SpawnPoint.Type.SLOWENEMY, sp.type);
+		assertEquals(-3, sp.getX());
+		assertEquals(-11, sp.getY());
+		assertEquals(SpawnPoint.Type.SLOWENEMY, sp.getType());
 	}
 
 	@Test

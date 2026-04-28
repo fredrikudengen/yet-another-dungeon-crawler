@@ -99,4 +99,33 @@ class GameWorldBuilderTest {
 
         assertTrue(world.getEntities().contains(world.getPlayer()));
     }
+
+    @Test
+    void build_withDoorSpawnPoint_doesNotThrowOrSpawnEntity() {
+        room.addSpawnPoint(new SpawnPoint(TILE_SIZE, TILE_SIZE, SpawnPoint.Type.PLAYER));
+        room.addSpawnPoint(new SpawnPoint(5 * TILE_SIZE, 5 * TILE_SIZE, SpawnPoint.Type.DOOR));
+
+        GameWorld world = assertDoesNotThrow(() -> new GameWorldBuilder(room, NO_SOUND).build());
+
+        long nonPlayerEntities = world.getEntities().stream()
+                .filter(entity -> entity != world.getPlayer())
+                .count();
+        assertEquals(0, nonPlayerEntities);
+    }
+
+    @Test
+    void buildWithPlayer_reusesPlayerAndPreservesHealth() {
+        room.addSpawnPoint(new SpawnPoint(10 * TILE_SIZE, 10 * TILE_SIZE, SpawnPoint.Type.FASTENEMY));
+
+        Player persistentPlayer = new Player(0, 0, NO_SOUND);
+        persistentPlayer.setHealth(2);
+
+        GameWorld world = new GameWorldBuilder(room, NO_SOUND)
+                .buildWithPlayer(persistentPlayer, 3 * TILE_SIZE, 4 * TILE_SIZE);
+
+        assertSame(persistentPlayer, world.getPlayer());
+        assertEquals(2, world.getPlayer().getHealth());
+        assertEquals(3 * TILE_SIZE, world.getPlayer().getX());
+        assertEquals(4 * TILE_SIZE, world.getPlayer().getY());
+    }
 }

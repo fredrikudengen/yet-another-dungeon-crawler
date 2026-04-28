@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RoomTemplateTest {
@@ -46,6 +45,30 @@ class RoomTemplateTest {
 	}
 
 	@Test
+	void createRoom_leftWallDoor_usesLeftWallDoorTile() {
+		Room room = new RoomTemplate(new String[]{"...", "D..", "..."}).createRoom();
+		assertEquals(TileType.DOOR_LEFT_WALL_CLOSED, room.getTileAt(0, 1));
+	}
+
+	@Test
+	void createRoom_rightWallDoor_usesRightWallDoorTile() {
+		Room room = new RoomTemplate(new String[]{"...", "..D", "..."}).createRoom();
+		assertEquals(TileType.DOOR_RIGHT_WALL_CLOSED, room.getTileAt(2, 1));
+	}
+
+	@Test
+	void createRoom_topWallDoor_usesTopDoorTile() {
+		Room room = new RoomTemplate(new String[]{".D.", "...", "..."}).createRoom();
+		assertEquals(TileType.DOOR_TOP_CLOSED, room.getTileAt(1, 2));
+	}
+
+	@Test
+	void createRoom_bottomWallDoor_usesBottomDoorTile() {
+		Room room = new RoomTemplate(new String[]{"...", "...", ".D."}).createRoom();
+		assertEquals(TileType.DOOR_BOTTOM_CLOSED, room.getTileAt(1, 0));
+	}
+
+	@Test
 	void createRoom_unknownCharBecomesFloor() {
 		Room room = new RoomTemplate(new String[]{"X"}).createRoom();
 		assertEquals(TileType.FLOOR, room.getTileAt(0, 0));
@@ -56,9 +79,9 @@ class RoomTemplateTest {
 		Room room = new RoomTemplate(new String[]{"D"}).createRoom();
 		List<SpawnPoint> spawnPoints = room.getSpawnPoints();
 		assertEquals(1, spawnPoints.size());
-		assertEquals(SpawnPoint.Type.DOOR, spawnPoints.get(0).type);
-		assertEquals(0, spawnPoints.get(0).x);
-		assertEquals(0, spawnPoints.get(0).y);
+		assertEquals(SpawnPoint.Type.DOOR, spawnPoints.getFirst().getType());
+		assertEquals(0, spawnPoints.getFirst().getX());
+		assertEquals(0, spawnPoints.getFirst().getY());
 	}
 
 	@Test

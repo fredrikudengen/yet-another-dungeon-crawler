@@ -119,7 +119,7 @@ public class GameOverScreen implements Screen {
 
         layout.setText(statsFont, countStr);
         float countX = (W - layout.width) / 2f;
-        float countY = panelBottom + (panelH * 0.55f);
+        float countY = panelBottom + (panelH * 0.38f);
 
         batch.begin();
         bodyFont.draw(batch, label, labelX, labelY);

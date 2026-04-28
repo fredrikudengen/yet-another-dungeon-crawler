@@ -129,6 +129,20 @@ class GameWorldTest {
     }
 
     @Test
+    void getEnemiesRemainingCount_initiallyZero() {
+        assertEquals(0, world.getEnemiesRemainingCount());
+    }
+
+    @Test
+    void getEnemiesRemainingCount_countsOnlyAliveEnemies() {
+        world.addEntity(makeFastEnemy(100, 100));
+        world.addEntity(makeDeadEnemy(200, 200));
+        world.step(0.016);
+
+        assertEquals(1, world.getEnemiesRemainingCount());
+    }
+
+    @Test
     void getKilledEnemies_initiallyZero() {
         assertEquals(0, world.getKilledEnemies());
     }

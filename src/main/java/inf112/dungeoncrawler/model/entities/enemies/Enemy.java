@@ -2,8 +2,8 @@ package inf112.dungeoncrawler.model.entities.enemies;
 
 import inf112.dungeoncrawler.model.Direction;
 import inf112.dungeoncrawler.model.entities.Entity;
+import inf112.dungeoncrawler.model.entities.Targetable;
 import inf112.dungeoncrawler.model.entities.Movable;
-import inf112.dungeoncrawler.model.entities.Player;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 
@@ -19,44 +19,33 @@ import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
 public abstract class Enemy extends Entity implements Movable {
 
-    private static final float STUN_DURATION     = Player.INVINCIBILITY_DURATION;
+    private static final float STUN_DURATION     = 1.0f;
     private static final float PATH_REFRESH_RATE = 0.5f;
     private static final float WAYPOINT_RADIUS   = TILE_SIZE * 0.6f;
     private static final float DETECTION_RADIUS  = TILE_SIZE * 12f;
 
     private static final int[][] DIRECTIONS = { {1,0}, {-1,0}, {0,1}, {0,-1} };
 
-    private final Player player;
+    private final Targetable target;
 
     private List<int[]> path = new ArrayList<>();
     private float pathTimer  = PATH_REFRESH_RATE;
     private float stunTimer  = 0f;
     private boolean moving   = false;
 
-    public Enemy(float x, float y, Player player) {
+    /**
+     * Abstract base class for all enemy types. Implements BFS pathfinding towards
+     * its target, collision damage, and knockback/stun behaviour.
+     *
+     * @param x      initial x-position in world pixels
+     * @param y      initial y-position in world pixels
+     * @param target the entity this enemy will chase and attack
+     */
+    public Enemy(float x, float y, Targetable target) {
         super(x, y);
-        this.player = player;
+        this.target = target;
         this.width  = TILE_SIZE;
         this.height = TILE_SIZE;
-    }
-
-    @Override
-    public void takeDamage(int damage, float sourceX, float sourceY) {
-        super.takeDamage(damage, sourceX, sourceY);
-        stunTimer = STUN_DURATION;
-    }
-
-    @Override
-    public boolean isMoving() {
-        return moving;
-    }
-
-    @Override
-    public Direction getFacingDirection() {
-        if (Math.abs(velocityX) >= Math.abs(velocityY)) {
-            return (velocityX >= 0) ? Direction.RIGHT : Direction.LEFT;
-        }
-        return (velocityY >= 0) ? Direction.UP : Direction.DOWN;
     }
 
     @Override
@@ -73,19 +62,19 @@ public abstract class Enemy extends Entity implements Movable {
             return;
         }
 
-        if (this.collidesWith(player) && !player.isInvincible()) {
-            applyKnockbackToPlayer();
+        if (this.collidesWith(target) && !target.isInvincible()) {
+            applyKnockbackToTarget();
             stunTimer = STUN_DURATION;
-            this.onCollision(player);
+            this.onCollision((Entity) target);
         }
 
-        float pdx          = player.getX() - x;
-        float pdy          = player.getY() - y;
-        float distToPlayer = (float) Math.sqrt(pdx * pdx + pdy * pdy);
+        float pdx          = target.getX() - x;
+        float pdy          = target.getY() - y;
+        float distToTarget = (float) Math.sqrt(pdx * pdx + pdy * pdy);
 
-        if (!moving && distToPlayer <= DETECTION_RADIUS) {
+        if (!moving && distToTarget <= DETECTION_RADIUS) {
             moving = true;
-        } else if (moving && distToPlayer > DETECTION_RADIUS) {
+        } else if (moving && distToTarget > DETECTION_RADIUS) {
             moving = false;
             path.clear();
         }
@@ -115,8 +104,8 @@ public abstract class Enemy extends Entity implements Movable {
             }
         }
 
-        float targetX = path.isEmpty() ? player.getX() : tileCenterX(path.getFirst());
-        float targetY = path.isEmpty() ? player.getY() : tileCenterY(path.getFirst());
+        float targetX = path.isEmpty() ? target.getX() : tileCenterX(path.getFirst());
+        float targetY = path.isEmpty() ? target.getY() : tileCenterY(path.getFirst());
 
         float dx       = targetX - x;
         float dy       = targetY - y;
@@ -134,38 +123,37 @@ public abstract class Enemy extends Entity implements Movable {
     }
 
     @Override
+    public void takeDamage(int damage, float sourceX, float sourceY) {
+        super.takeDamage(damage, sourceX, sourceY);
+        stunTimer = STUN_DURATION;
+    }
+
+    @Override
     public void onCollision(Entity entity) {
         entity.takeDamage(this.damage, this.x, this.y);
     }
 
-    private void applyKnockbackToPlayer() {
-        float dx   = player.getX() - x;
-        float dy   = player.getY() - y;
+    private void applyKnockbackToTarget() {
+        float dx   = target.getX() - x;
+        float dy   = target.getY() - y;
         float dist = (float) Math.sqrt(dx * dx + dy * dy);
         if (dist > 0) {
-            player.applyKnockback(
-                    (dx / dist) * player.getKnockBackForce(),
-                    (dy / dist) * player.getKnockBackForce());
+            target.applyKnockback(
+                    (dx / dist) * target.getKnockBackForce(),
+                    (dy / dist) * target.getKnockBackForce());
         }
     }
-
-    private static long tileKey(int x, int y) {
-        return ((long) x << 32) | (y & 0xFFFFFFFFL);
-    }
-
-    private static float tileCenterX(int[] tile) { return tile[0] * TILE_SIZE + TILE_SIZE / 2f; }
-    private static float tileCenterY(int[] tile) { return tile[1] * TILE_SIZE + TILE_SIZE / 2f; }
 
     private List<int[]> bfsPath(Room room) {
         int startX = (int) (x / TILE_SIZE);
         int startY = (int) (y / TILE_SIZE);
-        int goalX  = (int) (player.getX() / TILE_SIZE);
-        int goalY  = (int) (player.getY() / TILE_SIZE);
+        int goalX  = (int) (target.getX() / TILE_SIZE);
+        int goalY  = (int) (target.getY() / TILE_SIZE);
 
         if (startX == goalX && startY == goalY) return new ArrayList<>();
 
-        Queue<int[]>         open     = new LinkedList<>();
-        Map<Long, Long>      cameFrom = new HashMap<>();
+        Queue<int[]>    open     = new LinkedList<>();
+        Map<Long, Long> cameFrom = new HashMap<>();
         long startKey = tileKey(startX, startY);
         long goalKey  = tileKey(goalX, goalY);
 
@@ -210,6 +198,24 @@ public abstract class Enemy extends Entity implements Movable {
         return result;
     }
 
+    private static long tileKey(int x, int y) {
+        return ((long) x << 32) | (y & 0xFFFFFFFFL);
+    }
+
+    private static float tileCenterX(int[] tile) { return tile[0] * TILE_SIZE + TILE_SIZE / 2f; }
+    private static float tileCenterY(int[] tile) { return tile[1] * TILE_SIZE + TILE_SIZE / 2f; }
+
     @Override
     public abstract String getBaseTexturePath();
+
+    @Override
+    public boolean isMoving() { return moving; }
+
+    @Override
+    public Direction getFacingDirection() {
+        if (Math.abs(velocityX) >= Math.abs(velocityY)) {
+            return (velocityX >= 0) ? Direction.RIGHT : Direction.LEFT;
+        }
+        return (velocityY >= 0) ? Direction.UP : Direction.DOWN;
+    }
 }
