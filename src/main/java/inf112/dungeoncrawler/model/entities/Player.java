@@ -13,12 +13,13 @@ import java.util.Set;
 
 import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 
-public class Player extends Entity implements Movable, Controllable {
+public class Player extends Entity implements Movable, Controllable, Targetable {
 
     public static final float ATTACK_DURATION        = 0.2f;
     public static final float INVINCIBILITY_DURATION = 1.0f;
     private static final float ATTACK_REACH          = TILE_SIZE * 1.25f;
     private static final float ATTACK_SWEEP_PADDING  = TILE_SIZE * 0.25f;
+    private static final float FRAME_DURATION        = 0.15f;
 
     private boolean movingLeft, movingRight, movingUp, movingDown;
     private final Attack attack;
@@ -32,13 +33,6 @@ public class Player extends Entity implements Movable, Controllable {
 
     private final SoundService sound;
 
-    /**
-     * Player object which the user controls.
-     *
-     * @param x pixel value
-     * @param y pixel value
-     * @param sound injection used to play sound
-     */
     public Player(float x, float y, SoundService sound) {
         super(x, y);
         this.height         = TILE_SIZE;
@@ -104,7 +98,16 @@ public class Player extends Entity implements Movable, Controllable {
         return "player/weapon/Player_walk_weapon_";
     }
 
+    @Override
+    public float getFrameDuration() {
+        return FRAME_DURATION;
+    }
+
+    @Override
     public boolean isInvincible() { return isInvincible; }
+
+    @Override
+    public float getKnockBackForce() { return knockBackForce; }
 
     private void updateFacingDirection() {
         if      (movingLeft)  facingDirection = Direction.LEFT;
@@ -125,34 +128,34 @@ public class Player extends Entity implements Movable, Controllable {
     }
 
     private boolean isEnemyInAttackRange(Entity entity) {
-        float hitboxX = x;
-        float hitboxY = y;
-        float hitboxWidth = width;
+        float hitboxX      = x;
+        float hitboxY      = y;
+        float hitboxWidth  = width;
         float hitboxHeight = height;
 
         switch (facingDirection) {
             case LEFT -> {
-                hitboxX = x - ATTACK_REACH;
-                hitboxY = y - ATTACK_SWEEP_PADDING;
-                hitboxWidth = ATTACK_REACH;
+                hitboxX      = x - ATTACK_REACH;
+                hitboxY      = y - ATTACK_SWEEP_PADDING;
+                hitboxWidth  = ATTACK_REACH;
                 hitboxHeight = height + ATTACK_SWEEP_PADDING * 2f;
             }
             case RIGHT -> {
-                hitboxX = x + width;
-                hitboxY = y - ATTACK_SWEEP_PADDING;
-                hitboxWidth = ATTACK_REACH;
+                hitboxX      = x + width;
+                hitboxY      = y - ATTACK_SWEEP_PADDING;
+                hitboxWidth  = ATTACK_REACH;
                 hitboxHeight = height + ATTACK_SWEEP_PADDING * 2f;
             }
             case UP -> {
-                hitboxX = x - ATTACK_SWEEP_PADDING;
-                hitboxY = y + height;
-                hitboxWidth = width + ATTACK_SWEEP_PADDING * 2f;
+                hitboxX      = x - ATTACK_SWEEP_PADDING;
+                hitboxY      = y + height;
+                hitboxWidth  = width + ATTACK_SWEEP_PADDING * 2f;
                 hitboxHeight = ATTACK_REACH;
             }
             case DOWN -> {
-                hitboxX = x - ATTACK_SWEEP_PADDING;
-                hitboxY = y - ATTACK_REACH;
-                hitboxWidth = width + ATTACK_SWEEP_PADDING * 2f;
+                hitboxX      = x - ATTACK_SWEEP_PADDING;
+                hitboxY      = y - ATTACK_REACH;
+                hitboxWidth  = width + ATTACK_SWEEP_PADDING * 2f;
                 hitboxHeight = ATTACK_REACH;
             }
         }
@@ -182,31 +185,21 @@ public class Player extends Entity implements Movable, Controllable {
         }
     }
 
-    @Override
-    public boolean isAttacking() { return isAttacking; }
+    @Override public boolean isAttacking()   { return isAttacking; }
 
     @Override
     public int getAttackFrame() {
         return (attackTimer < ATTACK_DURATION / 2f) ? 1 : 2;
     }
 
-    public float getKnockBackForce() { return knockBackForce; }
-
-    @Override
-    public boolean isMoving() {
+    @Override public boolean isMoving() {
         return movingLeft || movingRight || movingUp || movingDown;
     }
 
-    @Override
-    public Direction getFacingDirection() { return facingDirection; }
+    @Override public Direction getFacingDirection() { return facingDirection; }
 
     @Override public void setMovingLeft(boolean moving)  { movingLeft  = moving; }
     @Override public void setMovingRight(boolean moving) { movingRight = moving; }
     @Override public void setMovingUp(boolean moving)    { movingUp    = moving; }
     @Override public void setMovingDown(boolean moving)  { movingDown  = moving; }
-
-    @Override
-    public boolean collidesWith(Collidable other) {
-        return super.collidesWith(other);
-    }
 }

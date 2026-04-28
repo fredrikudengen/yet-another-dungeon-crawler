@@ -26,4 +26,6 @@ public interface Movable {
      * @return
      */
     default int getAttackFrame()   { return 1; }
+
+    default float getFrameDuration() { return 0.18f; }
 }

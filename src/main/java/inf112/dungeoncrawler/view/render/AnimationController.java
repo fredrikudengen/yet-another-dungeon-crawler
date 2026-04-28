@@ -3,14 +3,10 @@ package inf112.dungeoncrawler.view.render;
 import inf112.dungeoncrawler.model.Direction;
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.Movable;
-import inf112.dungeoncrawler.model.entities.powerups.Powerup;
 
 import java.util.WeakHashMap;
 
 public class AnimationController {
-
-    private static final float PLAYER_FRAME_DURATION = 0.15f;
-    private static final float ENEMY_FRAME_DURATION  = 0.18f;
 
     private static class WalkState {
         float timer = 0f;
@@ -20,8 +16,8 @@ public class AnimationController {
     private final WeakHashMap<Entity, WalkState> states = new WeakHashMap<>();
 
     public String getTextureName(float deltaTime, Entity entity) {
-        if (entity instanceof Powerup powerup) {
-            return powerup.isPickedUp() ? null : entity.getBaseTexturePath();
+        if (!entity.isVisible()) {
+            return null;
         }
 
         if (!(entity instanceof Movable movable)) {
@@ -38,14 +34,11 @@ public class AnimationController {
 
     private String getWalkTexture(float deltaTime, Entity entity, Movable movable) {
         WalkState state = states.computeIfAbsent(entity, e -> new WalkState());
-        float frameDuration = (entity.getClass().getSimpleName().equals("Player"))
-                ? PLAYER_FRAME_DURATION
-                : ENEMY_FRAME_DURATION;
 
         if (movable.isMoving()) {
             state.timer += deltaTime;
-            if (state.timer >= frameDuration) {
-                state.timer -= frameDuration;
+            if (state.timer >= movable.getFrameDuration()) {
+                state.timer -= movable.getFrameDuration();
                 state.frame  = (state.frame == 1) ? 2 : 1;
             }
         } else {
@@ -54,7 +47,6 @@ public class AnimationController {
         }
 
         String dir = directionToString(movable.getFacingDirection());
-
         return entity.getBaseTexturePath() + dir + state.frame + ".png";
     }
 
