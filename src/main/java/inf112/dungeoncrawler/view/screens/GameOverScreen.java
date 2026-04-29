@@ -19,13 +19,14 @@ import java.util.Objects;
 
 public class GameOverScreen implements Screen {
 
-    private static final Color GOLD     = Color.valueOf("F4BB44");
-    private static final Color DIVIDER  = new Color(0.55f, 0.34f, 0.12f, 1f);
+    private static final Color GOLD = Color.valueOf("F4BB44");
+    private static final Color DIVIDER = new Color(0.55f, 0.34f, 0.12f, 1f);
     private static final Color TEXT_DIM = new Color(0.70f, 0.60f, 0.50f, 1f);
 
     private final Game game;
     private final SoundService sound;
     private final int killedEnemies;
+    private final int roomsCleared; // Add this line
 
     private SpriteBatch batch;
     private ShapeRenderer shapes;
@@ -36,15 +37,16 @@ public class GameOverScreen implements Screen {
     private BitmapFont hintFont;
     private GlyphLayout layout;
 
-    public GameOverScreen(Game game, SoundService sound, int killedEnemies) {
-        this.game          = Objects.requireNonNull(game,  "game must not be null");
-        this.sound         = Objects.requireNonNull(sound, "sound must not be null");
+    public GameOverScreen(Game game, SoundService sound, int killedEnemies, int roomsCleared) {
+        this.game = Objects.requireNonNull(game, "game must not be null");
+        this.sound = Objects.requireNonNull(sound, "sound must not be null");
         this.killedEnemies = killedEnemies;
+        this.roomsCleared = roomsCleared;
     }
 
     @Override
     public void show() {
-        batch  = new SpriteBatch();
+        batch = new SpriteBatch();
         shapes = new ShapeRenderer();
         layout = new GlyphLayout();
         camera = new OrthographicCamera();
@@ -53,10 +55,18 @@ public class GameOverScreen implements Screen {
         FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter p = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-        p.size = 110; titleFont = gen.generateFont(p); titleFont.setColor(GOLD);
-        p.size = 55;  statsFont = gen.generateFont(p); statsFont.setColor(GOLD);
-        p.size = 30;  bodyFont  = gen.generateFont(p); bodyFont.setColor(TEXT_DIM);
-        p.size = 24;  hintFont  = gen.generateFont(p); hintFont.setColor(TEXT_DIM);
+        p.size = 110;
+        titleFont = gen.generateFont(p);
+        titleFont.setColor(GOLD);
+        p.size = 55;
+        statsFont = gen.generateFont(p);
+        statsFont.setColor(GOLD);
+        p.size = 30;
+        bodyFont = gen.generateFont(p);
+        bodyFont.setColor(TEXT_DIM);
+        p.size = 24;
+        hintFont = gen.generateFont(p);
+        hintFont.setColor(TEXT_DIM);
 
         gen.dispose();
     }
@@ -106,24 +116,33 @@ public class GameOverScreen implements Screen {
     }
 
     private void drawStats(float W, float H) {
-        float panelTop    = H * 0.70f - 10f;
+        float panelTop = H * 0.70f - 10f;
         float panelBottom = H * 0.44f + 10f;
-        float panelH      = panelTop - panelBottom;
+        float panelH = panelTop - panelBottom;
 
-        String label    = "ENEMIES SLAIN";
-        String countStr = String.valueOf(killedEnemies);
-
-        layout.setText(bodyFont, label);
-        float labelX = (W - layout.width) / 2f;
+        // Left stat: Enemies Slain
+        String label1 = "ENEMIES SLAIN";
+        String countStr1 = String.valueOf(killedEnemies);
+        layout.setText(bodyFont, label1);
+        float label1X = (W * 0.25f - layout.width) / 2f;
         float labelY = panelTop - (panelH * 0.28f);
-
-        layout.setText(statsFont, countStr);
-        float countX = (W - layout.width) / 2f;
+        layout.setText(statsFont, countStr1);
+        float count1X = (W * 0.25f - layout.width) / 2f;
         float countY = panelBottom + (panelH * 0.38f);
 
+        // Right stat: Rooms Cleared
+        String label2 = "ROOMS CLEARED";
+        String countStr2 = String.valueOf(roomsCleared);
+        layout.setText(bodyFont, label2);
+        float label2X = (W * 0.75f - layout.width) / 2f;
+        layout.setText(statsFont, countStr2);
+        float count2X = (W * 0.75f - layout.width) / 2f;
+
         batch.begin();
-        bodyFont.draw(batch, label, labelX, labelY);
-        statsFont.draw(batch, countStr, countX, countY);
+        bodyFont.draw(batch, label1, label1X, labelY);
+        statsFont.draw(batch, countStr1, count1X, countY);
+        bodyFont.draw(batch, label2, label2X, labelY);
+        statsFont.draw(batch, countStr2, count2X, countY);
         batch.end();
     }
 
@@ -140,9 +159,17 @@ public class GameOverScreen implements Screen {
         camera.setToOrtho(false, width, height);
     }
 
-    @Override public void pause()  {}
-    @Override public void resume() {}
-    @Override public void hide()   {}
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
 
     @Override
     public void dispose() {

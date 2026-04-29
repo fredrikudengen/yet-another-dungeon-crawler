@@ -52,15 +52,16 @@ public class GameScreen implements Screen {
     private boolean isPaused = false;
     private float doorTransitionCooldown = 0f;
     private int totalEnemiesKilled = 0;
+    private int roomsCleared = 0;
 
     public GameScreen(Game game, GameWorld gameWorld, SoundService sound) {
         this(game, gameWorld, sound, ROOM_3_PATH);
     }
 
     public GameScreen(Game game, GameWorld gameWorld, SoundService sound, String currentRoomPath) {
-        this.game      = Objects.requireNonNull(game,      "game must not be null");
+        this.game = Objects.requireNonNull(game, "game must not be null");
         this.gameWorld = Objects.requireNonNull(gameWorld, "gameWorld must not be null");
-        this.sound     = Objects.requireNonNull(sound,     "sound must not be null");
+        this.sound = Objects.requireNonNull(sound, "sound must not be null");
         this.currentRoomPath = Objects.requireNonNull(currentRoomPath, "currentRoomPath must not be null");
     }
 
@@ -171,7 +172,7 @@ public class GameScreen implements Screen {
     }
 
     private boolean rectanglesIntersect(float ax, float ay, float aw, float ah,
-                                        float bx, float by, float bw, float bh) {
+            float bx, float by, float bw, float bh) {
         return ax < bx + bw
                 && ax + aw > bx
                 && ay < by + bh
@@ -180,6 +181,7 @@ public class GameScreen implements Screen {
 
     private void transitionToRoom(TransitionSpec transition) {
         totalEnemiesKilled += gameWorld.getKilledEnemies();
+        roomsCleared++;
 
         Room targetRoom = new RoomLoader(transition.targetRoomPath).createRoom();
         float[] entryPosition = findEntryPosition(targetRoom, transition.targetEntrySide);
@@ -194,10 +196,10 @@ public class GameScreen implements Screen {
         if (doorSpawnPoint == null) {
             for (SpawnPoint spawnPoint : room.getSpawnPoints()) {
                 if (spawnPoint.getType() == SpawnPoint.Type.PLAYER) {
-                    return new float[]{spawnPoint.getX(), spawnPoint.getY()};
+                    return new float[] { spawnPoint.getX(), spawnPoint.getY() };
                 }
             }
-            return new float[]{TILE_SIZE, TILE_SIZE};
+            return new float[] { TILE_SIZE, TILE_SIZE };
         }
 
         int doorTileX = doorSpawnPoint.getX() / TILE_SIZE;
@@ -215,7 +217,7 @@ public class GameScreen implements Screen {
 
         spawnTileX = Math.clamp(spawnTileX, 0, room.getWidth() - 1);
         spawnTileY = Math.clamp(spawnTileY, 0, room.getHeight() - 1);
-        return new float[]{spawnTileX * TILE_SIZE, spawnTileY * TILE_SIZE};
+        return new float[] { spawnTileX * TILE_SIZE, spawnTileY * TILE_SIZE };
     }
 
     private SpawnPoint findDoorSpawnPoint(Room room, DoorSide side) {
@@ -291,7 +293,8 @@ public class GameScreen implements Screen {
     private void checkGameOver() {
         if (gameWorld.getPlayer().getHealth() <= 0) {
             int totalKilledEnemies = totalEnemiesKilled + gameWorld.getKilledEnemies();
-            game.setScreen(new GameOverScreen(game, sound, totalKilledEnemies));
+
+            game.setScreen(new GameOverScreen(game, sound, totalKilledEnemies, roomsCleared));
         }
     }
 
@@ -301,10 +304,12 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void pause() { /* managed by render-loop via ESCAPE */ }
+    public void pause() {
+        /* managed by render-loop via ESCAPE */ }
 
     @Override
-    public void resume() { /* managed by render-loop via ESCAPE */ }
+    public void resume() {
+        /* managed by render-loop via ESCAPE */ }
 
     @Override
     public void hide() {
