@@ -116,33 +116,28 @@ public class GameOverScreen implements Screen {
     }
 
     private void drawStats(float W, float H) {
-        float panelTop = H * 0.70f - 10f;
-        float panelBottom = H * 0.44f + 10f;
-        float panelH = panelTop - panelBottom;
+        float centerX = W / 2f;
+        float centerY = H * 0.55f;
 
-        // Left stat: Enemies Slain
-        String label1 = "ENEMIES SLAIN";
-        String countStr1 = String.valueOf(killedEnemies);
-        layout.setText(bodyFont, label1);
-        float label1X = (W * 0.25f - layout.width) / 2f;
-        float labelY = panelTop - (panelH * 0.28f);
-        layout.setText(statsFont, countStr1);
-        float count1X = (W * 0.25f - layout.width) / 2f;
-        float countY = panelBottom + (panelH * 0.38f);
+        float spacing = 50f;
 
-        // Right stat: Rooms Cleared
-        String label2 = "ROOMS CLEARED";
-        String countStr2 = String.valueOf(roomsCleared);
-        layout.setText(bodyFont, label2);
-        float label2X = (W * 0.75f - layout.width) / 2f;
-        layout.setText(statsFont, countStr2);
-        float count2X = (W * 0.75f - layout.width) / 2f;
+        String enemiesText = "ENEMIES SLAIN: " + killedEnemies;
+        String roomsText = "ROOMS CLEARED: " + roomsCleared;
 
         batch.begin();
-        bodyFont.draw(batch, label1, label1X, labelY);
-        statsFont.draw(batch, countStr1, count1X, countY);
-        bodyFont.draw(batch, label2, label2X, labelY);
-        statsFont.draw(batch, countStr2, count2X, countY);
+
+        // Enemies
+        layout.setText(statsFont, enemiesText);
+        float enemiesX = centerX - layout.width / 2f;
+        float enemiesY = centerY + spacing;
+        statsFont.draw(batch, enemiesText, enemiesX, enemiesY);
+
+        // Rooms
+        layout.setText(statsFont, roomsText);
+        float roomsX = centerX - layout.width / 2f;
+        float roomsY = centerY - spacing;
+        statsFont.draw(batch, roomsText, roomsX, roomsY);
+
         batch.end();
     }
 
