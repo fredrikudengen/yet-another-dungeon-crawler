@@ -48,6 +48,7 @@ public abstract class Enemy extends Entity implements Movable {
         this.height = TILE_SIZE;
     }
 
+    // TODO: kanskje refaktorisere denne? Flytte noe logikk ut i hjelpemetoder?
     @Override
     public void step(GameWorld world, double deltaTime) {
         Room room = world.getRoom();
@@ -144,6 +145,8 @@ public abstract class Enemy extends Entity implements Movable {
         }
     }
 
+
+    // this method (bfsPath()) was adapted using Claude Sonnet 4.6
     private List<int[]> bfsPath(Room room) {
         int startX = (int) (x / TILE_SIZE);
         int startY = (int) (y / TILE_SIZE);
@@ -186,6 +189,7 @@ public abstract class Enemy extends Entity implements Movable {
         return new ArrayList<>();
     }
 
+    // this method (reconstructPath()) was adapted using Claude Sonnet 4.6
     private List<int[]> reconstructPath(Map<Long, Long> cameFrom,
                                         long startKey, long goalKey) {
         List<int[]> result = new ArrayList<>();

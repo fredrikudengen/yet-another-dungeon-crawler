@@ -21,17 +21,6 @@ class TileTypeTest {
         assertEquals("tiles/wall3.png", TileType.WALL.getTextureName());
     }
 
-    // TODO: add tests when door textures are added
-//    @Test
-//    void doorClosed_hasCorrectTextureName() {
-//        assertEquals("tiles/door_closed.png", TileType.DOOR_CLOSED.getTextureName());
-//    }
-//
-//    @Test
-//    void doorOpen_hasCorrectTextureName() {
-//        assertEquals("tiles/door_open.png", TileType.DOOR_OPEN.getTextureName());
-//    }
-
     @Test
     void empty_blocksMovement() {
         assertTrue(TileType.EMPTY.blocksMovement());
