@@ -25,15 +25,18 @@ godkjente, og eventuelt løste konflikter som dukket opp.
 
 Rollene i gruppen har i stor grad fungert etter hensikt. Rollene har ført til en god flyt i arbeidet og en klar inndeling 
 av ansvar. Samtidig har vi erfart at gitmaster-rollen til tider kunne bli en flaskehals dersom flere merge requests 
-kommer samtidig. De øvrige rollene har i praksis vært noe flytende, da alle også har jobbet som utviklere. Dette har 
+kommer samtidig. I tillegg kunne vi ha etablert retningslinjer for git-praksis tidligere, som for eksempel å ha konsistente commits-meldinger og holde til samme språk. 
+De øvrige rollene har i praksis vært noe flytende, da alle også har jobbet som utviklere. Dette har 
 fungert bra for fremdriften og vist verdien av tydelig kommunikasjon.
+
+
 
 ### Ytterlige forbedringer
 
 - For å styrke samarbeidet enda mer kunne vi ha hatt en egen Kanban/Trello-ansvarlig. Denne rollen kunne hatt en konkret 
 oversikt over hvem som gjorde hva til hvilke tider og hvordan utviklingen henger sammen. De kunne videreført denne 
 informasjonen til gitmaster, slik at hele produksjons-pipelinen ble mer sammenhengende. 
-- Vi hadde sammen roller gjennom hele prosjektet. For å forbedre forståelsen av hva de ulike rollene innebærer, og for 
+- Vi hadde samme roller gjennom hele prosjektet. For å forbedre forståelsen av hva de ulike rollene innebærer, og for 
 læringens skyld, kunne vi rotert på rollene innad i gruppen.
 
 ## 2. Konsept
@@ -72,10 +75,22 @@ Krever Java 25 eller nyere
 
 ## 4. Teamprosess og samarbeid
 
-Vi har brukt Kanban som arbeidsmetodikk, med Trello for å holde oversikt over oppgaver. Vi prøvde også parprogrammering 
-og test-driven (?) programmering. Arbeidet ble organisert i ukentlige møter hvor vi oppdaterte hverandre på progresjonen, 
+Vi har brukt Kanban som arbeidsmetodikk, med Trello for å holde oversikt over oppgaver. Vi prøvde også parprogrammering.
+Da Leila og Njål skulle parprogrammere på romlogikk, diskuterte de hvordan de kunne gå frem. Leila skrev en kjapp pseudokode utifra funksjonene Njål ville implementere. Deretter så Njål gjennom og bygget det videre ved å skrive det til kode. Slik itererte de prosessen og byttet på rollene. 
+Gjennom dette fikk begge dannet en god forståelse av koden, lært å jobbe med andres kode, og foreslå forbedringer og implementasjoner til en annen person. 
+Ulempen med denne prosessen var at det var tidskrevende, skapte mer rom for misforståelse, og mindre indiviudell kodefrihet.
+
+
+og test-driven (?) programmering. ELABORATE
+
+Arbeidet ble organisert i ukentlige møter hvor vi oppdaterte hverandre på progresjonen, 
 evaluerte hva vi hadde gjort og planla nye oppgaver og fordelte disse. Utenom disse møtene så har kommunikasjonen 
 foregått via Messenger. Her kunne vi avklare raskt hvis man lurte på noe, eller komme med oppdateringer.
+I tillegg har vi alle erfart at LLM-modeller har vært nyttige verktøy for å debugge og kvalitetssikre i henhold til SOLID. 
+Likevel har vi opplevd at noen av forslagene ikke er fornuftige og/eller følger prinsippene for god kodestil. 
+
+
+
 
 ### Git og utviklingsflyt
 
@@ -87,12 +102,13 @@ Vi jobbet med:
 - Merge requests som ble håndtert av gitmaster
 
 Dette har gitt god struktur, men git-arbeidsflyten i en gruppe var relativt nytt for alle. Vi opplevde derfor enkelte 
-merge-konflikter hvis noen glemte å pulle før de startet å jobbe (UTDYP HVORDAN LØSTE KONFLIKT). Gjennom denne arbeidsflyten har vi lært verdien av:
+merge-konflikter hvis noen glemte å pulle før de startet å jobbe. For eksempel, da to personer jobbet i samme branch på en større feature, og de endret på samme kodeseksjon så oppsto det en konflikt da de skulle commite. Da har git-masteren prøvd å løse dette ved å "resolve" konfliktene på gitlab, og kommunisere med teamet hvordan konflikten kan ha oppstått slik at det ikke gjentar seg, som for eksempel ved å oppfordre til tydeligere kommunikasjon.
+Samtidig har vi rotert litt på hvem som er git master for at alle skal lære git-flyten. Samtidig har vi rotert litt på hvem som er git master 
+for at alle skal lære git-flyten. Gjennom denne arbeidsflyten har vi lært verdien av:
 - hyppige commits
 - god koordinering av oppgaver
 - samarbeid og parprogrammering
 
-Samtidig har vi rotert litt på hvem som er git master for at alle skal lære git-flyten.
 
 ### Generelt samarbeid
 
@@ -137,7 +153,55 @@ overleve så lenge som mulig og oppnå høyest mulig score.
 
 ## 8. Brukerhistorier med akseptansekriterier
 
-### Eksempel (FJERN ETTER HVERT)
+Brukerhistorie:
+Som spiller vil jeg kunne se karakteren min
+
+Brukerhistorie:
+Som spiller vil jeg kunne bevege karakteren min
+
+Brukerhistorie:
+Som spiller vil jeg kunne se fiender 
+
+Brukerhistorie:
+Som spiller vil jeg kunne bli angrepet av fiender
+
+Brukerhistorie:
+Som spiller vil jeg kunne se forskjell på vegg og gulv
+Disse elementene må derfor ikke være veldig like hverandre, og man bør også ta hensyn til svaksynte og fargeblinde.
+
+
+Brukerhistorie:
+Som spiller vil jeg kunne se forskjell mellom vegg og dør
+
+
+Brukerhistorie:
+Som spiller vil jeg at kameraet skal følge karakteren min, slik at jeg alltid vet hvor jeg befinner meg.
+
+Brukerhistorie:
+Som spiller vil jeg kunne finne power-ups, slik at jeg kan variere angrepene mine.
+
+Brukerhistorie:
+Som spiller vil jeg kunne se hvor mange liv jeg har, slik at jeg kan unngå å dø.
+
+Brukerhistorie:
+Som spiller vil jeg at spillet skal ha lydeffekter når jeg angriper, slik at jeg får bedre tilbakemelding på handlingene mine.
+
+Brukerhistorie:
+Som spiller vil jeg ha bakgrunnsmusikk som passer til stemningen, slik at spillopplevelsen blir mer engasjerende.
+
+Brukerhistorie:
+Som spiller vil jeg kunne pause spillet, slik at jeg kan ta pauser uten å miste progresjon.
+
+Brukerhistorie:
+Som spiller vil jeg at ulike rom skal ha forskjellige utfordringer og fiender, slik at spillet føles variert og ikke blir ensformig.
+
+Brukerhistorie:
+Som utvikler vil jeg at koden skal være modulær og lett å utvide, slik at vi enkelt kan legge til nye funksjoner senere.
+
+Brukerhistorie:
+Som spiller vil jeg ha en angrepsanimasjon, slik at jeg tydelig ser når angrepet mitt treffer.
+
+
 
 Brukerhistorie:
 Som spiller vil jeg at kameraet skal følge karakteren min
@@ -232,3 +296,10 @@ Forbedringstiltak:
 Oppdatere Trello jevnlig
 Bedre koordinering før utvikling
 Planlagte parprogrammeringsøkter
+
+Prioritering videre:
+Utvide funksjonaliteter, for eksempel flere rom, flere power-ups, flere fiender, en boss. 
+Enda mindre avhengigheter på tvers av komponenter 
+Etablere retningslinjer
+Utdele en Kanban-rolle 
+Konkretisere alle rollenes funksjon og ansvar
