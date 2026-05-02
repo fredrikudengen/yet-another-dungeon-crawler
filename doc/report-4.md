@@ -90,8 +90,6 @@ I tillegg har vi alle erfart at LLM-modeller har vært nyttige verktøy for å d
 Likevel har vi opplevd at noen av forslagene ikke er fornuftige og/eller følger prinsippene for god kodestil. 
 
 
-
-
 ### Git og utviklingsflyt
 
 Vi jobbet med:
@@ -146,125 +144,133 @@ Vi har implementert:
 
 MVP-kravene er oppfylt.
 
-## 7. Spesifikasjon (trenger vi dette?)
-
-Vi lager et 2D-spill der spilleren navigerer gjennom rom, unngår fiender og bekjemper dem for å samle poeng. Målet er å 
-overleve så lenge som mulig og oppnå høyest mulig score.
-
 ## 8. Brukerhistorier med akseptansekriterier
 
-Brukerhistorie:
-Som spiller vil jeg kunne se karakteren min
-
-Brukerhistorie:
-Som spiller vil jeg kunne bevege karakteren min
-
-Brukerhistorie:
-Som spiller vil jeg kunne se fiender 
-
-Brukerhistorie:
-Som spiller vil jeg kunne bli angrepet av fiender
-
-Brukerhistorie:
-Som spiller vil jeg kunne se forskjell på vegg og gulv
-Disse elementene må derfor ikke være veldig like hverandre, og man bør også ta hensyn til svaksynte og fargeblinde.
-
-
-Brukerhistorie:
-Som spiller vil jeg kunne se forskjell mellom vegg og dør
-
-
-Brukerhistorie:
-Som spiller vil jeg at kameraet skal følge karakteren min, slik at jeg alltid vet hvor jeg befinner meg.
-
-Brukerhistorie:
-Som spiller vil jeg kunne finne power-ups, slik at jeg kan variere angrepene mine.
-
-Brukerhistorie:
-Som spiller vil jeg kunne se hvor mange liv jeg har, slik at jeg kan unngå å dø.
-
-Brukerhistorie:
-Som spiller vil jeg at spillet skal ha lydeffekter når jeg angriper, slik at jeg får bedre tilbakemelding på handlingene mine.
-
-Brukerhistorie:
-Som spiller vil jeg ha bakgrunnsmusikk som passer til stemningen, slik at spillopplevelsen blir mer engasjerende.
-
-Brukerhistorie:
-Som spiller vil jeg kunne pause spillet, slik at jeg kan ta pauser uten å miste progresjon.
-
-Brukerhistorie:
-Som spiller vil jeg at ulike rom skal ha forskjellige utfordringer og fiender, slik at spillet føles variert og ikke blir ensformig.
-
-Brukerhistorie:
-Som utvikler vil jeg at koden skal være modulær og lett å utvide, slik at vi enkelt kan legge til nye funksjoner senere.
-
-Brukerhistorie:
-Som spiller vil jeg ha en angrepsanimasjon, slik at jeg tydelig ser når angrepet mitt treffer.
-
-
-
-Brukerhistorie:
-Som spiller vil jeg at kameraet skal følge karakteren min
-
-Akseptansekriterier:
-- Spilleren er alltid synlig
-- Kamera følger i alle retninger
-- Bevegelsen er jevn
-
-Arbeidsoppgaver:
-- Implementere kamera klasse i koden
-- Koble kameraposisjon til spillerens posisjon
-- Oppdatere kamera i gameloop
-- Osv..
-
-Eksempel på en brukerhistorie som kan splittes opp:
-Som spiller vil jeg ha lydeffekter, dette kan deles opp i:
-- Som spiller vil jeg høre lyd når jeg angriper
-- Som spiller vil jeg høre lyd når jeg tar skade
-- Som spiller vil jeg ha bakgrunnsmusikk
-
-### Som spiller vil jeg at kameraet skal følge karakteren min
+### Brukerhistorie:
+Som spiller vil jeg kunne bevege karakteren min i alle retninger, slik at jeg kan utforske rommene og unngå fiender.
 
 #### Akseptansekriterier:
-- Kamera følger spilleren i alle retninger
-- Spilleren er alltid synlig
-- Verden scroller jevnt
-- Power-ups
+- Spilleren beveger seg opp, ned, venstre og høyre med WASD eller piltaster
+- Spilleren stopper når ingen taster er trykket
+- Spilleren kan ikke gå gjennom vegger
+- Animasjonen viser riktig retning spilleren beveger seg
 
-#### Implementasjon:
-- vi må bruke Camera fra libGDX og oppdatere dette etter controller-input (idk?)
+#### Arbeidsoppgaver:
+- Lag Controllable-interfacet med metodene setMovingLeft/Right/Up/Down()
+- Implementer bevegelseslogikk i Player.step() som setter velocityX/Y basert på retning
+- Implementer moveWithCollision() i Entity for å sjekke mot Room.isBlocked()
+- Lag PlayerInputHandler (controller) som leser Gdx.input og kaller Controllable-metodene
+- Koble AnimationController til Movable.getFacingDirection() for riktig sprite
 
-### Som spiller vil jeg kunne finne power-ups
-
-#### Akseptansekriterier:
-- Power-ups finnes i verden
-- Spilleren kan plukke dem opp
-- De påvirker spilleren (fart/skade)
-
-#### Implementasjon:
-- vi må opprette en Powerup klasse og underklasser for de spesifikke powerupene
-- powerupene må interagere med spilleren via collision detection
-
-### Som spiller vil jeg kunne se hvor mange liv jeg har
+### Brukerhistorie:
+Som spiller vil jeg kunne angripe fiender med et sverdangrep, slik at jeg kan bekjempe dem og komme videre i spillet.
 
 #### Akseptansekriterier:
-- Spilleren har liv representert med hjerter 
-- UI oppdateres ved skade 
-- Game over ved 0 liv 
+- Angrep utløses med piltastene
+- Angrepet har en visuell animasjon med riktig retning
+- Angrepet treffer fiender innenfor rekkevidde
+- Det er en cooldown mellom angrep slik at man ikke kan spamme
+- Lyden SWORD_SWING spilles av ved angrep
 
-#### Implementasjon
-- vi må lage en UI klasse som tegner oppå spill-skjermen
-- UI-en må lese hvor mange liv spilleren har og oppdatere seg
+#### Arbeidsoppgaver:
+- Lag Attack-klassen med cooldown, canUse() og use()
+- Implementer isEnemyInAttackRange() i Player med retningsbasert hitbox
+- Implementer checkAttackHits() som itererer over world.getEntities()
+- Legg til angrepsanimasjon i AnimationController.getTextureName() via isAttacking() og getAttackFrame()
+- Spill av SoundEffect.SWORD_SWING via SoundService i performAttack()
 
-### Som spiller vil jeg ha lydeffekter
+### Brukerhistorie:
+Som spiller vil jeg at fiender skal jage meg og angripe meg ved berøring, slik at spillet byr på utfordringer.
 
 #### Akseptansekriterier:
-- Lyd ved angrep
-- Lyd ved skade
-- Bakgrunnsmusikk spilles
+- Fiender begynner å bevege seg mot spilleren innenfor en viss radius
+- Fiender navigerer rundt vegger
+- Fienden skader spilleren ved kollisjon
+- Fienden blir stunnet etter å ha skadet spilleren
 
-#### Implementasjon 
-- vi må lage Sound-arkitetur slik at .ogg filer spilles av når en hendelse skjer
+#### Arbeidsoppgaver:
+- Implementer BFS-pathfinding i Enemy.bfsPath() som finner rute rundt vegger
+- Implementer bevegelse langs beregnet sti i Enemy.step()
+- Implementer DETECTION_RADIUS-sjekk for å starte/stoppe forflytning
+- Implementer kollisjonsskade med onCollision() og STUN_DURATION
+- Lag underklassene FastEnemy, NormalEnemy, SlowEnemy med ulike stats
+
+### Brukerhistorie:
+Som spiller vil jeg at karakteren min skal ta skade og kunne dø, slik at spillet gir en reell utfordring.
+
+#### Akseptansekriterier:
+- Spilleren mister liv ved kontakt med fiender
+- Spilleren er midlertidig usynkrbar etter å ha tatt skade (invincibility frames)
+- Lyd spilles av når spilleren tar skade
+- Spillet viser game over-skjerm når spilleren når 0 liv
+
+#### Arbeidsoppgaver:
+- Override takeDamage() i Player med isInvincible-sjekk og timer
+- Spill av SoundEffect.DAMAGE_TAKEN via SoundService i takeDamage()
+- Implementer helsereduksjon og isAlive = false i Entity.takeDamage()
+- Sjekk player.getHealth() <= 0 i GameScreen.checkGameOver() og bytt til GameOverScreen
+
+### Brukerhistorie:
+Som spiller vil jeg kunne plukke opp power-ups som midlertidig forbedrer fart, angrep eller helse, slik at jeg kan tilpasse spillestilen min.
+
+#### Akseptansekriterier:
+- Power-ups er synlige i verden
+- Power-up plukkes opp ved kollisjon med spilleren
+- Fart- og angreps-powerups reverseres automatisk etter 10 sekunder
+- Lyd spilles av ved pickup
+- Power-ups forsvinner etter de er plukket opp
+
+#### Arbeidsoppgaver:
+- Lag abstrakt Powerup-klasse med pickedUp, isVisible() og step()
+- Implementer SpeedPowerup, AttackPowerup, HealthPowerup som underklasser
+- Implementer tidsbasert reversering med speedTimer/attackTimer i de to tidsbaserte powerupene
+- Spill av SoundEffect.POWERUP_PICKUP i Powerup.step() via SoundService
+- Registrer powerup-typer i EntityFactory via GameWorldBuilder.spawnEntities()
+
+### Brukerhistorie:
+Som spiller vil jeg at dørene i rommet skal åpne seg når alle fiender er bekjempet, slik at jeg kan gå videre til neste rom.
+
+#### Akseptansekriterier:
+- Dørene er lukket når rommet har fiender
+- Dørene åpner automatisk når siste fiende dør
+- Spilleren kan gå gjennom en åpen dør for å bytte rom
+- Spillerens helse og stats beholdes mellom rom
+
+#### Arbeidsoppgaver:
+- Implementer hasEnemiesRemaining() i GameWorld med stream-sjekk
+- Kall world.openDoors() → room.openDoors() fra GameScreen.update() når ingen fiender gjenstår
+- Implementer TileType.toOpenVariant() og iterasjon over tiles i Room.openDoors()
+- Implementer rombytte i GameScreen.handleDoorTransition() med TransitionSpec
+- Bruk GameWorldBuilder.buildWithPlayer() for å gjenbruke spillerobjektet i nytt rom
+
+### Brukerhistorie:
+- Som spiller vil jeg se helse og antall gjenværende fiender på skjermen, slik at jeg kan ta informerte beslutninger.
+
+#### Akseptansekriterier:
+- Hjerter vises i øvre venstre hjørne og oppdateres ved skade
+- Antall gjenværende fiender vises på skjermen
+- HUD-elementer er alltid synlige uavhengig av kameraposisjon
+
+#### Arbeidsoppgaver:
+- Lag UIRenderer med eget ortografisk projeksjonsmatrise (ikke påvirket av kamera)
+- Implementer renderPlayerHealth() som tegner health antall hjerter
+- Implementer renderEnemiesRemaining() med BitmapFont
+- Kall begge fra GameView.render() etter verden og entiteter er tegnet
+
+### Brukerhistorie:
+Som spiller vil jeg møte en forside når jeg starter spillet og ha tilgang til en hjelpeskjerm, slik at jeg vet hvordan jeg spiller.
+
+#### Akseptansekriterier:
+- Forsiden viser spillets navn og en meny med Start, Help og Exit
+- Hjelpeskjermen viser alle tastebindinger
+- Man kan navigere menyen med piltaster og Enter
+- ESC returnerer til forsiden fra hjelpeskjermen
+
+#### Arbeidsoppgaver:
+- Lag TitleScreen som implementerer libGDX Screen med meny og animasjoner
+- Lag HelpScreen med tabell over kontroller (BINDS-arrayet)
+- Implementer handleInput() i begge klasser for tastaturnavigasjon
+- Koble MenuOption.START til å opprette GameScreen med GameWorldBuilder
 
 ## 9. Kjente bugs og begrensninger
 Spilleren kan miste flere liv ved kontakt med flere fiender i samme frame.

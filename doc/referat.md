@@ -27,8 +27,7 @@
 
 ### Verktøy
 - Trello for oppgaveoversikt
-- Git for versjonskontroll
-- IntelliJ som IDE
+- Messenger for kommunikasjon
 
 ### Til neste møte
 - Sette seg inn i Git og libGDX
@@ -64,7 +63,7 @@
 - Planene måtte justeres raskt
 
 ### Status
-- **Fredrik:** Spillerbevegelse påbegynt
+- **Fredrik og Njål:** Spillerbevegelse
 - **Guang:** Sprites
 - **Kim:** Romdesign og UI
 - **Leila:** Rapport
