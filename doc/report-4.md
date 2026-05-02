@@ -100,19 +100,19 @@ Vi jobbet med:
 - Merge requests som ble håndtert av gitmaster
 
 Dette har gitt god struktur, men git-arbeidsflyten i en gruppe var relativt nytt for alle. Vi opplevde derfor enkelte 
-merge-konflikter hvis noen glemte å pulle før de startet å jobbe. For eksempel, da to personer jobbet i samme branch på en større feature, og de endret på samme kodeseksjon så oppsto det en konflikt da de skulle commite. Da har git-masteren prøvd å løse dette ved å "resolve" konfliktene på gitlab, og kommunisere med teamet hvordan konflikten kan ha oppstått slik at det ikke gjentar seg, som for eksempel ved å oppfordre til tydeligere kommunikasjon.
-Samtidig har vi rotert litt på hvem som er git master for at alle skal lære git-flyten. Samtidig har vi rotert litt på hvem som er git master 
-for at alle skal lære git-flyten. Gjennom denne arbeidsflyten har vi lært verdien av:
+merge-konflikter hvis noen glemte å pulle før de startet å jobbe. For eksempel, da to personer jobbet i samme branch på en større feature, og de endret på samme kodeseksjon så oppsto det en konflikt da de skulle commite. Da har git-masteren prøvd å løse dette ved å "resolve" konfliktene på gitlab, og kommunisere med teamet hvordan konflikten kan ha oppstått slik at det ikke gjentar seg, som for eksempel ved å oppfordre til å huske å oppdatere koden ved å "git pull" oftere eller si ifra hvilken kodeseksjon en jobber med.
+Samtidig har vi rotert litt på hvem som er git master for at alle skal lære git-flyten. Gjennom denne arbeidsflyten har vi lært verdien av:
 - hyppige commits
 - god koordinering av oppgaver
 - samarbeid og parprogrammering
+- tydeligere kommunikasjon
 
 
 ### Generelt samarbeid
 
 Samarbeidet i gruppen har fungert godt. Vi har vært åpne for å stille spørsmål og hjelpe hverandre. Parprogrammering og 
 møter har blitt brukt ved mer komplekse oppgaver, noe som har:
-- forbedret kodekvaliteten
+- forbedret kodekvaliteten og kommunikasjonsevner 
 - bidratt til økt felles forståelse av koden og oppgaven
 
 
@@ -146,131 +146,111 @@ MVP-kravene er oppfylt.
 
 ## 8. Brukerhistorier med akseptansekriterier
 
-### Brukerhistorie:
+### Brukerhistorie
 Som spiller vil jeg kunne bevege karakteren min i alle retninger, slik at jeg kan utforske rommene og unngå fiender.
 
-#### Akseptansekriterier:
+#### Akseptansekriterier
 - Spilleren beveger seg opp, ned, venstre og høyre med WASD eller piltaster
 - Spilleren stopper når ingen taster er trykket
 - Spilleren kan ikke gå gjennom vegger
 - Animasjonen viser riktig retning spilleren beveger seg
 
-#### Arbeidsoppgaver:
-- Lag Controllable-interfacet med metodene setMovingLeft/Right/Up/Down()
-- Implementer bevegelseslogikk i Player.step() som setter velocityX/Y basert på retning
-- Implementer moveWithCollision() i Entity for å sjekke mot Room.isBlocked()
-- Lag PlayerInputHandler (controller) som leser Gdx.input og kaller Controllable-metodene
-- Koble AnimationController til Movable.getFacingDirection() for riktig sprite
+#### Arbeidsoppgave
+Implementere bevegelseskontroller med kollisjonssjekk og retningsbaserte animasjoner.
 
-### Brukerhistorie:
+
+### Brukerhistorie
 Som spiller vil jeg kunne angripe fiender med et sverdangrep, slik at jeg kan bekjempe dem og komme videre i spillet.
 
-#### Akseptansekriterier:
+#### Akseptansekriterier
 - Angrep utløses med piltastene
 - Angrepet har en visuell animasjon med riktig retning
 - Angrepet treffer fiender innenfor rekkevidde
 - Det er en cooldown mellom angrep slik at man ikke kan spamme
-- Lyden SWORD_SWING spilles av ved angrep
+- Lyd spilles av ved angrep
 
-#### Arbeidsoppgaver:
-- Lag Attack-klassen med cooldown, canUse() og use()
-- Implementer isEnemyInAttackRange() i Player med retningsbasert hitbox
-- Implementer checkAttackHits() som itererer over world.getEntities()
-- Legg til angrepsanimasjon i AnimationController.getTextureName() via isAttacking() og getAttackFrame()
-- Spill av SoundEffect.SWORD_SWING via SoundService i performAttack()
+#### Arbeidsoppgave
+Implementere en angrepsmekanisme med retningsbasert hitbox, cooldown og tilhørende lyd- og animasjonseffekter.
 
-### Brukerhistorie:
+
+### Brukerhistorie
 Som spiller vil jeg at fiender skal jage meg og angripe meg ved berøring, slik at spillet byr på utfordringer.
 
-#### Akseptansekriterier:
+#### Akseptansekriterier
 - Fiender begynner å bevege seg mot spilleren innenfor en viss radius
 - Fiender navigerer rundt vegger
 - Fienden skader spilleren ved kollisjon
 - Fienden blir stunnet etter å ha skadet spilleren
 
-#### Arbeidsoppgaver:
-- Implementer BFS-pathfinding i Enemy.bfsPath() som finner rute rundt vegger
-- Implementer bevegelse langs beregnet sti i Enemy.step()
-- Implementer DETECTION_RADIUS-sjekk for å starte/stoppe forflytning
-- Implementer kollisjonsskade med onCollision() og STUN_DURATION
-- Lag underklassene FastEnemy, NormalEnemy, SlowEnemy med ulike stats
+#### Arbeidsoppgave
+Implementere AI-styrt bevegelse med pathfinding, deteksjonsradius og kollisjonsbasert skade.
 
-### Brukerhistorie:
+
+### Brukerhistorie
 Som spiller vil jeg at karakteren min skal ta skade og kunne dø, slik at spillet gir en reell utfordring.
 
-#### Akseptansekriterier:
+#### Akseptansekriterier
 - Spilleren mister liv ved kontakt med fiender
-- Spilleren er midlertidig usynkrbar etter å ha tatt skade (invincibility frames)
+- Spilleren er midlertidig usårbar etter å ha tatt skade (invincibility frames)
 - Lyd spilles av når spilleren tar skade
 - Spillet viser game over-skjerm når spilleren når 0 liv
 
-#### Arbeidsoppgaver:
-- Override takeDamage() i Player med isInvincible-sjekk og timer
-- Spill av SoundEffect.DAMAGE_TAKEN via SoundService i takeDamage()
-- Implementer helsereduksjon og isAlive = false i Entity.takeDamage()
-- Sjekk player.getHealth() <= 0 i GameScreen.checkGameOver() og bytt til GameOverScreen
+#### Arbeidsoppgave
+Implementere helsesystem med invincibility frames, lydeffekter og overgang til game over-skjerm ved død.
 
-### Brukerhistorie:
+
+### Brukerhistorie
 Som spiller vil jeg kunne plukke opp power-ups som midlertidig forbedrer fart, angrep eller helse, slik at jeg kan tilpasse spillestilen min.
 
-#### Akseptansekriterier:
+#### Akseptansekriterier
 - Power-ups er synlige i verden
 - Power-up plukkes opp ved kollisjon med spilleren
 - Fart- og angreps-powerups reverseres automatisk etter 10 sekunder
 - Lyd spilles av ved pickup
 - Power-ups forsvinner etter de er plukket opp
 
-#### Arbeidsoppgaver:
-- Lag abstrakt Powerup-klasse med pickedUp, isVisible() og step()
-- Implementer SpeedPowerup, AttackPowerup, HealthPowerup som underklasser
-- Implementer tidsbasert reversering med speedTimer/attackTimer i de to tidsbaserte powerupene
-- Spill av SoundEffect.POWERUP_PICKUP i Powerup.step() via SoundService
-- Registrer powerup-typer i EntityFactory via GameWorldBuilder.spawnEntities()
+#### Arbeidsoppgave
+Implementere ulike power-ups med tidsbasert effekt, pickup-logikk og lyd- og visuell feedback.
 
-### Brukerhistorie:
+
+### Brukerhistorie
 Som spiller vil jeg at dørene i rommet skal åpne seg når alle fiender er bekjempet, slik at jeg kan gå videre til neste rom.
 
-#### Akseptansekriterier:
+#### Akseptansekriterier
 - Dørene er lukket når rommet har fiender
 - Dørene åpner automatisk når siste fiende dør
 - Spilleren kan gå gjennom en åpen dør for å bytte rom
 - Spillerens helse og stats beholdes mellom rom
 
-#### Arbeidsoppgaver:
-- Implementer hasEnemiesRemaining() i GameWorld med stream-sjekk
-- Kall world.openDoors() → room.openDoors() fra GameScreen.update() når ingen fiender gjenstår
-- Implementer TileType.toOpenVariant() og iterasjon over tiles i Room.openDoors()
-- Implementer rombytte i GameScreen.handleDoorTransition() med TransitionSpec
-- Bruk GameWorldBuilder.buildWithPlayer() for å gjenbruke spillerobjektet i nytt rom
+#### Arbeidsoppgave
+Implementere dørlogikk som åpner seg når rommet er ryddet, og rombytte som bevarer spillerens tilstand.
 
-### Brukerhistorie:
-- Som spiller vil jeg se helse og antall gjenværende fiender på skjermen, slik at jeg kan ta informerte beslutninger.
 
-#### Akseptansekriterier:
+
+### Brukerhistorie
+Som spiller vil jeg se helse og antall gjenværende fiender på skjermen, slik at jeg kan ta informerte beslutninger.
+
+#### Akseptansekriterier
 - Hjerter vises i øvre venstre hjørne og oppdateres ved skade
 - Antall gjenværende fiender vises på skjermen
 - HUD-elementer er alltid synlige uavhengig av kameraposisjon
 
-#### Arbeidsoppgaver:
-- Lag UIRenderer med eget ortografisk projeksjonsmatrise (ikke påvirket av kamera)
-- Implementer renderPlayerHealth() som tegner health antall hjerter
-- Implementer renderEnemiesRemaining() med BitmapFont
-- Kall begge fra GameView.render() etter verden og entiteter er tegnet
+#### Arbeidsoppgave
+Implementere et HUD som viser spillerens helse og antall gjenværende fiender uavhengig av kameraet.
 
-### Brukerhistorie:
+
+
+### Brukerhistorie
 Som spiller vil jeg møte en forside når jeg starter spillet og ha tilgang til en hjelpeskjerm, slik at jeg vet hvordan jeg spiller.
 
-#### Akseptansekriterier:
+#### Akseptansekriterier
 - Forsiden viser spillets navn og en meny med Start, Help og Exit
 - Hjelpeskjermen viser alle tastebindinger
 - Man kan navigere menyen med piltaster og Enter
 - ESC returnerer til forsiden fra hjelpeskjermen
 
-#### Arbeidsoppgaver:
-- Lag TitleScreen som implementerer libGDX Screen med meny og animasjoner
-- Lag HelpScreen med tabell over kontroller (BINDS-arrayet)
-- Implementer handleInput() i begge klasser for tastaturnavigasjon
-- Koble MenuOption.START til å opprette GameScreen med GameWorldBuilder
+#### Arbeidsoppgave
+Implementere tittelskjerm og hjelpeskjerm med menynavigasjon og tastebindingsoversikt.
 
 ## 9. Kjente bugs og begrensninger
 Spilleren kan miste flere liv ved kontakt med flere fiender i samme frame.
@@ -281,31 +261,26 @@ Koden er delt opp i standard MVC komponenter, i tillegg til sound som en egen ko
 komponent godt adskilt fra andre ved å redusere avhengigheter på tvers av komponentene. Model inneholder alle entiteter 
 og in-game logikk. View inneholder alt av grafikk og rendering. Controller har som eneste oppgave å lese input fra
 brukeren og sende det videre. Dette har gjort det mulig å utvikle funksjonalitet parallelt og man kan dele inn i en klar
-frontend, og backend del.
+frontend og backend del.
 
 ========== SE PÅ DETTE UNDER ===================
 ## 12. Retrospektiv
 
-Vi har i stor grad nådd målene for MVP og fått på plass sentral funksjonalitet som bevegelse, kamp, lyd og UI. Dette 
-viser at planleggingen har vært realistisk og overkommelig. Kanban og Trello har gitt god oversikt, men kunne vært brukt 
-mer aktivt. Git har fungert bra, men krever bedre koordinering og rutiner for presise navn. Samarbeidet i gruppen har 
-vært godt, og parprogrammering har hatt positiv effekt der det er brukt. I tillegg har gruppechatten vært effektiv for å 
-videreutvikle spillet mellom møtene. Vi har etablert et solid grunnlag for videre utvikling, og tar med oss erfaringene 
-videre for å forbedre både struktur og arbeidsflyt.
+Vi har i stor grad nådd målene for MVP og fått på plass sentral funksjonalitet som bevegelse, kamp, lyd og brukergrensesnitt. Dette tyder på at planleggingen har vært realistisk og gjennomførbar. Kanban og Trello har gitt god oversikt, men kunne vært brukt mer aktivt og systematisk. Git har fungert godt i samarbeid, men vi ser at det er behov for bedre koordinering og tydeligere rutiner, særlig når det gjelder navngivning. Samarbeidet i gruppen har vært bra, og parprogrammering har hatt en positiv effekt der det har blitt brukt. Gruppechatten har også vært nyttig for å holde fremdriften oppe mellom møtene. Alt i alt har vi etablert et godt grunnlag for videre utvikling, og tar med oss erfaringene videre for å forbedre struktur og arbeidsflyt.
 
 Hva fungerte mindre bra:
-Trello ikke alltid oppdatert
-Noe overlapp i arbeid
-Lite systematisk parprogrammering
+- Trello ikke alltid oppdatert
+- Noe overlapp i arbeid
+- Lite systematisk parprogrammering
 
 Forbedringstiltak:
-Oppdatere Trello jevnlig
-Bedre koordinering før utvikling
-Planlagte parprogrammeringsøkter
+- Oppdatere Trello jevnlig
+- Bedre koordinering før utvikling
+- Planlagte parprogrammeringsøkter
 
 Prioritering videre:
-Utvide funksjonaliteter, for eksempel flere rom, flere power-ups, flere fiender, en boss. 
-Enda mindre avhengigheter på tvers av komponenter 
-Etablere retningslinjer
-Utdele en Kanban-rolle 
-Konkretisere alle rollenes funksjon og ansvar
+- Utvide funksjonaliteter, for eksempel flere rom, flere power-ups, flere fiender, en boss. 
+- Enda mindre avhengigheter på tvers av komponenter 
+- Etablere retningslinjer
+- Utdele en Kanban-rolle 
+- Konkretisere alle rollenes funksjon og ansvar
