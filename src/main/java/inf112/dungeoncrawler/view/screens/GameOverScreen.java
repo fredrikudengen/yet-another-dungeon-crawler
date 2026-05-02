@@ -117,7 +117,7 @@ public class GameOverScreen implements Screen {
 
     private void drawStats(float W, float H) {
         float centerX = W / 2f;
-        float centerY = H * 0.55f;
+        float centerY = H * 0.59f;
 
         float spacing = 50f;
 
@@ -142,7 +142,7 @@ public class GameOverScreen implements Screen {
     }
 
     private void drawFooter(float W) {
-        String hint = "Press  ESC  to return to title";
+        String hint = "Press ESC to return to main menu";
         layout.setText(hintFont, hint);
         batch.begin();
         hintFont.draw(batch, hint, (W - layout.width) / 2f, 100f);
