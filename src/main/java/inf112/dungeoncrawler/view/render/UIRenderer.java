@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 
+/**
+ * Renders the HUD-display overlay, including the player's
+ * health as heart icons and the number of enemies remaining as text.
+ */
 public class UIRenderer extends Renderer {
 
 	private final Texture heartTexture;

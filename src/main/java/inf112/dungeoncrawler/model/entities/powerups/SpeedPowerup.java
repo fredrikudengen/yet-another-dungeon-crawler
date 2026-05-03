@@ -4,6 +4,10 @@ import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.sound.SoundService;
 
+/**
+ * A timed pickup that increases the player's movement speed for ten seconds,
+ * then restores it to its original value before removing itself from the world.
+ */
 public class SpeedPowerup extends Powerup {
 
     private double speedTimer;

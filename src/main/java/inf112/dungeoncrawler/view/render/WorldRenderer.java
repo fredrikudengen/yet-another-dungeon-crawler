@@ -13,6 +13,10 @@ import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Renders the tile grid of a Room using a texture per TileType.
+ * Textures are loaded once on construction and reused each frame.
+ */
 public class WorldRenderer extends Renderer {
     private final Map<TileType, Texture> tileTextures = new HashMap<>();
 

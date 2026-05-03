@@ -169,9 +169,9 @@ Leila skrev rapport til presentasjon og testfiler
 
 ---
 
-## Arbeidsperiode - mars
-
-**Periode:** Hele mars
+## Arbeidsøkt - mars
+**Deltakere:** Kim la til lyder og bakgrunnsmusikk, Njål la til angrep- og skade-funksjonalitet, Leila og Fredrik 
+fokuserte på testing og refaktorering, Guang implementerte sprite-rendering
 
 ### Fokus
 - Ferdigstille kjernefunksjonalitet: angrep, skade, livssystem
@@ -205,11 +205,11 @@ Leila skrev rapport til presentasjon og testfiler
 - Håndtering av merge-konflikt
 
 ### Statusoppdatering - testing
-| Komponent     | Dekning | Ansvar     |
-|---------------|------|------------|
-| Model         | ca. 90% |            |
-| Controller    | 100% |            |
-| Dør/romlogikk | Mangler | Guang, Kim |
+| Komponent     | Dekning | Ansvar        |
+|---------------|------|---------------|
+| Model         | ca. 90% | Fredrik, Njål |
+| Controller    | 100% | Leila         |
+| Dør/romlogikk | Mangler | Guang, Kim    |
 
 ### Hendelser
 - Merge-konflikt mellom test-branch og dev - løst i fellesskap
@@ -242,7 +242,7 @@ Møte etter samtale med gruppeleder/veileder.
 - Legge til mer refleksjon i rapporten
 - Tydeliggjøre sammenheng mellom krav, implementasjon og prosess
 - Leila hovedansvar for PowerPoint
--
+
 ### Arbeidsoppgaver frem mot innlevering
 - Gå gjennom krav i henhold til prosjektet
 - Finpusse tekniske detaljer (attack-range, variabel-navn)

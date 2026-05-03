@@ -76,6 +76,7 @@ class GameWorldBuilderTest {
 
         GameWorld world = new GameWorldBuilder(room, NO_SOUND).build();
 
+        // this code-section was adapted using Claude Sonnet 4.6
         long enemyCount = world.getEntities().stream()
                 .filter(e -> e instanceof Enemy)
                 .count();
@@ -107,6 +108,7 @@ class GameWorldBuilderTest {
 
         GameWorld world = assertDoesNotThrow(() -> new GameWorldBuilder(room, NO_SOUND).build());
 
+        // this code-section was adapted using Claude Sonnet 4.6
         long nonPlayerEntities = world.getEntities().stream()
                 .filter(entity -> entity != world.getPlayer())
                 .count();

@@ -6,6 +6,12 @@ import inf112.dungeoncrawler.model.entities.Movable;
 
 import java.util.WeakHashMap;
 
+/**
+ * Determines the correct texture filename for an entity each frame,
+ * based on movement state, facing direction, and attack animation.
+ * Walk-cycle state is tracked per entity using a WeakHashMap
+ * so entries are garbage-collected when entities are removed.
+ */
 public class AnimationController {
 
     private static class WalkState {

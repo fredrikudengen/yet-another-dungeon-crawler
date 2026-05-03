@@ -10,6 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Renders all Entity instances each frame.
+ * Textures are loaded on demand and cached for reuse.
+ * Delegates animation frame selection to AnimationController.
+ */
 public class EntityRenderer extends Renderer {
 
     private final Map<String, Texture> textureCache = new HashMap<>();

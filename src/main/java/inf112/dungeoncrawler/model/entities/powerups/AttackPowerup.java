@@ -4,6 +4,11 @@ import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.sound.SoundService;
 
+/**
+ * A timed pickup that increases the player's attack damage by three for ten
+ * seconds, then restores it to its original value before removing itself
+ * from the world.
+ */
 public class AttackPowerup extends Powerup {
 
     private double attackTimer;
@@ -39,10 +44,10 @@ public class AttackPowerup extends Powerup {
 
     @Override
     public void onCollision(Entity entity) {
-        entity.setDamage((int) (entity.getDamage() + 3));
+        entity.setDamage(entity.getDamage() + 3);
     }
 
     private void endPowerup(Entity entity) {
-        entity.setDamage((int) (entity.getDamage() - 3));
+        entity.setDamage(entity.getDamage() - 3);
     }
 }

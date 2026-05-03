@@ -4,6 +4,10 @@ import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.sound.SoundService;
 
+/**
+ * A one-time pickup that immediately increases the player's health by one.
+ * Removed from the world as soon as it is collected.
+ */
 public class HealthPowerup extends Powerup {
 
     public HealthPowerup(float x, float y, SoundService sound) {

@@ -2,6 +2,10 @@ package inf112.dungeoncrawler.model.entities.enemies;
 
 import inf112.dungeoncrawler.model.entities.Player;
 
+/**
+ * A balanced enemy type with moderate speed, health, and damage.
+ * Intended as the standard threat the player will encounter most often.
+ */
 public class NormalEnemy extends Enemy {
 
     public NormalEnemy(float x, float y, Player player) {
