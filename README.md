@@ -19,4 +19,5 @@ Spilleren kjemper gjennom ulike rom med fiender og powerups. Målet er å komme 
 Se resources/sourceList.txt
 
 ## Hvordan kjøre
-*oppdateres når ferdig*
+mvn package
+java -jar target/dungeoncrawler-1.26-SNAPSHOT-fat.jar

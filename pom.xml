@@ -26,12 +26,6 @@
 			<version>${libgdx.version}</version>
 		</dependency>
 		<dependency>
-			<!--libGDX graphics library – https://libgdx.com/ -->
-			<groupId>com.badlogicgames.gdx</groupId>
-			<artifactId>gdx-freetype</artifactId>
-			<version>${libgdx.version}</version>
-		</dependency>
-		<dependency>
 			<!-- Platform-specific libraries -->
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx-freetype-platform</artifactId>

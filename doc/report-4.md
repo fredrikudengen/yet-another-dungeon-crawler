@@ -68,8 +68,7 @@ mvn package
 
 Kjøres med:
 
-java -jar target/skeleton-1.0-SNAPSHOT-fat.jar
-====================== LAG JAR FIL FØR VI LEVERER =======================
+java -jar target/dungeoncrawler-1.26-SNAPSHOT-fat.jar
 
 Krever Java 25 eller nyere
 
