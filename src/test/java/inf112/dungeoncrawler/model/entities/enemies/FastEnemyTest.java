@@ -11,10 +11,10 @@ public class FastEnemyTest {
 
 	private static final SoundService NO_SOUND = new SoundService() {
 		@Override
-		public void play(SoundEffect effect) { /* ingenting */ }
+		public void play(SoundEffect effect) { /* test */ }
 
 		@Override
-		public void dispose() { /* ingenting */ }
+		public void dispose() { /* test */ }
 	};
 
 	@Test

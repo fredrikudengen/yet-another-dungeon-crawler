@@ -12,10 +12,10 @@ class CollidableTest {
 
     private static final SoundService NO_SOUND = new SoundService() {
         @Override
-        public void play(SoundEffect effect) { /* ingenting */ }
+        public void play(SoundEffect effect) { /* test */ }
 
         @Override
-        public void dispose() { /* ingenting */ }
+        public void dispose() { /* test */ }
     };
 
     private Player player;
@@ -28,18 +28,18 @@ class CollidableTest {
     }
 
     @Test
-    void collidesWith_samePosition_returnsTrue() {
+    void collidesWithSamePositionReturnsTrue() {
         assertTrue(player.collidesWith(normalEnemy));
     }
 
     @Test
-    void collidesWith_farAway_returnsFalse() {
+    void collidesWithFarAwayReturnsFalse() {
         normalEnemy.setPosition(500, 500);
         assertFalse(player.collidesWith(normalEnemy));
     }
 
     @Test
-    void collidesWith_exactEdge_returnsFalse() {
+    void collidesWithEdgeReturnsFalse() {
         normalEnemy.setPosition(
                 player.getX() + player.getWidth(),
                 player.getY() + player.getHeight());
@@ -47,13 +47,13 @@ class CollidableTest {
     }
 
     @Test
-    void collidesWith_partialOverlapX_returnsTrue() {
+    void collidesWithPartialOverlapXReturnsTrue() {
         normalEnemy.setPosition(player.getX() + player.getWidth() - 1, player.getY());
         assertTrue(player.collidesWith(normalEnemy));
     }
 
     @Test
-    void collidesWith_partialOverlapY_returnsTrue() {
+    void collidesWithPartialOverlapYReturnsTrue() {
         normalEnemy.setPosition(player.getX(), player.getY() + player.getHeight() - 1);
         assertTrue(player.collidesWith(normalEnemy));
     }

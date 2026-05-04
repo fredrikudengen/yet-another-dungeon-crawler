@@ -6,27 +6,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MovableTest {
+    Movable notMovable;
+    Movable movingMovable;
 
-    @Test
-    void testIsMoving() {
-        Movable movable = new Movable() {
-            @Override
-            public boolean isMoving() {
-                return true;
-            }
-
-            @Override
-            public Direction getFacingDirection() {
-                return Direction.UP;
-            }
-        };
-
-        assertTrue(movable.isMoving());
-    }
-
-    @Test
-    void testGetFacingDirection() {
-        Movable movable = new Movable() {
+    private void makeNotMovingMovable() {
+        notMovable = new Movable() {
             @Override
             public boolean isMoving() {
                 return false;
@@ -37,41 +21,50 @@ class MovableTest {
                 return Direction.DOWN;
             }
         };
+    }
 
-        assertEquals(Direction.DOWN, movable.getFacingDirection());
+    private void makeMovingMovable() {
+        movingMovable = new Movable() {
+            @Override
+            public boolean isMoving() {
+                return true;
+            }
+
+            @Override
+            public Direction getFacingDirection() {
+                return Direction.DOWN;
+            }
+        };
+
+
+    }
+    @Test
+    void testIsMoving() {
+        makeMovingMovable();
+        assertTrue(movingMovable.isMoving());
+    }
+
+    @Test
+    void testIsNotMoving() {
+        makeNotMovingMovable();
+        assertFalse(notMovable.isMoving());
+    }
+
+    @Test
+    void testGetFacingDirection() {
+        makeMovingMovable();
+        assertEquals(Direction.DOWN, movingMovable.getFacingDirection());
     }
 
     @Test
     void testIsAttacking() {
-        Movable movable = new Movable() {
-            @Override
-            public boolean isMoving() {
-                return false;
-            }
-
-            @Override
-            public Direction getFacingDirection() {
-                return Direction.UP;
-            }
-        };
-
-        assertFalse(movable.isAttacking());
+        makeMovingMovable();
+        assertFalse(movingMovable.isAttacking());
     }
 
     @Test
     void testGetAttackFrame() {
-        Movable movable = new Movable() {
-            @Override
-            public boolean isMoving() {
-                return false;
-            }
-
-            @Override
-            public Direction getFacingDirection() {
-                return Direction.UP;
-            }
-        };
-
-        assertEquals(1, movable.getAttackFrame());
+        makeMovingMovable();
+        assertEquals(1, movingMovable.getAttackFrame());
     }
 }

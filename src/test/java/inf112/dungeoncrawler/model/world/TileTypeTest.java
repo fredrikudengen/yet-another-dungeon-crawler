@@ -7,47 +7,47 @@ import static org.junit.jupiter.api.Assertions.*;
 class TileTypeTest {
 
     @Test
-    void empty_hasCorrectTextureName() {
+    void emptyHasCorrectTextureName() {
         assertEquals("tiles/empty.png", TileType.EMPTY.getTextureName());
     }
 
     @Test
-    void floor_hasCorrectTextureName() {
+    void floorHasCorrectTextureName() {
         assertEquals("tiles/wall2.png", TileType.FLOOR.getTextureName());
     }
 
     @Test
-    void wall_hasCorrectTextureName() {
+    void wallHasCorrectTextureName() {
         assertEquals("tiles/wall3.png", TileType.WALL.getTextureName());
     }
 
     @Test
-    void empty_blocksMovement() {
+    void emptyBlocksMovement() {
         assertTrue(TileType.EMPTY.blocksMovement());
     }
 
     @Test
-    void floor_doesNotBlockMovement() {
+    void floorDoesNotBlockMovement() {
         assertFalse(TileType.FLOOR.blocksMovement());
     }
 
     @Test
-    void wall_blocksMovement() {
+    void wallBlocksMovement() {
         assertTrue(TileType.WALL.blocksMovement());
     }
 
     @Test
-    void doorClosed_blocksMovement() {
+    void doorClosedBlocksMovement() {
         assertTrue(TileType.DOOR_CLOSED.blocksMovement());
     }
 
     @Test
-    void doorOpen_doesNotBlockMovement() {
+    void doorOpenDoesNotBlockMovement() {
         assertFalse(TileType.DOOR_OPEN.blocksMovement());
     }
 
     @Test
-    void allTileTypes_haveNonNullTextureName() {
+    void allTileTypesHaveNonNullTextureName() {
         for (TileType type : TileType.values()) {
             assertNotNull(type.getTextureName(), type + " has null texture name");
         }

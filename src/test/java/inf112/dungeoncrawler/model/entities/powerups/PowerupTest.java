@@ -2,13 +2,8 @@ package inf112.dungeoncrawler.model.entities.powerups;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
-import inf112.dungeoncrawler.model.entities.Player;
-import inf112.dungeoncrawler.model.world.GameWorld;
-import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.sound.SoundEffect;
-import inf112.dungeoncrawler.sound.SoundPlayer;
 import inf112.dungeoncrawler.sound.SoundService;
 import org.junit.jupiter.api.Test;
 
@@ -16,10 +11,10 @@ public class PowerupTest {
 
 	private static final SoundService NO_SOUND = new SoundService() {
 		@Override
-		public void play(SoundEffect effect) { /* ingenting */ }
+		public void play(SoundEffect effect) { /* test */ }
 
 		@Override
-		public void dispose() { /* ingenting */ }
+		public void dispose() { /* test */ }
 	};
 
 	private static class TestPowerup extends Powerup {

@@ -14,10 +14,10 @@ public class HealthPowerupTest {
 
 	private static final SoundService NO_SOUND = new SoundService() {
 		@Override
-		public void play(SoundEffect effect) { /* ingenting */ }
+		public void play(SoundEffect effect) { /* test */ }
 
 		@Override
-		public void dispose() { /* ingenting */ }
+		public void dispose() { /* test */ }
 	};
 
 	@Test
@@ -28,7 +28,7 @@ public class HealthPowerupTest {
 	}
 
 	@Test
-	void onCollisionIncreasesHealthAndMarksPowerupDead() {
+	void onCollisionIncreaseHealthAndPowerupDead() {
 		Player player = new Player(100, 100, NO_SOUND);
 		HealthPowerup powerup = new HealthPowerup(100, 100, NO_SOUND);
 		int initialHealth = player.getHealth();

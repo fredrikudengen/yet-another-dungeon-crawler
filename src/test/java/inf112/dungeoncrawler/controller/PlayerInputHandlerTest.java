@@ -128,6 +128,7 @@ public class PlayerInputHandlerTest {
 
     @Test
     void constructor_nullPlayer_throwsNullPointerException() {
+        // this code was adapted using Claude Sonnet 4.6
         assertThrows(NullPointerException.class, () -> new PlayerInputHandler(null));
     }
 }

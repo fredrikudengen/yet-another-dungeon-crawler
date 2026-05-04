@@ -18,10 +18,10 @@ class GameWorldTest {
 
     private static final SoundService NO_SOUND = new SoundService() {
         @Override
-        public void play(SoundEffect effect) { /* ingenting */ }
+        public void play(SoundEffect effect) { /* test */ }
 
         @Override
-        public void dispose() { /* ingenting */ }
+        public void dispose() { /* test */ }
     };
 
     private Room room;
@@ -36,36 +36,36 @@ class GameWorldTest {
     }
 
     @Test
-    void getRoom_returnsConstructorRoom() {
+    void getRoomReturnsConstructorRoom() {
         assertSame(room, world.getRoom());
     }
 
     @Test
-    void getPlayer_returnsConstructorPlayer() {
+    void getPlayerReturnsConstructorPlayer() {
         assertSame(player, world.getPlayer());
     }
 
     @Test
-    void newWorld_hasNoEntities() {
+    void newWorldHasNoEntities() {
         assertTrue(world.getEntities().isEmpty());
     }
 
     @Test
-    void addEntity_appearsInList() {
+    void addEntityAppearsInList() {
         Entity enemy = makeFastEnemy(100, 100);
         world.addEntity(enemy);
         assertTrue(world.getEntities().contains(enemy));
     }
 
     @Test
-    void addMultipleEntities_allStored() {
+    void addMultipleEntitiesAllStored() {
         world.addEntity(makeFastEnemy(100, 100));
         world.addEntity(makeFastEnemy(200, 200));
         assertEquals(2, world.getEntities().size());
     }
 
     @Test
-    void step_removesDeadEntity() {
+    void stepRemovesDeadEntity() {
         Entity dead = makeDeadEnemy(100, 100);
         world.addEntity(dead);
         world.step(0.016);
@@ -73,7 +73,7 @@ class GameWorldTest {
     }
 
     @Test
-    void step_keepsAliveEntity() {
+    void stepKeepsAliveEntity() {
         Entity alive = makeFastEnemy(100, 100);
         world.addEntity(alive);
         world.step(0.016);
@@ -81,7 +81,7 @@ class GameWorldTest {
     }
 
     @Test
-    void step_onlyRemovesDeadEntities() {
+    void stepOnlyRemovesDeadEntities() {
         Entity alive = makeFastEnemy(100, 100);
         Entity dead  = makeDeadEnemy(200, 200);
         world.addEntity(alive);
@@ -95,7 +95,7 @@ class GameWorldTest {
     }
 
     @Test
-    void step_removesPowerupCollidingWithPlayer() {
+    void stepRemovesPowerupCollidingWithPlayer() {
         HealthPowerup powerup = makePowerup(player.getX(), player.getY());
         world.addEntity(powerup);
         world.step(1);
@@ -103,7 +103,7 @@ class GameWorldTest {
     }
 
     @Test
-    void step_keepsPowerupNotCollidingWithPlayer() {
+    void stepKeepsPowerupNotCollidingWithPlayer() {
         Powerup powerup = makePowerup(0, 0);
         world.addEntity(powerup);
         world.step(0.016);
@@ -111,30 +111,30 @@ class GameWorldTest {
     }
 
     @Test
-    void hasEnemiesRemaining_noEnemies_returnsFalse() {
+    void hasEnemiesRemainingNoEnemiesReturnsFalse() {
         assertFalse(world.hasEnemiesRemaining());
     }
 
     @Test
-    void hasEnemiesRemaining_withAliveEnemy_returnsTrue() {
+    void hasEnemiesRemainingWithAliveEnemyReturnsTrue() {
         world.addEntity(makeFastEnemy(100, 100));
         assertTrue(world.hasEnemiesRemaining());
     }
 
     @Test
-    void hasEnemiesRemaining_afterEnemyDies_returnsFalse() {
+    void hasEnemiesRemainingAfterEnemyDiesReturnsFalse() {
         world.addEntity(makeDeadEnemy(100, 100));
         world.step(0.016);
         assertFalse(world.hasEnemiesRemaining());
     }
 
     @Test
-    void getEnemiesRemainingCount_initiallyZero() {
+    void getEnemiesRemainingCountInitiallyZero() {
         assertEquals(0, world.getEnemiesRemainingCount());
     }
 
     @Test
-    void getEnemiesRemainingCount_countsOnlyAliveEnemies() {
+    void getEnemiesRemainingCountCountsOnlyAliveEnemies() {
         world.addEntity(makeFastEnemy(100, 100));
         world.addEntity(makeDeadEnemy(200, 200));
         world.step(0.016);
@@ -143,19 +143,19 @@ class GameWorldTest {
     }
 
     @Test
-    void getKilledEnemies_initiallyZero() {
+    void getKilledEnemiesInitiallyZero() {
         assertEquals(0, world.getKilledEnemies());
     }
 
     @Test
-    void getKilledEnemies_incrementsWhenEnemyRemoved() {
+    void getKilledEnemiesIncrementsWhenEnemyRemoved() {
         world.addEntity(makeDeadEnemy(100, 100));
         world.step(0.016);
         assertEquals(1, world.getKilledEnemies());
     }
 
     @Test
-    void getKilledEnemies_doesNotCountPowerups() {
+    void getKilledEnemiesDoesNotCountPowerups() {
         HealthPowerup powerup = makePowerup(player.getX(), player.getY());
         world.addEntity(powerup);
         world.step(1);
@@ -163,7 +163,7 @@ class GameWorldTest {
     }
 
     @Test
-    void iterator_containsAllEntities() {
+    void iteratorContainsAllEntities() {
         Entity e1 = makeFastEnemy(100, 100);
         Entity e2 = makeFastEnemy(200, 200);
         world.addEntity(e1);
@@ -178,7 +178,7 @@ class GameWorldTest {
     }
 
     @Test
-    void iterator_emptyWorld_hasNoElements() {
+    void iteratorEmptyWorldHasNoElements() {
         assertFalse(world.iterator().hasNext());
     }
 

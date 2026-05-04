@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SpawnPointTest {
 
 	@Test
-	void constructor_storesCoordinatesAndType() {
+	void constructorStoresCoordinatesAndType() {
 		SpawnPoint sp = new SpawnPoint(7, 9, SpawnPoint.Type.PLAYER);
 		assertEquals(7, sp.getX());
 		assertEquals(9, sp.getY());
@@ -16,7 +16,7 @@ public class SpawnPointTest {
 	}
 
 	@Test
-	void constructor_supportsNegativeCoordinates() {
+	void constructorSupportsNegativeCoordinates() {
 		SpawnPoint sp = new SpawnPoint(-3, -11, SpawnPoint.Type.SLOWENEMY);
 		assertEquals(-3, sp.getX());
 		assertEquals(-11, sp.getY());
@@ -24,7 +24,7 @@ public class SpawnPointTest {
 	}
 
 	@Test
-	void typeEnum_containsAllExpectedTypes() {
+	void typeEnumContainsAllExpectedTypes() {
 		EnumSet<SpawnPoint.Type> types = EnumSet.allOf(SpawnPoint.Type.class);
 		assertTrue(types.contains(SpawnPoint.Type.FASTENEMY));
 		assertTrue(types.contains(SpawnPoint.Type.NORMALENEMY));

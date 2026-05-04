@@ -75,12 +75,11 @@ Krever Java 25 eller nyere
 ## 4. Teamprosess og samarbeid
 
 Vi har brukt Kanban som arbeidsmetodikk, med Trello for å holde oversikt over oppgaver. Vi prøvde også parprogrammering.
-Da Leila og Njål skulle parprogrammere på romlogikk, diskuterte de hvordan de kunne gå frem. Leila skrev en kjapp pseudokode utifra funksjonene Njål ville implementere. Deretter så Njål gjennom og bygget det videre ved å skrive det til kode. Slik itererte de prosessen og byttet på rollene. 
-Gjennom dette fikk begge dannet en god forståelse av koden, lært å jobbe med andres kode, og foreslå forbedringer og implementasjoner til en annen person. 
-Ulempen med denne prosessen var at det var tidskrevende, skapte mer rom for misforståelse, og mindre indiviudell kodefrihet.
-
-
-og test-driven (?) programmering. ELABORATE
+Da Leila og Njål skulle parprogrammere på romlogikk, diskuterte de hvordan de kunne gå frem. Leila skrev en kjapp 
+pseudokode utifra funksjonene Njål ville implementere. Deretter så Njål gjennom og bygget det videre ved å skrive det 
+til kode. Slik itererte de prosessen og byttet på rollene. Gjennom dette fikk begge dannet en god forståelse av koden, 
+lært å jobbe med andres kode, og foreslå forbedringer og implementasjoner til en annen person. Ulempen med denne 
+prosessen var at det var tidskrevende, skapte mer rom for misforståelse, og mindre indiviudell kodefrihet.
 
 Arbeidet ble organisert i ukentlige møter hvor vi oppdaterte hverandre på progresjonen, 
 evaluerte hva vi hadde gjort og planla nye oppgaver og fordelte disse. Utenom disse møtene så har kommunikasjonen 
@@ -116,14 +115,14 @@ møter har blitt brukt ved mer komplekse oppgaver, noe som har:
 
 
 ## 5. MVP-krav
-Statisk spilleverden
-Spiller i spillverden
-Bevegelse i åtte retninger
-Interaksjon med terreng og fiender
-Fiender med oppførsel
-Progresjon
-Spilleren kan dø
-Start- og game over-skjerm
+- Statisk spilleverden
+- Spiller i spillverden
+- Bevegelse i åtte retninger
+- Interaksjon med terreng og fiender
+- Fiender med oppførsel
+- Progresjon
+- Spilleren kan dø
+- Start- og game over-skjerm
 
 ## 6. Progresjon
 
@@ -262,15 +261,19 @@ og in-game logikk. View inneholder alt av grafikk og rendering. Controller har s
 brukeren og sende det videre. Dette har gjort det mulig å utvikle funksjonalitet parallelt og man kan dele inn i en klar
 frontend og backend del.
 
-========== SE PÅ DETTE UNDER ===================
 ## 12. Retrospektiv
 
-Vi har i stor grad nådd målene for MVP og fått på plass sentral funksjonalitet som bevegelse, kamp, lyd og brukergrensesnitt. Dette tyder på at planleggingen har vært realistisk og gjennomførbar. Kanban og Trello har gitt god oversikt, men kunne vært brukt mer aktivt og systematisk. Git har fungert godt i samarbeid, men vi ser at det er behov for bedre koordinering og tydeligere rutiner, særlig når det gjelder navngivning. Samarbeidet i gruppen har vært bra, og parprogrammering har hatt en positiv effekt der det har blitt brukt. Gruppechatten har også vært nyttig for å holde fremdriften oppe mellom møtene. Alt i alt har vi etablert et godt grunnlag for videre utvikling, og tar med oss erfaringene videre for å forbedre struktur og arbeidsflyt.
+Vi har i stor grad nådd målene for MVP og fått på plass sentral funksjonalitet som bevegelse, kamp, lyd og 
+brukergrensesnitt. Dette tyder på at planleggingen har vært realistisk og gjennomførbar. Kanban og Trello har gitt god 
+oversikt, men kunne vært brukt mer aktivt og systematisk. Git har fungert godt i samarbeid, men vi ser at det er behov 
+for bedre koordinering og tydeligere rutiner, særlig når det gjelder commit-navn. Samarbeidet i gruppen har vært bra, 
+og parprogrammering har hatt en positiv effekt der det har blitt brukt. Gruppechatten har også vært nyttig for å holde 
+fremdriften oppe mellom møtene. Alt i alt har vi etablert et godt grunnlag for videre utvikling, og tar med oss 
+erfaringene videre for å forbedre struktur og arbeidsflyt.
 
 Hva fungerte mindre bra:
 - Trello ikke alltid oppdatert
 - Noe overlapp i arbeid
-- Lite systematisk parprogrammering
 
 Forbedringstiltak:
 - Oppdatere Trello jevnlig

@@ -17,10 +17,10 @@ class GameWorldBuilderTest {
 
     private static final SoundService NO_SOUND = new SoundService() {
         @Override
-        public void play(SoundEffect effect) { /* ingenting */ }
+        public void play(SoundEffect effect) { /* test */ }
 
         @Override
-        public void dispose() { /* ingenting */ }
+        public void dispose() { /* test */ }
     };
 
     private Room room;
@@ -31,25 +31,25 @@ class GameWorldBuilderTest {
     }
 
     @Test
-    void constructor_nullRoom_throwsNullPointerException() {
+    void constructorNullRoomThrowsNullPointerException() {
         assertThrows(NullPointerException.class,
                 () -> new GameWorldBuilder(null, NO_SOUND));
     }
 
     @Test
-    void constructor_nullSound_throwsNullPointerException() {
+    void constructorNullSoundThrowsNullPointerException() {
         assertThrows(NullPointerException.class,
                 () -> new GameWorldBuilder(room, null));
     }
 
     @Test
-    void build_noPlayerSpawnPoint_throwsIllegalStateException() {
+    void buildNoPlayerSpawnPointThrowsIllegalStateException() {
         assertThrows(IllegalStateException.class,
                 () -> new GameWorldBuilder(room, NO_SOUND).build());
     }
 
     @Test
-    void build_withPlayerSpawnPoint_returnsWorldWithPlayer() {
+    void buildWithPlayerSpawnPointReturnsWorldWithPlayer() {
         room.addSpawnPoint(new SpawnPoint(TILE_SIZE, TILE_SIZE, SpawnPoint.Type.PLAYER));
 
         GameWorld world = new GameWorldBuilder(room, NO_SOUND).build();
@@ -59,7 +59,7 @@ class GameWorldBuilderTest {
     }
 
     @Test
-    void build_playerSpawnedAtCorrectPosition() {
+    void buildPlayerSpawnedAtCorrectPosition() {
         room.addSpawnPoint(new SpawnPoint(3 * TILE_SIZE, 4 * TILE_SIZE, SpawnPoint.Type.PLAYER));
 
         GameWorld world = new GameWorldBuilder(room, NO_SOUND).build();
@@ -69,7 +69,7 @@ class GameWorldBuilderTest {
     }
 
     @Test
-    void build_withEnemySpawnPoints_spawnsEnemiesInWorld() {
+    void buildWithEnemySpawnPointsSpawnsEnemiesInWorld() {
         room.addSpawnPoint(new SpawnPoint(TILE_SIZE,     TILE_SIZE,     SpawnPoint.Type.PLAYER));
         room.addSpawnPoint(new SpawnPoint(3 * TILE_SIZE, TILE_SIZE,     SpawnPoint.Type.FASTENEMY));
         room.addSpawnPoint(new SpawnPoint(5 * TILE_SIZE, TILE_SIZE,     SpawnPoint.Type.NORMALENEMY));
@@ -84,7 +84,7 @@ class GameWorldBuilderTest {
     }
 
     @Test
-    void build_withNoEnemySpawnPoints_worldHasNoEnemies() {
+    void buildWithNoEnemySpawnPointsWorldHasNoEnemies() {
         room.addSpawnPoint(new SpawnPoint(TILE_SIZE, TILE_SIZE, SpawnPoint.Type.PLAYER));
 
         GameWorld world = new GameWorldBuilder(room, NO_SOUND).build();
@@ -93,7 +93,7 @@ class GameWorldBuilderTest {
     }
 
     @Test
-    void build_playerIncludedInEntities() {
+    void buildPlayerIncludedInEntities() {
         room.addSpawnPoint(new SpawnPoint(TILE_SIZE, TILE_SIZE, SpawnPoint.Type.PLAYER));
 
         GameWorld world = new GameWorldBuilder(room, NO_SOUND).build();
@@ -102,7 +102,7 @@ class GameWorldBuilderTest {
     }
 
     @Test
-    void build_withDoorSpawnPoint_doesNotThrowOrSpawnEntity() {
+    void buildWithDoorSpawnPointDoesNotThrowOrSpawnEntity() {
         room.addSpawnPoint(new SpawnPoint(TILE_SIZE, TILE_SIZE, SpawnPoint.Type.PLAYER));
         room.addSpawnPoint(new SpawnPoint(5 * TILE_SIZE, 5 * TILE_SIZE, SpawnPoint.Type.DOOR));
 
@@ -116,7 +116,7 @@ class GameWorldBuilderTest {
     }
 
     @Test
-    void buildWithPlayer_reusesPlayerAndPreservesHealth() {
+    void buildWithPlayerReusesPlayerAndPreservesHealth() {
         room.addSpawnPoint(new SpawnPoint(10 * TILE_SIZE, 10 * TILE_SIZE, SpawnPoint.Type.FASTENEMY));
 
         Player persistentPlayer = new Player(0, 0, NO_SOUND);
