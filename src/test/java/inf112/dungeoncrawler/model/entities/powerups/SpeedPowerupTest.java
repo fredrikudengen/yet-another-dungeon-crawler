@@ -15,18 +15,11 @@ public class SpeedPowerupTest {
 
 	private static final SoundService NO_SOUND = new SoundService() {
 		@Override
-		public void play(SoundEffect effect) { /* ingenting */ }
+		public void play(SoundEffect effect) { /* test */ }
 
 		@Override
-		public void dispose() { /* ingenting */ }
+		public void dispose() { /* test */ }
 	};
-
-	@Test
-	void getBaseTexturePathReturnsSpeedPowerupPath() {
-		SpeedPowerup powerup = new SpeedPowerup(0, 0, NO_SOUND);
-
-		assertEquals("powerups/faster.png", powerup.getBaseTexturePath());
-	}
 
 	@Test
 	void onCollisionIncreasesSpeedByOneHundred() {

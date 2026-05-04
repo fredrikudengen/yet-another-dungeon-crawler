@@ -11,10 +11,10 @@ public class FastEnemyTest {
 
 	private static final SoundService NO_SOUND = new SoundService() {
 		@Override
-		public void play(SoundEffect effect) { /* ingenting */ }
+		public void play(SoundEffect effect) { /* test */ }
 
 		@Override
-		public void dispose() { /* ingenting */ }
+		public void dispose() { /* test */ }
 	};
 
 	@Test
@@ -29,14 +29,6 @@ public class FastEnemyTest {
 		assertEquals(240, enemy.getSpeed());
 		assertEquals(64f, enemy.getWidth());
 		assertEquals(64f, enemy.getHeight());
-	}
-
-	@Test
-	void getBaseTexturePathReturnsFastEnemyPath() {
-		Player trackingPlayer = new Player(300, 300, NO_SOUND);
-		FastEnemy enemy = new FastEnemy(10, 20, trackingPlayer);
-
-		assertEquals("enemy/fast/enemy_", enemy.getBaseTexturePath());
 	}
 
 	@Test

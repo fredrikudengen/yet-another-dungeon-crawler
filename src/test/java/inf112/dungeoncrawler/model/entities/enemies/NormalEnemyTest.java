@@ -11,10 +11,10 @@ public class NormalEnemyTest {
 
 	private static final SoundService NO_SOUND = new SoundService() {
 		@Override
-		public void play(SoundEffect effect) { /* ingenting */ }
+		public void play(SoundEffect effect) { /* test */ }
 
 		@Override
-		public void dispose() { /* ingenting */ }
+		public void dispose() { /* test */ }
 	};
 
 	@Test
@@ -29,14 +29,6 @@ public class NormalEnemyTest {
 		assertEquals(150, enemy.getSpeed());
 		assertEquals(64f, enemy.getWidth());
 		assertEquals(64f, enemy.getHeight());
-	}
-
-	@Test
-	void getBaseTexturePathReturnsNormalEnemyPath() {
-		Player trackingPlayer = new Player(300, 300, NO_SOUND);
-		NormalEnemy enemy = new NormalEnemy(11, 21, trackingPlayer);
-
-		assertEquals("enemy/normal/enemy_normal_", enemy.getBaseTexturePath());
 	}
 
 	@Test

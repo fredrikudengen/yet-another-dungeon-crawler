@@ -17,45 +17,45 @@ class AttackTest {
     }
 
     @Test
-    void canUse_initially_returnsTrue() {
+    void canUseInitiallyReturnsTrue() {
         assertTrue(attack.canUse());
     }
 
     @Test
-    void canUse_afterUse_returnsFalse() {
+    void canUseAfterUseReturnsFalse() {
         attack.use();
         assertFalse(attack.canUse());
     }
 
     @Test
-    void canUse_afterPartialUpdate_remainsFalse() {
+    void canUseRemainsFalse() {
         attack.use();
         attack.update(0.1f);
         assertFalse(attack.canUse());
     }
 
     @Test
-    void canUse_afterFullCooldown_returnsTrue() {
+    void canUseAfterCooldownReturnsTrue() {
         attack.use();
         attack.update(COOLDOWN);
         assertTrue(attack.canUse());
     }
 
     @Test
-    void canUse_afterExcessiveUpdate_returnsTrue() {
+    void canUseAfterLongCooldownReturnsTrue() {
         attack.use();
         attack.update(COOLDOWN * 10f);
         assertTrue(attack.canUse());
     }
 
     @Test
-    void update_whenNotOnCooldown_remainsReady() {
+    void updateReturnsTrue() {
         attack.update(COOLDOWN);
         assertTrue(attack.canUse());
     }
 
     @Test
-    void use_thenUseAgainAfterCooldown_isAllowed() {
+    void useThenUseAfterCooldownReturnsTrue() {
         attack.use();
         attack.update(COOLDOWN);
         attack.use();

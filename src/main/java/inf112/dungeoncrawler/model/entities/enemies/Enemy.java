@@ -68,16 +68,7 @@ public abstract class Enemy extends Entity implements Movable {
             this.onCollision((Entity) target);
         }
 
-        float pdx          = target.getX() - x;
-        float pdy          = target.getY() - y;
-        float distToTarget = (float) Math.sqrt(pdx * pdx + pdy * pdy);
-
-        if (!moving && distToTarget <= DETECTION_RADIUS) {
-            moving = true;
-        } else if (moving && distToTarget > DETECTION_RADIUS) {
-            moving = false;
-            path.clear();
-        }
+        detection();
 
         if (!moving) {
             velocityX = 0;
@@ -85,7 +76,14 @@ public abstract class Enemy extends Entity implements Movable {
             return;
         }
 
-        pathTimer += (float) deltaTime;
+        updatePath((float) deltaTime, room);
+
+        moveWithCollision(room, velocityX * (float) deltaTime, velocityY * (float) deltaTime);
+    }
+
+    // this method (updatePath()) was adapted using Claude Sonnet 4.6
+    private void updatePath(float deltaTime, Room room) {
+        pathTimer += deltaTime;
         if (pathTimer >= PATH_REFRESH_RATE) {
             pathTimer = 0f;
             path = bfsPath(room);
@@ -118,8 +116,19 @@ public abstract class Enemy extends Entity implements Movable {
             velocityX = 0;
             velocityY = 0;
         }
+    }
 
-        moveWithCollision(room, velocityX * (float) deltaTime, velocityY * (float) deltaTime);
+    private void detection() {
+        float pdx          = target.getX() - x;
+        float pdy          = target.getY() - y;
+        float distToTarget = (float) Math.sqrt(pdx * pdx + pdy * pdy);
+
+        if (!moving && distToTarget <= DETECTION_RADIUS) {
+            moving = true;
+        } else if (moving && distToTarget > DETECTION_RADIUS) {
+            moving = false;
+            path.clear();
+        }
     }
 
     @Override
@@ -144,6 +153,8 @@ public abstract class Enemy extends Entity implements Movable {
         }
     }
 
+
+    // this method (bfsPath()) was adapted using Claude Sonnet 4.6
     private List<int[]> bfsPath(Room room) {
         int startX = (int) (x / TILE_SIZE);
         int startY = (int) (y / TILE_SIZE);
@@ -186,6 +197,7 @@ public abstract class Enemy extends Entity implements Movable {
         return new ArrayList<>();
     }
 
+    // this method (reconstructPath()) was adapted using Claude Sonnet 4.6
     private List<int[]> reconstructPath(Map<Long, Long> cameFrom,
                                         long startKey, long goalKey) {
         List<int[]> result = new ArrayList<>();
@@ -204,9 +216,6 @@ public abstract class Enemy extends Entity implements Movable {
 
     private static float tileCenterX(int[] tile) { return tile[0] * TILE_SIZE + TILE_SIZE / 2f; }
     private static float tileCenterY(int[] tile) { return tile[1] * TILE_SIZE + TILE_SIZE / 2f; }
-
-    @Override
-    public abstract String getBaseTexturePath();
 
     @Override
     public boolean isMoving() { return moving; }

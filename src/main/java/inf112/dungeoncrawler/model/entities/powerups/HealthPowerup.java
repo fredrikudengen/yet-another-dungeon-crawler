@@ -4,6 +4,11 @@ import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.sound.SoundService;
 
+/**
+ * A one-time pickup that immediately increases the player's health by one.
+ * Removed from the world as soon as it is collected, therefore it does not
+ * use pickedUp and instead sets isAlive to false immediately.
+ */
 public class HealthPowerup extends Powerup {
 
     public HealthPowerup(float x, float y, SoundService sound) {
@@ -17,11 +22,6 @@ public class HealthPowerup extends Powerup {
         if (this.collidesWith(world.getPlayer())) {
             this.onCollision(world.getPlayer());
         }
-    }
-
-    @Override
-    public String getBaseTexturePath() {
-        return "powerups/Life.png";
     }
 
     @Override

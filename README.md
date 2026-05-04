@@ -4,7 +4,8 @@
 Fredrik Udengen, Njål Nordal, Guangwei Zhang, Kim Huynh, Leila Lu
 
 ## Konsept
-Spilleren kjemper gjennom ulike rom med fiender og powerups. Målet er å komme så langt som mulig uten å dø.
+Spillet er et dungeon-crawler spill hvor spilleren kjemper gjennom ulike rom med fiender og powerups. Når alle fiender 
+er drept i et rom, kan spilleren bevege seg til neste rom. Målet er å rydde så mange rom som mulig, uten å dø. 
 
 ## Brukerveiledning
 - WASD beveger spilleren.
@@ -18,5 +19,9 @@ Spilleren kjemper gjennom ulike rom med fiender og powerups. Målet er å komme 
 ## Kilde / Opphavsrett
 Se resources/sourceList.txt
 
-## Hvordan kjøre
-*oppdateres når ferdig*
+## Hvordan kjøre spillet
+- mvn package
+- java -jar target/dungeoncrawler-1.26-SNAPSHOT-fat.jar
+
+## Klassediagram
+![image info](ClassDiagram.png)

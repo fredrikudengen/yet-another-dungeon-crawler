@@ -1,7 +1,15 @@
 package inf112.dungeoncrawler.model.factories;
 
 import inf112.dungeoncrawler.model.entities.Entity;
+import inf112.dungeoncrawler.model.entities.Player;
+import inf112.dungeoncrawler.model.entities.enemies.FastEnemy;
+import inf112.dungeoncrawler.model.entities.enemies.NormalEnemy;
+import inf112.dungeoncrawler.model.entities.enemies.SlowEnemy;
+import inf112.dungeoncrawler.model.entities.powerups.AttackPowerup;
+import inf112.dungeoncrawler.model.entities.powerups.HealthPowerup;
+import inf112.dungeoncrawler.model.entities.powerups.SpeedPowerup;
 import inf112.dungeoncrawler.model.generation.SpawnPoint;
+import inf112.dungeoncrawler.sound.SoundService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,5 +62,23 @@ public class EntityFactory {
     }
 
     private final Map<SpawnPoint.Type, EntitySpawner> registry = new HashMap<>();
+
+    /**
+     * Register each SpawnPoint.Type for all the entities to be used by the EntityFactory.
+     *
+     * @param player object to be inserted into Enemy types
+     * @param sound to be inserted into Powerup types
+     * @return the EntityFactory with all SpawnPoint.Type registered
+     */
+    public static EntityFactory createDefault(Player player, SoundService sound) {
+        EntityFactory factory = new EntityFactory();
+        factory.register(SpawnPoint.Type.FASTENEMY,     (x, y) -> new FastEnemy(x, y, player));
+        factory.register(SpawnPoint.Type.NORMALENEMY,   (x, y) -> new NormalEnemy(x, y, player));
+        factory.register(SpawnPoint.Type.SLOWENEMY,     (x, y) -> new SlowEnemy(x, y, player));
+        factory.register(SpawnPoint.Type.HEALTHPOWERUP, (x, y) -> new HealthPowerup(x, y, sound));
+        factory.register(SpawnPoint.Type.SPEEDPOWERUP,  (x, y) -> new SpeedPowerup(x, y, sound));
+        factory.register(SpawnPoint.Type.ATTACKPOWERUP, (x, y) -> new AttackPowerup(x, y, sound));
+        return factory;
+    }
 
 }

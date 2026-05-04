@@ -13,11 +13,10 @@ public class EnemyFactoryTest {
 		TestEntity(float x, float y) { super(x, y); }
 
 		@Override public void step(GameWorld world, double deltaTime) {}
-		@Override public String getBaseTexturePath() { return "test"; }
 	}
 
 	@Test
-	void spawn_registeredType_returnsEntityAtCorrectPosition() {
+	void spawnRegisteredTypeReturnsEntityAtCorrectPosition() {
 		EntityFactory factory = new EntityFactory();
 		factory.register(SpawnPoint.Type.FASTENEMY, TestEntity::new);
 
@@ -29,7 +28,7 @@ public class EnemyFactoryTest {
 	}
 
 	@Test
-	void spawn_registeredTwice_usesLatestSpawner() {
+	void spawnRegisteredTwiceUsesLatestSpawner() {
 		EntityFactory factory = new EntityFactory();
 		factory.register(SpawnPoint.Type.NORMALENEMY, (x, y) -> new TestEntity(x + 1, y + 1));
 		factory.register(SpawnPoint.Type.NORMALENEMY, (x, y) -> new TestEntity(x + 2, y + 3));
@@ -41,7 +40,7 @@ public class EnemyFactoryTest {
 	}
 
 	@Test
-	void spawn_unregisteredType_throwsIllegalArgumentException() {
+	void spawnUnregisteredTypeThrowsIllegalArgumentException() {
 		EntityFactory factory = new EntityFactory();
 		assertThrows(IllegalArgumentException.class,
 				() -> factory.spawn(new SpawnPoint(1, 1, SpawnPoint.Type.HEALTHPOWERUP)));

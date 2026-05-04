@@ -21,42 +21,17 @@ class EnemyTest {
 
     private static final SoundService NO_SOUND = new SoundService() {
         @Override
-        public void play(SoundEffect effect) { /* ingenting */ }
+        public void play(SoundEffect effect) { /* test */ }
 
         @Override
-        public void dispose() { /* ingenting */ }
+        public void dispose() { /* test */ }
     };
 
     @BeforeEach
     void setUp() {
         room = new Room(20, 20);
-        world = new GameWorld(room, player);
         player = new Player(400, 300, NO_SOUND);
-    }
-
-    @Test
-    void testEnemyGetTextureNameReturnsEmptyString() {
-        Enemy enemy = new Enemy(100, 100, player) {
-            @Override
-            public boolean isMoving() {
-                return false;
-            }
-
-            @Override
-            public Direction getFacingDirection() {
-                return null;
-            }
-
-            @Override
-            public void onCollision(Entity entity) {
-            }
-
-            @Override
-            public String getBaseTexturePath() {
-                return "test";
-            }
-        };
-        assertEquals("test", enemy.getBaseTexturePath());
+        world = new GameWorld(room, player);
     }
 
     @Test
@@ -86,11 +61,6 @@ class EnemyTest {
             @Override
             public void onCollision(Entity entity) {
             }
-
-            @Override
-            public String getBaseTexturePath() {
-                return "test";
-            }
         };
         float initialX = enemy.getX();
         float initialY = enemy.getY();
@@ -117,11 +87,6 @@ class EnemyTest {
 
             @Override
             public void onCollision(Entity entity) {
-            }
-
-            @Override
-            public String getBaseTexturePath() {
-                return "test";
             }
         };
         enemy.step(world, 1.0);

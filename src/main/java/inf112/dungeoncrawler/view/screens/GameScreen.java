@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import inf112.dungeoncrawler.controller.PlayerInputHandler;
+import inf112.dungeoncrawler.model.entities.Collidable;
 import inf112.dungeoncrawler.model.factories.GameWorldBuilder;
 import inf112.dungeoncrawler.model.generation.RoomLoader;
 import inf112.dungeoncrawler.model.generation.SpawnPoint;
@@ -14,6 +15,7 @@ import inf112.dungeoncrawler.model.world.Room;
 import inf112.dungeoncrawler.sound.SoundService;
 import inf112.dungeoncrawler.view.GameView;
 
+import java.util.List;
 import java.util.Objects;
 
 import static inf112.dungeoncrawler.util.Constants.TILE_SIZE;
@@ -31,6 +33,18 @@ public class GameScreen implements Screen {
         TOP,
         BOTTOM
     }
+
+    private record RoomTransition(String fromRoom, DoorSide exitSide,
+                                  String toRoom,   DoorSide entrySide) {}
+
+    private static final List<RoomTransition> TRANSITIONS = List.of(
+            new RoomTransition(ROOM_3_PATH, DoorSide.LEFT,   ROOM_2_PATH, DoorSide.RIGHT),
+            new RoomTransition(ROOM_2_PATH, DoorSide.RIGHT,  ROOM_3_PATH, DoorSide.LEFT),
+            new RoomTransition(ROOM_2_PATH, DoorSide.TOP,    ROOM_1_PATH, DoorSide.BOTTOM),
+            new RoomTransition(ROOM_1_PATH, DoorSide.BOTTOM, ROOM_2_PATH, DoorSide.TOP),
+            new RoomTransition(ROOM_1_PATH, DoorSide.TOP,    ROOM_3_PATH, DoorSide.BOTTOM),
+            new RoomTransition(ROOM_3_PATH, DoorSide.BOTTOM, ROOM_1_PATH, DoorSide.TOP)
+    );
 
     private static class TransitionSpec {
         private final String targetRoomPath;
@@ -52,15 +66,16 @@ public class GameScreen implements Screen {
     private boolean isPaused = false;
     private float doorTransitionCooldown = 0f;
     private int totalEnemiesKilled = 0;
+    private int roomsCleared = 0;
 
     public GameScreen(Game game, GameWorld gameWorld, SoundService sound) {
         this(game, gameWorld, sound, ROOM_3_PATH);
     }
 
     public GameScreen(Game game, GameWorld gameWorld, SoundService sound, String currentRoomPath) {
-        this.game      = Objects.requireNonNull(game,      "game must not be null");
+        this.game = Objects.requireNonNull(game, "game must not be null");
         this.gameWorld = Objects.requireNonNull(gameWorld, "gameWorld must not be null");
-        this.sound     = Objects.requireNonNull(sound,     "sound must not be null");
+        this.sound = Objects.requireNonNull(sound, "sound must not be null");
         this.currentRoomPath = Objects.requireNonNull(currentRoomPath, "currentRoomPath must not be null");
     }
 
@@ -159,7 +174,7 @@ public class GameScreen implements Screen {
 
             float doorX = tileX * TILE_SIZE;
             float doorY = tileY * TILE_SIZE;
-            if (rectanglesIntersect(
+            if (Collidable.overlaps(
                     player.getX(), player.getY(), player.getWidth(), player.getHeight(),
                     doorX - tolerance, doorY - tolerance,
                     TILE_SIZE + tolerance * 2f, TILE_SIZE + tolerance * 2f)) {
@@ -170,16 +185,9 @@ public class GameScreen implements Screen {
         return null;
     }
 
-    private boolean rectanglesIntersect(float ax, float ay, float aw, float ah,
-                                        float bx, float by, float bw, float bh) {
-        return ax < bx + bw
-                && ax + aw > bx
-                && ay < by + bh
-                && ay + ah > by;
-    }
-
     private void transitionToRoom(TransitionSpec transition) {
         totalEnemiesKilled += gameWorld.getKilledEnemies();
+        roomsCleared++;
 
         Room targetRoom = new RoomLoader(transition.targetRoomPath).createRoom();
         float[] entryPosition = findEntryPosition(targetRoom, transition.targetEntrySide);
@@ -194,10 +202,10 @@ public class GameScreen implements Screen {
         if (doorSpawnPoint == null) {
             for (SpawnPoint spawnPoint : room.getSpawnPoints()) {
                 if (spawnPoint.getType() == SpawnPoint.Type.PLAYER) {
-                    return new float[]{spawnPoint.getX(), spawnPoint.getY()};
+                    return new float[] { spawnPoint.getX(), spawnPoint.getY() };
                 }
             }
-            return new float[]{TILE_SIZE, TILE_SIZE};
+            return new float[] { TILE_SIZE, TILE_SIZE };
         }
 
         int doorTileX = doorSpawnPoint.getX() / TILE_SIZE;
@@ -215,7 +223,7 @@ public class GameScreen implements Screen {
 
         spawnTileX = Math.clamp(spawnTileX, 0, room.getWidth() - 1);
         spawnTileY = Math.clamp(spawnTileY, 0, room.getHeight() - 1);
-        return new float[]{spawnTileX * TILE_SIZE, spawnTileY * TILE_SIZE};
+        return new float[] { spawnTileX * TILE_SIZE, spawnTileY * TILE_SIZE };
     }
 
     private SpawnPoint findDoorSpawnPoint(Room room, DoorSide side) {
@@ -259,26 +267,13 @@ public class GameScreen implements Screen {
         return null;
     }
 
-    private TransitionSpec getTransition(String roomPath, DoorSide exitDoorSide) {
-        if (ROOM_3_PATH.equals(roomPath) && exitDoorSide == DoorSide.LEFT) {
-            return new TransitionSpec(ROOM_2_PATH, DoorSide.RIGHT);
-        }
-        if (ROOM_2_PATH.equals(roomPath) && exitDoorSide == DoorSide.RIGHT) {
-            return new TransitionSpec(ROOM_3_PATH, DoorSide.LEFT);
-        }
-        if (ROOM_2_PATH.equals(roomPath) && exitDoorSide == DoorSide.TOP) {
-            return new TransitionSpec(ROOM_1_PATH, DoorSide.BOTTOM);
-        }
-        if (ROOM_1_PATH.equals(roomPath) && exitDoorSide == DoorSide.BOTTOM) {
-            return new TransitionSpec(ROOM_2_PATH, DoorSide.TOP);
-        }
-        if (ROOM_1_PATH.equals(roomPath) && exitDoorSide == DoorSide.TOP) {
-            return new TransitionSpec(ROOM_3_PATH, DoorSide.BOTTOM);
-        }
-        if (ROOM_3_PATH.equals(roomPath) && exitDoorSide == DoorSide.BOTTOM) {
-            return new TransitionSpec(ROOM_1_PATH, DoorSide.TOP);
-        }
-        return null;
+    // this method (getTransition()) was adapted using Claude Sonnet 4.6
+    private TransitionSpec getTransition(String roomPath, DoorSide exitSide) {
+        return TRANSITIONS.stream()
+                .filter(t -> t.fromRoom().equals(roomPath) && t.exitSide() == exitSide)
+                .findFirst()
+                .map(t -> new TransitionSpec(t.toRoom(), t.entrySide()))
+                .orElse(null);
     }
 
     private void draw(float delta) {
@@ -291,7 +286,8 @@ public class GameScreen implements Screen {
     private void checkGameOver() {
         if (gameWorld.getPlayer().getHealth() <= 0) {
             int totalKilledEnemies = totalEnemiesKilled + gameWorld.getKilledEnemies();
-            game.setScreen(new GameOverScreen(game, sound, totalKilledEnemies));
+
+            game.setScreen(new GameOverScreen(game, sound, totalKilledEnemies, roomsCleared));
         }
     }
 
@@ -301,10 +297,12 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void pause() { /* managed by render-loop via ESCAPE */ }
+    public void pause() {
+        /* managed by render-loop via ESCAPE */ }
 
     @Override
-    public void resume() { /* managed by render-loop via ESCAPE */ }
+    public void resume() {
+        /* managed by render-loop via ESCAPE */ }
 
     @Override
     public void hide() {

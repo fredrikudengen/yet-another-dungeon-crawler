@@ -18,7 +18,7 @@ class RoomTemplateTest {
 	}
 
 	@Test
-	void createRoom_mapsTilesBottomUp() {
+	void createRoomMapsTilesBottomUp() {
 		Room room = new RoomTemplate(new String[]{"#.", ".#"}).createRoom();
 		assertEquals(TileType.FLOOR, room.getTileAt(0, 0));
 		assertEquals(TileType.WALL,  room.getTileAt(1, 0));
@@ -27,55 +27,55 @@ class RoomTemplateTest {
 	}
 
 	@Test
-	void createRoom_hashCharBecomesWall() {
+	void createRoomHashCharBecomesWall() {
 		Room room = new RoomTemplate(new String[]{"#"}).createRoom();
 		assertEquals(TileType.WALL, room.getTileAt(0, 0));
 	}
 
 	@Test
-	void createRoom_spaceCharBecomesEmpty() {
+	void createRoomSpaceCharBecomesEmpty() {
 		Room room = new RoomTemplate(new String[]{" "}).createRoom();
 		assertEquals(TileType.EMPTY, room.getTileAt(0, 0));
 	}
 
 	@Test
-	void createRoom_doorCharBecomesDoorClosed() {
+	void createRoomDoorCharBecomesDoorClosed() {
 		Room room = new RoomTemplate(new String[]{"D"}).createRoom();
 		assertEquals(TileType.DOOR_CLOSED, room.getTileAt(0, 0));
 	}
 
 	@Test
-	void createRoom_leftWallDoor_usesLeftWallDoorTile() {
+	void createRoomLeftWallDoorUsesLeftWallDoorTile() {
 		Room room = new RoomTemplate(new String[]{"...", "D..", "..."}).createRoom();
 		assertEquals(TileType.DOOR_LEFT_WALL_CLOSED, room.getTileAt(0, 1));
 	}
 
 	@Test
-	void createRoom_rightWallDoor_usesRightWallDoorTile() {
+	void createRoomRightWallDoorUsesRightWallDoorTile() {
 		Room room = new RoomTemplate(new String[]{"...", "..D", "..."}).createRoom();
 		assertEquals(TileType.DOOR_RIGHT_WALL_CLOSED, room.getTileAt(2, 1));
 	}
 
 	@Test
-	void createRoom_topWallDoor_usesTopDoorTile() {
+	void createRoomTopWallDoorUsesTopDoorTile() {
 		Room room = new RoomTemplate(new String[]{".D.", "...", "..."}).createRoom();
 		assertEquals(TileType.DOOR_TOP_CLOSED, room.getTileAt(1, 2));
 	}
 
 	@Test
-	void createRoom_bottomWallDoor_usesBottomDoorTile() {
+	void createRoomBottomWallDoorUsesBottomDoorTile() {
 		Room room = new RoomTemplate(new String[]{"...", "...", ".D."}).createRoom();
 		assertEquals(TileType.DOOR_BOTTOM_CLOSED, room.getTileAt(1, 0));
 	}
 
 	@Test
-	void createRoom_unknownCharBecomesFloor() {
+	void createRoomUnknownCharBecomesFloor() {
 		Room room = new RoomTemplate(new String[]{"X"}).createRoom();
 		assertEquals(TileType.FLOOR, room.getTileAt(0, 0));
 	}
 
 	@Test
-	void createRoom_doorCharAddsSpawnPointOfTypeDoor() {
+	void createRoomDoorCharAddsSpawnPointOfTypeDoor() {
 		Room room = new RoomTemplate(new String[]{"D"}).createRoom();
 		List<SpawnPoint> spawnPoints = room.getSpawnPoints();
 		assertEquals(1, spawnPoints.size());
@@ -85,7 +85,7 @@ class RoomTemplateTest {
 	}
 
 	@Test
-	void createRoom_wallAndFloor_doNotAddSpawnPoints() {
+	void createRoomWallAndFloorDoNotAddSpawnPoints() {
 		Room room = new RoomTemplate(new String[]{".#"}).createRoom();
 		assertTrue(room.getSpawnPoints().isEmpty());
 	}

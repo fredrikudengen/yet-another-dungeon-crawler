@@ -28,7 +28,7 @@ class RoomTest {
     }
 
     @Test
-    void constructor_fillsWithFloorTiles() {
+    void constructorFillsWithFloorTiles() {
         for (int x = 0; x < ROOM_WIDTH; x++) {
             for (int y = 0; y < ROOM_HEIGHT; y++) {
                 assertEquals(TileType.FLOOR, room.getTileAt(x, y));
@@ -37,7 +37,7 @@ class RoomTest {
     }
 
     @Test
-    void getTileAt_outOfBounds_returnsWall() {
+    void getTileAtOutOfBoundsReturnsWall() {
         assertEquals(TileType.WALL, room.getTileAt(-1, 0));
         assertEquals(TileType.WALL, room.getTileAt(0, -1));
         assertEquals(TileType.WALL, room.getTileAt(ROOM_WIDTH, 0));
@@ -45,74 +45,74 @@ class RoomTest {
     }
 
     @Test
-    void setTileAt_updatesTile() {
+    void setTileAtUpdatesTile() {
         room.setTileAt(3, 2, TileType.WALL);
         assertEquals(TileType.WALL,  room.getTileAt(3, 2));
         assertEquals(TileType.FLOOR, room.getTileAt(2, 2));
     }
 
     @Test
-    void setTileAt_outOfBounds_doesNotThrow() {
+    void setTileAtOutOfBoundsDoesNotThrow() {
         assertDoesNotThrow(() -> room.setTileAt(-1, 0, TileType.WALL));
         assertDoesNotThrow(() -> room.setTileAt(ROOM_WIDTH, 0, TileType.WALL));
         assertEquals(TileType.FLOOR, room.getTileAt(0, 0));
     }
 
     @Test
-    void isBlocked_floorTile_returnsFalse() {
+    void isBlockedFloorTileReturnsFalse() {
         assertFalse(room.isBlocked(1.5f * TILE_SIZE, 1.5f * TILE_SIZE, 16, 16));
     }
 
     @Test
-    void isBlocked_wallTile_returnsTrue() {
+    void isBlockedWallTileReturnsTrue() {
         room.setTileAt(2, 3, TileType.WALL);
         assertTrue(room.isBlocked(2 * TILE_SIZE + 5, 3 * TILE_SIZE + 5, 16, 16));
     }
 
     @Test
-    void isBlocked_checksAllFourCorners() {
+    void isBlockedChecksAllFourCorners() {
         room.setTileAt(2, 2, TileType.WALL);
         assertTrue(room.isBlocked(2 * TILE_SIZE - 10, 2 * TILE_SIZE - 10, 20, 20));
     }
 
     @Test
-    void isBlocked_outsideRoom_returnsTrue() {
+    void isBlockedOutsideRoomReturnsTrue() {
         assertTrue(room.isBlocked(-TILE_SIZE, -TILE_SIZE, 16, 16));
         assertTrue(room.isBlocked(ROOM_WIDTH * TILE_SIZE + 10, ROOM_HEIGHT * TILE_SIZE + 10, 16, 16));
     }
 
     @Test
-    void isBlocked_doorClosed_returnsTrue() {
+    void isBlockedDoorClosedReturnsTrue() {
         room.setTileAt(2, 2, TileType.DOOR_CLOSED);
         assertTrue(room.isBlocked(2 * TILE_SIZE + 5, 2 * TILE_SIZE + 5, 16, 16));
     }
 
     @Test
-    void isBlocked_doorOpen_returnsFalse() {
+    void isBlockedDoorOpenReturnsFalse() {
         room.setTileAt(2, 2, TileType.DOOR_OPEN);
         assertFalse(room.isBlocked(2 * TILE_SIZE + 5, 2 * TILE_SIZE + 5, 16, 16));
     }
 
     @Test
-    void isBlocked_fullTileOnRightEdgeOpenDoor_returnsFalse() {
+    void isBlockedFullTileOnRightEdgeOpenDoorReturnsFalse() {
         room.setTileAt(ROOM_WIDTH - 1, 3, TileType.DOOR_OPEN);
         assertFalse(room.isBlocked((ROOM_WIDTH - 1) * TILE_SIZE, 3 * TILE_SIZE, TILE_SIZE, TILE_SIZE));
     }
 
     @Test
-    void isBlocked_fullTileOnTopEdgeOpenDoor_returnsFalse() {
+    void isBlockedFullTileOnTopEdgeOpenDoorReturnsFalse() {
         room.setTileAt(4, ROOM_HEIGHT - 1, TileType.DOOR_OPEN);
         assertFalse(room.isBlocked(4 * TILE_SIZE, (ROOM_HEIGHT - 1) * TILE_SIZE, TILE_SIZE, TILE_SIZE));
     }
 
     @Test
-    void isBlocked_partialNegativePosition_returnsTrue() {
+    void isBlockedPartialNegativePositionReturnsTrue() {
         assertTrue(room.isBlocked(-1, TILE_SIZE, 16, 16));
         assertTrue(room.isBlocked(TILE_SIZE, -1, 16, 16));
     }
 
     @Test
-    void openDoors_convertsDoorClosedToDoorOpen() {
+    void openDoorsConvertsDoorClosedToDoorOpen() {
         room.setTileAt(1, 1, TileType.DOOR_CLOSED);
         room.setTileAt(3, 3, TileType.DOOR_CLOSED);
         room.openDoors();
@@ -121,7 +121,7 @@ class RoomTest {
     }
 
     @Test
-    void openDoors_convertsDirectionalDoorsToMatchingOpenVariant() {
+    void openDoorsConvertsDirectionalDoorsToMatchingOpenVariant() {
         room.setTileAt(1, 1, TileType.DOOR_LEFT_WALL_CLOSED);
         room.setTileAt(2, 1, TileType.DOOR_RIGHT_WALL_CLOSED);
         room.setTileAt(3, 1, TileType.DOOR_TOP_CLOSED);
@@ -136,7 +136,7 @@ class RoomTest {
     }
 
     @Test
-    void openDoors_doesNotAffectOtherTiles() {
+    void openDoorsDoesNotAffectOtherTiles() {
         room.setTileAt(1, 1, TileType.DOOR_CLOSED);
         room.setTileAt(2, 2, TileType.WALL);
         room.openDoors();
@@ -145,7 +145,7 @@ class RoomTest {
     }
 
     @Test
-    void addSpawnPoint_appearsInList() {
+    void addSpawnPointAppearsInList() {
         SpawnPoint sp1 = new SpawnPoint(100, 200, SpawnPoint.Type.PLAYER);
         SpawnPoint sp2 = new SpawnPoint(300, 400, SpawnPoint.Type.FASTENEMY);
         room.addSpawnPoint(sp1);

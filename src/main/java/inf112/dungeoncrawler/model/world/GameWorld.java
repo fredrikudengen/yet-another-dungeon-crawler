@@ -51,12 +51,13 @@ public class GameWorld implements Iterable<Entity> {
         });
     }
 
-    // TODO: kanskje endre disse to metodene?
+    // this method (hasEnemiesRemaining()) was adapted using Claude Sonnet 4.6
     /** @return true if at least one Enemy entity is still alive */
     public boolean hasEnemiesRemaining() {
         return entities.stream().anyMatch(e -> e instanceof Enemy);
     }
 
+    // this method (getEnemiesRemainingCount()) was adapted using Claude Sonnet 4.6
     /** @return the number of living Enemy entities currently in the world */
     public int getEnemiesRemainingCount() {
         return (int) entities.stream().filter(e -> e instanceof Enemy).count();
