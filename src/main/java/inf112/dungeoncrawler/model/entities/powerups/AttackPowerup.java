@@ -38,11 +38,6 @@ public class AttackPowerup extends Powerup {
     }
 
     @Override
-    public String getBaseTexturePath() {
-        return "powerups/weapon1.png";
-    }
-
-    @Override
     public void onCollision(Entity entity) {
         entity.setDamage(entity.getDamage() + 3);
     }

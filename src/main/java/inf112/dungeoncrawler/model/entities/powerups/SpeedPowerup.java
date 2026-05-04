@@ -37,11 +37,6 @@ public class SpeedPowerup extends Powerup {
     }
 
     @Override
-    public String getBaseTexturePath() {
-        return "powerups/faster.png";
-    }
-
-    @Override
     public void onCollision(Entity entity) {
         entity.setSpeed(entity.getSpeed() + 100);
     }

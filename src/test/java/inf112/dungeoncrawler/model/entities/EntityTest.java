@@ -84,7 +84,6 @@ class EntityTest {
     private Entity makeEntity() {
         return new Entity((float) 100, (float) 100) {
             @Override public void step(GameWorld world, double dt) {}
-            @Override public String getBaseTexturePath() { return "test"; }
         };
     }
 }

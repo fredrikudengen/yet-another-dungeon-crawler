@@ -15,9 +15,4 @@ public class NormalEnemy extends Enemy {
         this.speed          = 150;
         this.knockBackForce = 350;
     }
-
-    @Override
-    public String getBaseTexturePath() {
-        return "enemy/normal/enemy_normal_";
-    }
 }

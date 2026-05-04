@@ -32,14 +32,6 @@ public class FastEnemyTest {
 	}
 
 	@Test
-	void getBaseTexturePathReturnsFastEnemyPath() {
-		Player trackingPlayer = new Player(300, 300, NO_SOUND);
-		FastEnemy enemy = new FastEnemy(10, 20, trackingPlayer);
-
-		assertEquals("enemy/fast/enemy_", enemy.getBaseTexturePath());
-	}
-
-	@Test
 	void onCollisionDealsExpectedDamage() {
 		Player trackingPlayer = new Player(300, 300, NO_SOUND);
 		FastEnemy enemy = new FastEnemy(10, 20, trackingPlayer);

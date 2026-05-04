@@ -15,9 +15,4 @@ public class SlowEnemy extends Enemy {
         this.speed          = 120;
         this.knockBackForce = 400;
     }
-
-    @Override
-    public String getBaseTexturePath() {
-        return "enemy/slow/enemy_slow_";
-    }
 }

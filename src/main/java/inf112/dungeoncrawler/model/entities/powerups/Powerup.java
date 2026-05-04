@@ -34,16 +34,8 @@ public abstract class Powerup extends Entity {
         }
     }
 
-    @Override
-    public boolean isVisible() {
-        return !pickedUp;
-    }
-
     /** @return true if this powerup has already been collected by the player */
     public boolean isPickedUp() {
         return pickedUp;
     }
-
-    @Override
-    public abstract String getBaseTexturePath();
 }

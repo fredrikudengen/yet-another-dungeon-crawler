@@ -13,7 +13,6 @@ public class EnemyFactoryTest {
 		TestEntity(float x, float y) { super(x, y); }
 
 		@Override public void step(GameWorld world, double deltaTime) {}
-		@Override public String getBaseTexturePath() { return "test"; }
 	}
 
 	@Test

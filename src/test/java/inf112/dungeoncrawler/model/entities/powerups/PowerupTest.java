@@ -21,11 +21,6 @@ public class PowerupTest {
 		TestPowerup(float x, float y, SoundService sound) {
 			super(x, y, sound);
 		}
-
-		@Override
-		public String getBaseTexturePath() {
-			return "";
-		}
 	}
 
 	@Test

@@ -186,7 +186,6 @@ class GameWorldTest {
         return new FastEnemy(x, y, player) {
             { width = 32; height = 32; health = 10; speed = 100; damage = 5; }
             @Override public void step(GameWorld world, double dt) {}
-            @Override public String getBaseTexturePath() { return ""; }
         };
     }
 
@@ -194,13 +193,10 @@ class GameWorldTest {
         return new FastEnemy(x, y, player) {
             { isAlive = false; }
             @Override public void step(GameWorld world, double dt) {}
-            @Override public String getBaseTexturePath() { return ""; }
         };
     }
 
     private HealthPowerup makePowerup(float x, float y) {
-        return new HealthPowerup(x, y, NO_SOUND) {
-            @Override public String getBaseTexturePath() { return "test"; }
-        };
+        return new HealthPowerup(x, y, NO_SOUND) {};
     }
 }

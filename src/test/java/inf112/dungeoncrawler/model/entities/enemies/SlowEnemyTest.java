@@ -32,14 +32,6 @@ public class SlowEnemyTest {
 	}
 
 	@Test
-	void getBaseTexturePathReturnsSlowEnemyPath() {
-		Player trackingPlayer = new Player(300, 300, NO_SOUND);
-		SlowEnemy enemy = new SlowEnemy(12, 22, trackingPlayer);
-
-		assertEquals("enemy/slow/enemy_slow_", enemy.getBaseTexturePath());
-	}
-
-	@Test
 	void onCollisionDealsExpectedDamage() {
 		Player trackingPlayer = new Player(300, 300, NO_SOUND);
 		SlowEnemy enemy = new SlowEnemy(12, 22, trackingPlayer);

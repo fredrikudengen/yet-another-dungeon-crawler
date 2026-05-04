@@ -21,13 +21,6 @@ public class HealthPowerupTest {
 	};
 
 	@Test
-	void getBaseTexturePathReturnsHealthPowerupPath() {
-		HealthPowerup powerup = new HealthPowerup(0, 0, NO_SOUND);
-
-		assertEquals("powerups/Life.png", powerup.getBaseTexturePath());
-	}
-
-	@Test
 	void onCollisionIncreaseHealthAndPowerupDead() {
 		Player player = new Player(100, 100, NO_SOUND);
 		HealthPowerup powerup = new HealthPowerup(100, 100, NO_SOUND);

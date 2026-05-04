@@ -3,6 +3,7 @@ package inf112.dungeoncrawler.view.render;
 import inf112.dungeoncrawler.model.Direction;
 import inf112.dungeoncrawler.model.entities.Entity;
 import inf112.dungeoncrawler.model.entities.Movable;
+import inf112.dungeoncrawler.model.entities.powerups.Powerup;
 
 import java.util.WeakHashMap;
 
@@ -21,13 +22,19 @@ public class AnimationController {
 
     private final WeakHashMap<Entity, WalkState> states = new WeakHashMap<>();
 
-    public String getTextureName(float deltaTime, Entity entity) {
-        if (!entity.isVisible()) {
-            return null;
-        }
+    /**
+     * Returns texture path to be used in EntityRenderer.
+     *
+     * @param deltaTime time since last call
+     * @param entity specific entity to get texture for
+     * @param basePath path to entity texture in EntityRenderer.TEXTURE_PATHS
+     * @return texture path of given entity
+     */
+    public String getTextureName(float deltaTime, Entity entity, String basePath) {
+        if (entity instanceof Powerup p && p.isPickedUp()) return null;
 
         if (!(entity instanceof Movable movable)) {
-            return entity.getBaseTexturePath();
+            return basePath;
         }
 
         if (movable.isAttacking()) {
@@ -35,10 +42,10 @@ public class AnimationController {
             return "player/weapon/attack/Player_attack_weapon_" + dir + movable.getAttackFrame() + ".png";
         }
 
-        return getWalkTexture(deltaTime, entity, movable);
+        return getWalkTexture(deltaTime, entity, movable, basePath);
     }
 
-    private String getWalkTexture(float deltaTime, Entity entity, Movable movable) {
+    private String getWalkTexture(float deltaTime, Entity entity, Movable movable, String basePath) {
         WalkState state = states.computeIfAbsent(entity, e -> new WalkState());
 
         if (movable.isMoving()) {
@@ -53,7 +60,7 @@ public class AnimationController {
         }
 
         String dir = directionToString(movable.getFacingDirection());
-        return entity.getBaseTexturePath() + dir + state.frame + ".png";
+        return basePath + dir + state.frame + ".png";
     }
 
     private static String directionToString(Direction direction) {

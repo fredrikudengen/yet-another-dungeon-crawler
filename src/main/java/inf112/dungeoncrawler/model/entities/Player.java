@@ -94,11 +94,6 @@ public class Player extends Entity implements Movable, Controllable, Targetable 
     }
 
     @Override
-    public String getBaseTexturePath() {
-        return "player/weapon/Player_walk_weapon_";
-    }
-
-    @Override
     public float getFrameDuration() {
         return FRAME_DURATION;
     }
@@ -160,17 +155,9 @@ public class Player extends Entity implements Movable, Controllable, Targetable 
             }
         }
 
-        return rectanglesIntersect(
+        return Collidable.overlaps(
                 hitboxX, hitboxY, hitboxWidth, hitboxHeight,
                 entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
-    }
-
-    private boolean rectanglesIntersect(float ax, float ay, float aw, float ah,
-                                        float bx, float by, float bw, float bh) {
-        return ax < bx + bw
-                && ax + aw > bx
-                && ay < by + bh
-                && ay + ah > by;
     }
 
     @Override

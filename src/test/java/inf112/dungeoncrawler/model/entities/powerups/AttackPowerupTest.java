@@ -22,13 +22,6 @@ public class AttackPowerupTest {
 	};
 
 	@Test
-	void getBaseTexturePathReturnsAttackPowerupPath() {
-		AttackPowerup powerup = new AttackPowerup(0, 0, NO_SOUND);
-
-		assertEquals("powerups/weapon1.png", powerup.getBaseTexturePath());
-	}
-
-	@Test
 	void onCollisionIncreasesDamageByThree() {
 		Player player = new Player(100, 100, NO_SOUND);
 		AttackPowerup powerup = new AttackPowerup(100, 100, NO_SOUND);

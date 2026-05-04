@@ -1,69 +1,76 @@
 package inf112.dungeoncrawler.model.entities;
 
 import inf112.dungeoncrawler.model.Direction;
-import inf112.dungeoncrawler.sound.SoundEffect;
-import inf112.dungeoncrawler.sound.SoundService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ControllableTest {
+class ControllableTest {
 
-    private static final SoundService NO_SOUND = new SoundService() {
-        @Override
-        public void play(SoundEffect effect) { /* test */ }
+    private static class ControllableStub implements Controllable {
+        boolean movingLeft, movingRight, movingUp, movingDown;
+        Direction lastAttackDirection;
+        int attackCallCount;
 
-        @Override
-        public void dispose() { /* test */ }
-    };
+        @Override public void setMovingLeft(boolean v)  { movingLeft  = v; }
+        @Override public void setMovingRight(boolean v) { movingRight = v; }
+        @Override public void setMovingUp(boolean v)    { movingUp    = v; }
+        @Override public void setMovingDown(boolean v)  { movingDown  = v; }
+        @Override public void performAttack(Direction d) {
+            lastAttackDirection = d;
+            attackCallCount++;
+        }
+    }
 
-    private Player player; 
+    private ControllableStub controllable;
 
     @BeforeEach
     void setUp() {
-        player = new Player(300, 300, NO_SOUND); 
+        controllable = new ControllableStub();
     }
 
     @Test
-    void setMovingLeft() {
-        player.setMovingLeft(true);
-        assertTrue(player.isMoving());
+    void setMovingLeftPropagatesValue() {
+        controllable.setMovingLeft(true);
+        assertTrue(controllable.movingLeft);
 
-        player.setMovingLeft(false);
-        assertFalse(player.isMoving());
+        controllable.setMovingLeft(false);
+        assertFalse(controllable.movingLeft);
     }
 
     @Test
-    void setMovingRight() {
-        player.setMovingRight(true);
-        assertTrue(player.isMoving());
-
-        player.setMovingRight(false);
-        assertFalse(player.isMoving());
+    void setMovingRightPropagatesValue() {
+        controllable.setMovingRight(true);
+        assertTrue(controllable.movingRight);
     }
 
     @Test
-    void setMovingUp() {
-        player.setMovingUp(true);
-        assertTrue(player.isMoving());
-
-        player.setMovingUp(false);
-        assertFalse(player.isMoving());
+    void setMovingUpPropagatesValue() {
+        controllable.setMovingUp(true);
+        assertTrue(controllable.movingUp);
     }
 
     @Test
-    void setMovingDown() {
-        player.setMovingDown(true);
-        assertTrue(player.isMoving());
-
-        player.setMovingDown(false);
-        assertFalse(player.isMoving());
+    void setMovingDownPropagatesValue() {
+        controllable.setMovingDown(true);
+        assertTrue(controllable.movingDown);
     }
 
     @Test
-    void performAttack() {
-        player.performAttack(Direction.UP);
-        assertTrue(player.isAttacking());
+    void performAttackPassesDirection() {
+        controllable.performAttack(Direction.UP);
+        assertEquals(Direction.UP, controllable.lastAttackDirection);
+    }
+
+    @Test
+    void controllableCanBeUsedPolymorphically() {
+        Controllable c = controllable;
+        c.setMovingLeft(true);
+        c.performAttack(Direction.RIGHT);
+
+        assertTrue(controllable.movingLeft);
+        assertEquals(Direction.RIGHT, controllable.lastAttackDirection);
+        assertEquals(1, controllable.attackCallCount);
     }
 }

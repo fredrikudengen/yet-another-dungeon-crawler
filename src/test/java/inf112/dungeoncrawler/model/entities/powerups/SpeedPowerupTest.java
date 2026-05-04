@@ -22,13 +22,6 @@ public class SpeedPowerupTest {
 	};
 
 	@Test
-	void getBaseTexturePathReturnsSpeedPowerupPath() {
-		SpeedPowerup powerup = new SpeedPowerup(0, 0, NO_SOUND);
-
-		assertEquals("powerups/faster.png", powerup.getBaseTexturePath());
-	}
-
-	@Test
 	void onCollisionIncreasesSpeedByOneHundred() {
 		Player player = new Player(100, 100, NO_SOUND);
 		SpeedPowerup powerup = new SpeedPowerup(100, 100, NO_SOUND);

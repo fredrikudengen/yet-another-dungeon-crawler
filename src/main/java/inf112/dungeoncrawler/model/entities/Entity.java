@@ -3,7 +3,7 @@ package inf112.dungeoncrawler.model.entities;
 import inf112.dungeoncrawler.model.world.GameWorld;
 import inf112.dungeoncrawler.model.world.Room;
 
-public abstract class Entity implements Collidable, Renderable {
+public abstract class Entity implements Collidable {
     protected float x, y;
     protected int health, speed, damage;
 

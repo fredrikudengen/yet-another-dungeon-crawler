@@ -32,14 +32,6 @@ public class NormalEnemyTest {
 	}
 
 	@Test
-	void getBaseTexturePathReturnsNormalEnemyPath() {
-		Player trackingPlayer = new Player(300, 300, NO_SOUND);
-		NormalEnemy enemy = new NormalEnemy(11, 21, trackingPlayer);
-
-		assertEquals("enemy/normal/enemy_normal_", enemy.getBaseTexturePath());
-	}
-
-	@Test
 	void onCollisionDealsExpectedDamage() {
 		Player trackingPlayer = new Player(300, 300, NO_SOUND);
 		NormalEnemy enemy = new NormalEnemy(11, 21, trackingPlayer);

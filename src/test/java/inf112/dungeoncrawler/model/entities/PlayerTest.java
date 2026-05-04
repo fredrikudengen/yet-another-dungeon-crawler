@@ -202,11 +202,6 @@ class PlayerTest {
             public void step(GameWorld world, double deltaTime) {
                 // test
             }
-
-            @Override
-            public String getBaseTexturePath() {
-                return "";
-            }
         };
     }
 }
